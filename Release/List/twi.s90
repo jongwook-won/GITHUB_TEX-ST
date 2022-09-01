@@ -1,0 +1,459 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:40 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\twi.c                   /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\twi.c" --cpu=m128 -ms  /
+//                    -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D NDEBUG    /
+//                    -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -lb       /
+//                    "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y             /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\twi.s90           /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME twi
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B4_L09
+        EXTERN ?PROLOGUE4_L09
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBLIC TWI_Start
+        PUBLIC Twi_Byte_Read
+        PUBLIC Twi_Byte_Write
+        PUBLIC Twi_Multiple_Read
+        PUBWEAK _A_TWBR
+        PUBWEAK _A_TWCR
+        PUBWEAK _A_TWDR
+        PUBWEAK _A_TWSR
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC edid_data_1920_1080
+        PUBLIC edid_data_3200_930
+        PUBLIC edid_read_data
+        PUBLIC edid_save_1920
+        PUBLIC edid_save_3200
+        PUBLIC init_Twi
+        PUBLIC twi_read
+        PUBLIC twi_write
+
+        EXTERN delay_us
+        EXTERN delay_ms
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,070H
+// union <unnamed> volatile __io _A_TWBR
+_A_TWBR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,071H
+// union <unnamed> volatile __io _A_TWSR
+_A_TWSR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,073H
+// union <unnamed> volatile __io _A_TWDR
+_A_TWDR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,074H
+// union <unnamed> volatile __io _A_TWCR
+_A_TWCR:
+        DS8 1
+
+        RSEG NEAR_F:CODE:NOROOT(0)
+edid_data_3200_930:
+        DC8 0, 255, 255, 255, 255, 255, 255, 0, 30, 109, 187, 90, 1, 1, 1, 1, 1
+        DC8 24, 1, 3, 128, 48, 27, 120, 234, 49, 53, 165, 85, 78, 161, 38, 12
+        DC8 80, 84, 165, 75, 0, 113, 79, 129, 128, 149, 0, 179, 0, 169, 192
+        DC8 129, 0, 129, 192, 144, 64, 165, 73, 128, 40, 192, 162, 10, 48, 24
+        DC8 16, 78, 0, 224, 14, 17, 0, 0, 30, 0, 0, 0, 253, 0, 56, 75, 30, 83
+        DC8 15, 0, 10, 32, 32, 32, 32, 32, 32, 0, 0, 0, 252, 0, 76, 71, 32, 70
+        DC8 85, 76, 76, 32, 72, 68, 10, 32, 32, 0, 0, 0, 255, 0, 10, 32, 32, 32
+        DC8 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 15
+
+        RSEG NEAR_F:CODE:NOROOT(0)
+edid_data_1920_1080:
+        DC8 0, 255, 255, 255, 255, 255, 255, 0, 48, 228, 82, 183, 0, 0, 0, 0, 0
+        DC8 24, 1, 3, 128, 22, 13, 120, 10, 166, 51, 144, 80, 80, 139, 38, 29
+        DC8 78, 81, 0, 0, 0, 69, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DC8 247, 53, 128, 160, 112, 56, 27, 64, 48, 32, 58, 0, 36, 109, 16, 0
+        DC8 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+edid_read_data:
+        DS8 128
+
+        RSEG CODE:CODE:NOROOT(1)
+init_Twi:
+        LDI     R16, 0
+        RCALL   ??Subroutine19_0
+??CrossCallReturnLabel_23:
+        LDI     R16, 100
+        STS     _A_TWBR, R16
+        LDI     R16, 0
+        STS     _A_TWSR, R16
+        LDS     R16, _A_TWDR
+        RET
+        REQUIRE _A_TWCR
+        REQUIRE _A_TWBR
+        REQUIRE _A_TWSR
+        REQUIRE _A_TWDR
+
+        RSEG CODE:CODE:NOROOT(1)
+TWI_Start:
+        RCALL   ?Subroutine7
+??CrossCallReturnLabel_7:
+        LDI     R16, 164
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_4:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_11:
+        SBRC    R16, 7
+        RJMP    ??TWI_Start_0
+        SBIW    R25:R24, 1
+        BRNE    ??CrossCallReturnLabel_4
+??TWI_Start_0:
+        REQUIRE ?Subroutine16
+        REQUIRE _A_TWCR
+        ;               // Fall through to label ?Subroutine16
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine16:
+        MOV     R24, R18
+        MOV     R25, R17
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+Twi_Byte_Write:
+        RCALL   ?Subroutine7
+??CrossCallReturnLabel_8:
+        STS     _A_TWDR, R16
+        LDI     R16, 132
+        RCALL   ??Subroutine19_0
+??CrossCallReturnLabel_24:
+        LDI     R24, 1
+        LDI     R25, 240
+??Twi_Byte_Write_0:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_12:
+        SBRC    R16, 7
+        RJMP    ??Twi_Byte_Write_1
+        SBIW    R25:R24, 1
+        BRNE    ??Twi_Byte_Write_0
+??Twi_Byte_Write_1:
+        RJMP    ?Subroutine16
+        REQUIRE _A_TWDR
+        REQUIRE _A_TWCR
+
+        RSEG CODE:CODE:NOROOT(1)
+Twi_Byte_Read:
+        RCALL   ?Subroutine7
+??CrossCallReturnLabel_9:
+        LDI     R16, 132
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_5:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_13:
+        SBRC    R16, 7
+        RJMP    ??Twi_Byte_Read_0
+        SBIW    R25:R24, 1
+        BRNE    ??CrossCallReturnLabel_5
+??Twi_Byte_Read_0:
+        RJMP    ?Subroutine6
+        REQUIRE _A_TWCR
+        REQUIRE _A_TWDR
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine8:
+        LDS     R16, _A_TWCR
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine7:
+        MOV     R17, R25
+        MOV     R18, R24
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine3:
+        STS     _A_TWCR, R16
+        LDI     R24, 1
+        LDI     R25, 16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+Twi_Multiple_Read:
+        RCALL   ?Subroutine7
+??CrossCallReturnLabel_10:
+        LDI     R16, 196
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_6:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_14:
+        SBRC    R16, 7
+        RJMP    ??Twi_Multiple_Read_0
+        SBIW    R25:R24, 1
+        BRNE    ??CrossCallReturnLabel_6
+??Twi_Multiple_Read_0:
+        REQUIRE ?Subroutine6
+        REQUIRE _A_TWCR
+        REQUIRE _A_TWDR
+        ;               // Fall through to label ?Subroutine6
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine6:
+        LDS     R16, _A_TWDR
+        RJMP    ?Subroutine16
+
+        RSEG CODE:CODE:NOROOT(1)
+twi_write:
+        CALL    ?PROLOGUE4_L09
+        MOV     R27, R16
+        MOV     R26, R17
+        MOV     R24, R18
+        RCALL   ?Subroutine9
+??CrossCallReturnLabel_17:
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_42:
+        MOV     R16, R27
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_29:
+        MOV     R16, R26
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_30:
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_33:
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_25:
+        LDI     R16, 10
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_21:
+        LDI     R30, 4
+        JMP     ?EPILOGUE_B4_L09
+        REQUIRE _A_TWCR
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine5:
+        LDI     R16, 148
+        REQUIRE ??Subroutine19_0
+        ;               // Fall through to label ??Subroutine19_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine19_0:
+        STS     _A_TWCR, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine4:
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_37:
+        REQUIRE ??Subroutine20_0
+        ;               // Fall through to label ??Subroutine20_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine20_0:
+        LDI     R16, 5
+        RJMP    ?Subroutine18
+
+        RSEG CODE:CODE:NOROOT(1)
+twi_read:
+        ST      -Y, R25
+        ST      -Y, R24
+        MOV     R25, R16
+        MOV     R24, R17
+        LDI     R16, 1
+        STS     edid_read_data, R16
+        RCALL   ?Subroutine9
+??CrossCallReturnLabel_16:
+        RCALL   ??Subroutine20_0
+??CrossCallReturnLabel_27:
+        MOV     R16, R25
+        RCALL   ??Subroutine21_0
+??CrossCallReturnLabel_31:
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_34:
+        RCALL   ?Subroutine9
+??CrossCallReturnLabel_15:
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_43:
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_44:
+        INC     R25
+        MOV     R16, R25
+        RCALL   ??Subroutine21_0
+??CrossCallReturnLabel_32:
+        RCALL   Twi_Byte_Read
+        STS     edid_read_data, R16
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_26:
+        LDI     R16, 1
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_22:
+        RCALL   ??Subroutine20_0
+??CrossCallReturnLabel_28:
+        LDS     R16, edid_read_data
+        LDI     R17, 0
+        LD      R24, Y+
+        LD      R25, Y+
+        RET
+        REQUIRE _A_TWCR
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine14:
+        LDI     R17, 0
+        JMP     delay_ms
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine9:
+        RJMP    TWI_Start
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine2:
+        MOV     R16, R24
+        REQUIRE ??Subroutine21_0
+        ;               // Fall through to label ??Subroutine21_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine21_0:
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_36:
+        RJMP    ?Subroutine13
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine15:
+        RJMP    Twi_Byte_Write
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine13:
+        LDI     R16, 2
+        REQUIRE ?Subroutine18
+        ;               // Fall through to label ?Subroutine18
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine18:
+        JMP     delay_us
+
+        RSEG CODE:CODE:NOROOT(1)
+edid_save_3200:
+        RCALL   ?Subroutine11
+??CrossCallReturnLabel_18:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_0:
+        SUBI    R30, LOW((-(edid_data_3200_930) & 0xFFFF))
+        SBCI    R31, (-(edid_data_3200_930) & 0xFFFF) >> 8
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_2:
+        BRCS    ??CrossCallReturnLabel_18
+        REQUIRE ?Subroutine17
+        REQUIRE _A_TWCR
+        ;               // Fall through to label ?Subroutine17
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine17:
+        LD      R24, Y+
+        LD      R26, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+edid_save_1920:
+        RCALL   ?Subroutine11
+??CrossCallReturnLabel_19:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_1:
+        SUBI    R30, LOW((-(edid_data_1920_1080) & 0xFFFF))
+        SBCI    R31, (-(edid_data_1920_1080) & 0xFFFF) >> 8
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_3:
+        BRCS    ??CrossCallReturnLabel_19
+        RJMP    ?Subroutine17
+        REQUIRE _A_TWCR
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine11:
+        ST      -Y, R26
+        ST      -Y, R24
+        MOV     R26, R16
+        LDI     R24, 0
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        LPM     R16, Z
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_40:
+        LDI     R16, 148
+        STS     _A_TWCR, R16
+        LDI     R16, 10
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_20:
+        INC     R24
+        CPI     R24, 128
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        RCALL   TWI_Start
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_41:
+        MOV     R16, R26
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_39:
+        MOV     R16, R24
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_38:
+        LDI     R31, 0
+        MOV     R30, R24
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine12:
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_35:
+        LDI     R16, 2
+        RJMP    ?Subroutine18
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        END
+// 
+//   4 bytes in segment ABSOLUTE
+// 352 bytes in segment CODE
+//   7 bytes in segment INITTAB
+// 256 bytes in segment NEAR_F
+// 128 bytes in segment NEAR_Z
+// 
+// 608 bytes of CODE memory (+ 7 bytes shared)
+// 128 bytes of DATA memory (+ 4 bytes shared)
+//
+//Errors: none
+//Warnings: 4

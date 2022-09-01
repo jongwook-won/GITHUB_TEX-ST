@@ -1,0 +1,251 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:39 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\avr_pwm.c               /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\avr_pwm.c" --cpu=m128  /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\avr_pwm.s90       /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME avr_pwm
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?L_EC_MUL_L03
+        EXTERN ?UL_DIVMOD_L03
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_I>`
+        PUBLIC DUTY_VAL
+        PUBLIC OCR3A_VAL
+        PUBLIC OCR3B_VAL
+        PUBLIC Timer3_pwm_initial
+        PUBWEAK _A_OCR3A
+        PUBWEAK _A_OCR3B
+        PUBWEAK _A_TCCR3A
+        PUBWEAK _A_TCCR3B
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC cur_DUTY_VAL
+        PUBLIC pwm_dimming_fun
+
+        EXTERN printf
+        EXTERN PC_pwm_flag
+        EXTERN pc_duty_100
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,084H
+// union <unnamed> volatile __io _A_OCR3B
+_A_OCR3B:
+        DS8 2
+
+        ASEGN ABSOLUTE:DATA:NOROOT,086H
+// union <unnamed> volatile __io _A_OCR3A
+_A_OCR3A:
+        DS8 2
+
+        ASEGN ABSOLUTE:DATA:NOROOT,08aH
+// union <unnamed> volatile __io _A_TCCR3B
+_A_TCCR3B:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,08bH
+// union <unnamed> volatile __io _A_TCCR3A
+_A_TCCR3A:
+        DS8 1
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "set ok pc_duty_100 = ...">`:
+        DS8 26
+        REQUIRE `?<Initializer for <Constant "set ok pc_duty_10`
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+OCR3A_VAL:
+        DS8 2
+        REQUIRE `?<Initializer for OCR3A_VAL>`
+OCR3B_VAL:
+        DS8 2
+        REQUIRE `?<Initializer for OCR3B_VAL>`
+DUTY_VAL:
+        DS8 2
+        REQUIRE `?<Initializer for DUTY_VAL>`
+cur_DUTY_VAL:
+        DS8 2
+        REQUIRE `?<Initializer for cur_DUTY_VAL>`
+
+        RSEG CODE:CODE:NOROOT(1)
+Timer3_pwm_initial:
+        ST      -Y, R27
+        MOV     R31, R26
+        LDI     R16, 33
+        STS     _A_TCCR3A, R16
+        LDI     R16, 19
+        STS     _A_TCCR3B, R16
+        LDI     R26, LOW(OCR3A_VAL)
+        LDI     R27, (OCR3A_VAL) >> 8
+        LDI     R16, 17
+        LDI     R17, 4
+        ST      X+, R16
+        ST      X, R17
+        ADIW    R27:R26, 3
+        STS     135, R17
+        STS     _A_OCR3A, R16
+        LD      R16, X+
+        LD      R17, X
+        SBIW    R27:R26, 3
+        LDI     R18, 0
+        LDI     R19, 0
+        LDI     R20, 17
+        LDI     R21, 4
+        LDI     R22, 0
+        LDI     R23, 0
+        CALL    ?L_EC_MUL_L03
+        LDI     R20, 100
+        LDI     R21, 0
+        CALL    ?UL_DIVMOD_L03
+        ST      X+, R16
+        ST      X, R17
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_0:
+        MOV     R26, R31
+        REQUIRE ?Subroutine1
+        REQUIRE _A_TCCR3A
+        REQUIRE _A_TCCR3B
+        REQUIRE _A_OCR3A
+        REQUIRE _A_OCR3B
+        ;               // Fall through to label ?Subroutine1
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        LD      R27, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+pwm_dimming_fun:
+        ST      -Y, R27
+        ST      -Y, R26
+        LDI     R26, LOW(OCR3A_VAL)
+        LDI     R27, (OCR3A_VAL) >> 8
+        LDS     R16, PC_pwm_flag
+        SBRS    R16, 1
+        RJMP    ??pwm_dimming_fun_0
+        LD      R20, X+
+        LD      R21, X
+        SBIW    R27:R26, 1
+        LDI     R30, LOW(pc_duty_100)
+        LDI     R31, (pc_duty_100) >> 8
+        LD      R22, Z
+        LDD     R23, Z+1
+        CLR     R2
+        MUL     R21, R23
+        MOVW    R19:R18, R1:R0
+        MUL     R20, R22
+        MOVW    R17:R16, R1:R0
+        MUL     R21, R22
+        ADD     R17, R0
+        ADC     R18, R1
+        ADC     R19, R2
+        MUL     R23, R20
+        ADD     R17, R0
+        ADC     R18, R1
+        ADC     R19, R2
+        LDI     R20, 100
+        LDI     R21, 0
+        LDI     R22, 0
+        LDI     R23, 0
+        CALL    ?UL_DIVMOD_L03
+        MOVW    R31:R30, R27:R26
+        STD     Z+2, R16
+        STD     Z+3, R17
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_1:
+        LDI     R30, LOW(PC_pwm_flag)
+        LDI     R31, (PC_pwm_flag) >> 8
+        LD      R16, Z
+        ANDI    R16, 0xFD
+        ST      Z, R16
+        LDI     R30, LOW(pc_duty_100)
+        LDI     R31, (pc_duty_100) >> 8
+        LD      R16, Z
+        LDD     R17, Z+1
+        ST      -Y, R17
+        ST      -Y, R16
+        LDI     R16, LOW(`?<Constant "set ok pc_duty_100 = ...">`)
+        LDI     R17, (`?<Constant "set ok pc_duty_100 = ...">`) >> 8
+        CALL    printf
+        ADIW    R29:R28, 2
+??pwm_dimming_fun_0:
+        LDI     R16, 200
+        LDI     R17, 0
+        MOVW    R31:R30, R27:R26
+        STD     Z+6, R16
+        STD     Z+7, R17
+        LD      R26, Y+
+        RJMP    ?Subroutine1
+        REQUIRE _A_OCR3B
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        STS     133, R17
+        STS     _A_OCR3B, R16
+        RET
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "set ok pc_duty_10`:
+        DC8 "set ok pc_duty_100 = %d\015\012"
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_I>`:
+        DC16    SFE(NEAR_I) - SFB(NEAR_I)
+        DC16    SFB(NEAR_I)
+        DP      SFB(NEAR_ID)
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for OCR3A_VAL>`:
+        DC16 0
+`?<Initializer for OCR3B_VAL>`:
+        DC16 0
+`?<Initializer for DUTY_VAL>`:
+        DC16 100
+`?<Initializer for cur_DUTY_VAL>`:
+        DC16 100
+
+        END
+// 
+//   6 bytes in segment ABSOLUTE
+// 212 bytes in segment CODE
+//   7 bytes in segment INITTAB
+//  34 bytes in segment NEAR_I
+//  34 bytes in segment NEAR_ID
+// 
+// 246 bytes of CODE memory (+ 7 bytes shared)
+//  34 bytes of DATA memory (+ 6 bytes shared)
+//
+//Errors: none
+//Warnings: none

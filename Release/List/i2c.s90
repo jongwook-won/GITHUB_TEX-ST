@@ -1,0 +1,515 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:12 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\i2c.c                   /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\i2c.c" --cpu=m128 -ms  /
+//                    -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D NDEBUG    /
+//                    -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -lb       /
+//                    "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y             /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\i2c.s90           /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME i2c
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B10_L09
+        EXTERN ?EPILOGUE_B3_L09
+        EXTERN ?EPILOGUE_B4_L09
+        EXTERN ?EPILOGUE_B5_L09
+        EXTERN ?EPILOGUE_B8_L09
+        EXTERN ?PROLOGUE10_L09
+        EXTERN ?PROLOGUE3_L09
+        EXTERN ?PROLOGUE4_L09
+        EXTERN ?PROLOGUE5_L09
+        EXTERN ?PROLOGUE8_L09
+        EXTERN ?Register_R4_is_cg_reg
+        EXTERN ?Register_R5_is_cg_reg
+        EXTERN ?Register_R6_is_cg_reg
+        EXTERN ?Register_R7_is_cg_reg
+        EXTERN ?Register_R8_is_cg_reg
+        EXTERN ?Register_R9_is_cg_reg
+        EXTERN ?US_DIVMOD_L02
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_I>`
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBLIC I2C_Read_Change_Add
+        PUBLIC I2C_Write_1Byte
+        PUBLIC I2C_Write_Change_Add
+        PUBLIC I2C_Write_Several
+        PUBLIC Tx_Lenth_Update
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC eep_usPvcomDly
+        PUBLIC ext_ucI2cDelay
+        PUBLIC ext_usI2cData_2
+        PUBLIC i2c_read
+
+        EXTERN gpi2c_start_condition
+        EXTERN gpi2c_write
+        EXTERN gpi2c_stop_condition
+        EXTERN gpi2c_read
+        EXTERN delay_ms
+        EXTERN ext_ucRxbuf
+        EXTERN gpi2c_module
+
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+ext_usI2cData_2:
+        DS8 2
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+ext_ucI2cDelay:
+        DS8 1
+        REQUIRE `?<Initializer for ext_ucI2cDelay>`
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+eep_usPvcomDly:
+        DS8 1
+        REQUIRE `?<Initializer for eep_usPvcomDly>`
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+Tx_Lenth_Update:
+        DS8 2
+
+        RSEG CODE:CODE:NOROOT(1)
+I2C_Write_1Byte:
+        CALL    ?PROLOGUE3_L09
+        MOV     R25, R16
+        MOV     R24, R17
+        MOV     R26, R18
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_22:
+        MOV     R18, R25
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_29:
+        BREQ    ??I2C_Write_1Byte_0
+??I2C_Write_1Byte_1:
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_0:
+        RJMP    ??CrossCallReturnLabel_7
+??I2C_Write_1Byte_0:
+        MOV     R18, R24
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_30:
+        BRNE    ??I2C_Write_1Byte_1
+        MOV     R18, R26
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_31:
+        BRNE    ??I2C_Write_1Byte_1
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_7:
+        LDI     R30, 3
+        JMP     ?EPILOGUE_B3_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+I2C_Write_Several:
+        CALL    ?PROLOGUE4_L09
+        MOV     R27, R16
+        MOV     R26, R17
+        MOVW    R25:R24, R19:R18
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_27:
+        BREQ    ??I2C_Write_Several_0
+??I2C_Write_Several_1:
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_1:
+        RJMP    ??CrossCallReturnLabel_8
+??I2C_Write_Several_0:
+        MOV     R18, R26
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_32:
+        BRNE    ??I2C_Write_Several_1
+        LDI     R26, 0
+        LDI     R27, 0
+        RJMP    ??I2C_Write_Several_2
+??I2C_Write_Several_3:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_9:
+        ADD     R16, R26
+        ADC     R17, R27
+        MOVW    R31:R30, R17:R16
+        SUBI    R30, LOW((-(ext_ucRxbuf) & 0xFFFF))
+        SBCI    R31, (-(ext_ucRxbuf) & 0xFFFF) >> 8
+        LD      R18, Z
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_33:
+        BRNE    ??I2C_Write_Several_1
+        ADIW    R27:R26, 1
+??I2C_Write_Several_2:
+        CP      R26, R24
+        CPC     R27, R25
+        BRCS    ??I2C_Write_Several_3
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_8:
+        LDI     R30, 4
+        JMP     ?EPILOGUE_B4_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine4:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_17:
+        LDI     R16, 0
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+i2c_read:
+        CALL    ?PROLOGUE5_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        SBIW    R29:R28, 1
+        MOVW    R25:R24, R17:R16
+        MOVW    R27:R26, R19:R18
+        MOV     R4, R20
+        LDI     R16, 0
+        ST      Y, R16
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_23:
+        MOV     R18, R24
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_34:
+        BREQ    ??i2c_read_0
+??i2c_read_1:
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_2:
+        RJMP    ??i2c_read_2
+??i2c_read_0:
+        TST     R4
+        BREQ    ??i2c_read_3
+        LDI     R18, 0
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_35:
+        BRNE    ??i2c_read_1
+??i2c_read_3:
+        MOV     R18, R25
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_36:
+        BRNE    ??i2c_read_1
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_24:
+        ORI     R24, 0x01
+        MOV     R18, R24
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_41:
+        LDI     R24, 0
+        LDI     R25, 0
+        RJMP    ??i2c_read_4
+??i2c_read_5:
+        LDI     R20, 1
+        RCALL   ?Subroutine11
+??CrossCallReturnLabel_19:
+        ADIW    R25:R24, 1
+??i2c_read_4:
+        MOVW    R31:R30, R27:R26
+        SBIW    R31:R30, 1
+        CP      R24, R30
+        CPC     R25, R31
+        BRCS    ??i2c_read_5
+        LDI     R20, 0
+        RCALL   ?Subroutine11
+??CrossCallReturnLabel_18:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_13:
+        LDI     R30, LOW(Tx_Lenth_Update)
+        LDI     R31, (Tx_Lenth_Update) >> 8
+        ST      Z, R26
+        STD     Z+1, R27
+        LDI     R16, 0
+??i2c_read_2:
+        ADIW    R29:R28, 1
+        LDI     R30, 5
+        JMP     ?EPILOGUE_B5_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine11:
+        MOVW    R19:R18, R29:R28
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_45:
+        CALL    gpi2c_read
+        ST      Y, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine12:
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_46:
+        JMP     gpi2c_start_condition
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_16:
+        LDI     R16, 170
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_21:
+        MOV     R18, R27
+        REQUIRE ??Subroutine15_0
+        ;               // Fall through to label ??Subroutine15_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine15_0:
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_43:
+        OR      R16, R17
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+I2C_Write_Change_Add:
+        CALL    ?PROLOGUE8_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        REQUIRE ?Register_R5_is_cg_reg
+        REQUIRE ?Register_R6_is_cg_reg
+        REQUIRE ?Register_R7_is_cg_reg
+        MOV     R27, R16
+        MOV     R26, R17
+        MOVW    R25:R24, R19:R18
+        MOV     R6, R20
+        CLR     R4
+        CLR     R5
+        RJMP    ??I2C_Write_Change_Add_0
+??I2C_Write_Change_Add_1:
+        LDI     R30, LOW(ext_usI2cData_2)
+        LDI     R31, (ext_usI2cData_2) >> 8
+        LD      R16, Z
+        LDD     R31, Z+1
+        MOV     R30, R16
+        SUBI    R30, LOW((-(ext_ucRxbuf) & 0xFFFF))
+        SBCI    R31, (-(ext_ucRxbuf) & 0xFFFF) >> 8
+        LD      R18, Z
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_37:
+        BRNE    ??I2C_Write_Change_Add_2
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_10:
+        SUBI    R16, 255
+        SBCI    R17, 255
+        ST      Z, R16
+        STD     Z+1, R17
+        INC     R7
+??I2C_Write_Change_Add_3:
+        CP      R7, R6
+        BRCS    ??I2C_Write_Change_Add_1
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_14:
+        INC     R26
+        RCALL   ?Subroutine9
+??CrossCallReturnLabel_12:
+        LDI     R16, 1
+        ADD     R4, R16
+        LDI     R16, 0
+        ADC     R5, R16
+??I2C_Write_Change_Add_0:
+        MOV     R20, R6
+        LDI     R21, 0
+        MOVW    R17:R16, R25:R24
+        CALL    ?US_DIVMOD_L02
+        CP      R4, R16
+        CPC     R5, R17
+        BRCC    ??I2C_Write_Change_Add_4
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_28:
+        BREQ    ??I2C_Write_Change_Add_5
+??I2C_Write_Change_Add_2:
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_3:
+        RJMP    ??I2C_Write_Change_Add_6
+??I2C_Write_Change_Add_5:
+        MOV     R18, R26
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_38:
+        BRNE    ??I2C_Write_Change_Add_2
+        CLR     R7
+        RJMP    ??I2C_Write_Change_Add_3
+??I2C_Write_Change_Add_4:
+        LDI     R16, 0
+??I2C_Write_Change_Add_6:
+        LDI     R30, 8
+        JMP     ?EPILOGUE_B8_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine8:
+        LDI     R30, LOW(ext_usI2cData_2)
+        LDI     R31, (ext_usI2cData_2) >> 8
+        LD      R16, Z
+        LDD     R17, Z+1
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine10:
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_44:
+        JMP     gpi2c_stop_condition
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine14:
+        LDI     R16, LOW(gpi2c_module)
+        LDI     R17, (gpi2c_module) >> 8
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+I2C_Read_Change_Add:
+        CALL    ?PROLOGUE10_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        REQUIRE ?Register_R5_is_cg_reg
+        REQUIRE ?Register_R6_is_cg_reg
+        REQUIRE ?Register_R7_is_cg_reg
+        REQUIRE ?Register_R8_is_cg_reg
+        REQUIRE ?Register_R9_is_cg_reg
+        SBIW    R29:R28, 1
+        MOV     R5, R16
+        MOV     R4, R17
+        MOVW    R7:R6, R19:R18
+        MOV     R24, R20
+        LDI     R25, 0
+        ST      Y, R25
+        LDI     R26, 0
+        LDI     R27, 0
+        RJMP    ??I2C_Read_Change_Add_0
+??I2C_Read_Change_Add_1:
+        LDI     R20, 1
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_5:
+        INC     R8
+??I2C_Read_Change_Add_2:
+        CLR     R9
+        MOV     R30, R24
+        LDI     R31, 0
+        SBIW    R31:R30, 1
+        CP      R8, R30
+        CPC     R9, R31
+        BRLT    ??I2C_Read_Change_Add_1
+        LDI     R20, 0
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_6:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_15:
+        INC     R4
+        RCALL   ?Subroutine9
+??CrossCallReturnLabel_11:
+        ADIW    R27:R26, 1
+??I2C_Read_Change_Add_0:
+        MOV     R20, R24
+        LDI     R21, 0
+        MOVW    R17:R16, R7:R6
+        CALL    ?US_DIVMOD_L02
+        CP      R26, R16
+        CPC     R27, R17
+        BRCC    ??I2C_Read_Change_Add_3
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_25:
+        MOV     R18, R5
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_39:
+        BREQ    ??I2C_Read_Change_Add_4
+??I2C_Read_Change_Add_5:
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_4:
+        RJMP    ??I2C_Read_Change_Add_6
+??I2C_Read_Change_Add_4:
+        MOV     R18, R4
+        RCALL   ??Subroutine15_0
+??CrossCallReturnLabel_40:
+        BRNE    ??I2C_Read_Change_Add_5
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_26:
+        MOV     R18, R5
+        ORI     R18, 0x01
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_42:
+        CLR     R8
+        RJMP    ??I2C_Read_Change_Add_2
+??I2C_Read_Change_Add_3:
+        LDI     R17, 0
+        LDI     R30, LOW(Tx_Lenth_Update)
+        LDI     R31, (Tx_Lenth_Update) >> 8
+        ST      Z, R25
+        STD     Z+1, R17
+        LDI     R16, 0
+??I2C_Read_Change_Add_6:
+        ADIW    R29:R28, 1
+        LDI     R30, 10
+        JMP     ?EPILOGUE_B10_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine9:
+        LDI     R16, 5
+        LDI     R17, 0
+        JMP     delay_ms
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine13:
+        RCALL   ?Subroutine14
+??CrossCallReturnLabel_47:
+        JMP     gpi2c_write
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine2:
+        RCALL   ?Subroutine11
+??CrossCallReturnLabel_20:
+        INC     R25
+        RET
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for ext_ucI2cDelay>`:
+        DC8 5
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_I>`:
+        DC16    SFE(NEAR_I) - SFB(NEAR_I)
+        DC16    SFB(NEAR_I)
+        DP      SFB(NEAR_ID)
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for eep_usPvcomDly>`:
+        DC8 10
+
+        END
+// 
+// 518 bytes in segment CODE
+//  14 bytes in segment INITTAB
+//   2 bytes in segment NEAR_I
+//   2 bytes in segment NEAR_ID
+//   4 bytes in segment NEAR_Z
+// 
+// 520 bytes of CODE memory (+ 14 bytes shared)
+//   6 bytes of DATA memory
+//
+//Errors: none
+//Warnings: none

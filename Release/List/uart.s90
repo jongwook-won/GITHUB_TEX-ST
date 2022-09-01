@@ -1,0 +1,467 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  17:11:39 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\uart.c                  /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\uart.c" --cpu=m128     /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\uart.s90          /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME uart
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B8_L09
+        EXTERN ?PROLOGUE8_L09
+        EXTERN ?Register_R4_is_cg_reg
+        EXTERN ?Register_R5_is_cg_reg
+        EXTERN ?Register_R6_is_cg_reg
+        EXTERN ?Register_R7_is_cg_reg
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBWEAK `??uart_interrupt_routine??INTVEC 120`
+        PUBWEAK _A_PORTC
+        PUBWEAK _A_UBRR0H
+        PUBWEAK _A_UBRR0L
+        PUBWEAK _A_UBRR1H
+        PUBWEAK _A_UBRR1L
+        PUBWEAK _A_UCSR0A
+        PUBWEAK _A_UCSR0B
+        PUBWEAK _A_UCSR0C
+        PUBWEAK _A_UCSR1A
+        PUBWEAK _A_UCSR1B
+        PUBWEAK _A_UCSR1C
+        PUBWEAK _A_UDR0
+        PUBWEAK _A_UDR1
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC ext_ucRxStatus
+        PUBLIC ext_ucRxbuf
+        PUBLIC ext_ucTxbuf
+        PUBLIC ext_usLen
+        PUBLIC ext_usRxCnt
+        PUBLIC init_uart0
+        PUBLIC init_uart1
+        PUBLIC putchar
+        PUBLIC send_data
+        PUBLIC uart0_rx_char
+        PUBLIC uart_interrupt_routine
+
+uart_interrupt_routine SYMBOL "uart_interrupt_routine"
+`??uart_interrupt_routine??INTVEC 120` SYMBOL "??INTVEC 120", uart_interrupt_routine
+
+        EXTERN uart_tx_char
+        EXTERN delay_us
+        EXTERN ext_usRxTimer
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,029H
+// union <unnamed> volatile __io _A_UBRR0L
+_A_UBRR0L:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,02aH
+// union <unnamed> volatile __io _A_UCSR0B
+_A_UCSR0B:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,02bH
+// union <unnamed> volatile __io _A_UCSR0A
+_A_UCSR0A:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,02cH
+// union <unnamed> volatile __io _A_UDR0
+_A_UDR0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,035H
+// union <unnamed> volatile __io _A_PORTC
+_A_PORTC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,090H
+// union <unnamed> volatile __io _A_UBRR0H
+_A_UBRR0H:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,095H
+// union <unnamed> volatile __io _A_UCSR0C
+_A_UCSR0C:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,098H
+// union <unnamed> volatile __io _A_UBRR1H
+_A_UBRR1H:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,099H
+// union <unnamed> volatile __io _A_UBRR1L
+_A_UBRR1L:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,09aH
+// union <unnamed> volatile __io _A_UCSR1B
+_A_UCSR1B:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,09bH
+// union <unnamed> volatile __io _A_UCSR1A
+_A_UCSR1A:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,09cH
+// union <unnamed> volatile __io _A_UDR1
+_A_UDR1:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,09dH
+// union <unnamed> volatile __io _A_UCSR1C
+_A_UCSR1C:
+        DS8 1
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+ext_ucRxbuf:
+        DS8 20
+ext_usRxCnt:
+        DS8 2
+ext_usLen:
+        DS8 2
+ext_ucRxStatus:
+        DS8 1
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+ext_ucTxbuf:
+        DS8 20
+
+        RSEG CODE:CODE:NOROOT(1)
+init_uart0:
+        SBIW    R29:R28, 1
+        LDI     R18, 0
+        STS     _A_UBRR0H, R18
+        OUT     0x09, R16
+        LDI     R16, 2
+        OUT     0x0B, R16
+        LDI     R16, 8
+        OUT     0x0A, R16
+        LDI     R16, 6
+        STS     _A_UCSR0C, R16
+        IN      R16, 0x0C
+        REQUIRE ?Subroutine4
+        REQUIRE _A_UBRR0H
+        REQUIRE _A_UBRR0L
+        REQUIRE _A_UCSR0A
+        REQUIRE _A_UCSR0B
+        REQUIRE _A_UCSR0C
+        REQUIRE _A_UDR0
+        ;               // Fall through to label ?Subroutine4
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine4:
+        ST      Y, R16
+        ADIW    R29:R28, 1
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+init_uart1:
+        SBIW    R29:R28, 1
+        LDI     R18, 0
+        STS     _A_UBRR1H, R18
+        STS     _A_UBRR1L, R16
+        LDI     R16, 2
+        STS     _A_UCSR1A, R16
+        LDI     R16, 152
+        STS     _A_UCSR1B, R16
+        LDI     R16, 6
+        STS     _A_UCSR1C, R16
+        LDS     R16, _A_UDR1
+        RJMP    ?Subroutine4
+        REQUIRE _A_UBRR1H
+        REQUIRE _A_UBRR1L
+        REQUIRE _A_UCSR1A
+        REQUIRE _A_UCSR1B
+        REQUIRE _A_UCSR1C
+        REQUIRE _A_UDR1
+
+        RSEG CODE:CODE:NOROOT(1)
+putchar:
+??putchar_0:
+        SBIS    0x0B, 0x05
+        RJMP    ??putchar_0
+        OUT     0x0C, R16
+        LDI     R16, 0
+        LDI     R17, 0
+        RET
+        REQUIRE _A_UCSR0A
+        REQUIRE _A_UDR0
+
+        RSEG CODE:CODE:NOROOT(1)
+uart0_rx_char:
+??uart0_rx_char_0:
+        SBIS    0x0B, 0x07
+        RJMP    ??uart0_rx_char_0
+        IN      R16, 0x0C
+        RET
+        REQUIRE _A_UCSR0A
+        REQUIRE _A_UDR0
+
+        RSEG CODE:CODE:NOROOT(1)
+send_data:
+        CALL    ?PROLOGUE8_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        REQUIRE ?Register_R5_is_cg_reg
+        REQUIRE ?Register_R6_is_cg_reg
+        REQUIRE ?Register_R7_is_cg_reg
+        MOV     R4, R16
+        MOV     R26, R17
+        MOVW    R25:R24, R19:R18
+        MOV     R27, R19
+        MOV     R5, R18
+        LDI     R16, 2
+        RCALL   ??Subroutine5_0
+??CrossCallReturnLabel_5:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_3:
+        MOV     R16, R26
+        RCALL   ??Subroutine5_0
+??CrossCallReturnLabel_6:
+        MOV     R16, R27
+        RCALL   ??Subroutine5_0
+??CrossCallReturnLabel_7:
+        MOV     R16, R5
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_2:
+        ADD     R4, R26
+        ADD     R4, R25
+        ADD     R4, R24
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_8:
+        CLR     R6
+        CLR     R7
+        RJMP    ??send_data_0
+??send_data_1:
+        LDI     R26, LOW(ext_ucTxbuf)
+        LDI     R27, (ext_ucTxbuf) >> 8
+        ADD     R26, R6
+        ADC     R27, R7
+        LD      R16, X
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_1:
+        LD      R16, X
+        ADD     R4, R16
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_9:
+        LDI     R16, 1
+        ADD     R6, R16
+        LDI     R16, 0
+        ADC     R7, R16
+??send_data_0:
+        CP      R6, R24
+        CPC     R7, R25
+        BRCS    ??send_data_1
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_4:
+        LDI     R16, 3
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_0:
+        LDI     R30, 8
+        JMP     ?EPILOGUE_B8_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        JMP     uart_tx_char
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        MOV     R16, R4
+        REQUIRE ?Subroutine3
+        REQUIRE ??Subroutine5_0
+        ;               // Fall through to label ??Subroutine5_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine5_0:
+        CALL    uart_tx_char
+        REQUIRE ?Subroutine3
+        ;               // Fall through to label ?Subroutine3
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine3:
+        LDI     R16, 100
+        JMP     delay_us
+
+        RSEG CODE:CODE:NOROOT(1)
+uart_interrupt_routine:
+        ST      -Y, R27
+        ST      -Y, R26
+        ST      -Y, R31
+        ST      -Y, R30
+        ST      -Y, R22
+        ST      -Y, R21
+        ST      -Y, R20
+        ST      -Y, R19
+        ST      -Y, R18
+        ST      -Y, R17
+        ST      -Y, R16
+        IN      R22, 0x3F
+        LDS     R17, _A_UDR1
+        CBI     0x15, 0x01
+        LDI     R30, LOW(ext_ucRxbuf)
+        LDI     R31, (ext_ucRxbuf) >> 8
+        LDD     R16, Z+24
+        TST     R16
+        BRNE    ??uart_interrupt_routine_0
+        CPI     R17, 2
+        BREQ    $+2+2
+        RJMP    ??uart_interrupt_routine_1
+        LDI     R16, 2
+        ST      Z, R16
+        LDI     R16, 128
+        STD     Z+24, R16
+        LDI     R16, 0
+        STS     ext_usRxTimer, R16
+        STS     (ext_usRxTimer + 1), R16
+        RJMP    ??uart_interrupt_routine_1
+??uart_interrupt_routine_0:
+        CPI     R16, 128
+        BRNE    ??uart_interrupt_routine_2
+        STD     Z+1, R17
+        LDI     R16, 192
+        RJMP    ??uart_interrupt_routine_3
+??uart_interrupt_routine_2:
+        CPI     R16, 192
+        BRNE    ??uart_interrupt_routine_4
+        STD     Z+2, R17
+        LDI     R16, 224
+        RJMP    ??uart_interrupt_routine_3
+??uart_interrupt_routine_4:
+        CPI     R16, 224
+        BRNE    ??uart_interrupt_routine_5
+        STD     Z+3, R17
+        LDI     R16, 225
+        RJMP    ??uart_interrupt_routine_3
+??uart_interrupt_routine_5:
+        CPI     R16, 225
+        BRNE    ??uart_interrupt_routine_6
+        STD     Z+4, R17
+        LDI     R16, 240
+        STD     Z+24, R16
+        LDD     R19, Z+3
+        LDD     R16, Z+4
+        LDI     R17, 0
+        TST     R19
+        STD     Z+22, R16
+        STD     Z+23, R19
+        STD     Z+20, R17
+??uart_interrupt_routine_7:
+        STD     Z+21, R17
+        RJMP    ??uart_interrupt_routine_1
+??uart_interrupt_routine_6:
+        LDD     R18, Z+20
+        LDD     R19, Z+21
+        MOVW    R27:R26, R31:R30
+        ADD     R26, R18
+        ADC     R27, R19
+        CPI     R16, 240
+        BRNE    ??uart_interrupt_routine_8
+        LDD     R20, Z+22
+        LDD     R21, Z+23
+        CP      R18, R20
+        CPC     R19, R21
+        BRCC    ??uart_interrupt_routine_9
+        ADIW    R27:R26, 5
+        ST      X, R17
+        LDD     R16, Z+20
+        LDD     R17, Z+21
+        SUBI    R16, 255
+        SBCI    R17, 255
+        STD     Z+20, R16
+        RJMP    ??uart_interrupt_routine_7
+??uart_interrupt_routine_9:
+        ADIW    R27:R26, 5
+        ST      X, R17
+        SBIW    R27:R26, 5
+        LDI     R16, 252
+        RJMP    ??uart_interrupt_routine_3
+??uart_interrupt_routine_8:
+        CPI     R16, 252
+        BRNE    ??uart_interrupt_routine_1
+        CPI     R17, 3
+        BRNE    ??uart_interrupt_routine_10
+        LDI     R16, 3
+        ADIW    R27:R26, 6
+        ST      X, R16
+        SBIW    R27:R26, 6
+        LDI     R16, 253
+        RJMP    ??uart_interrupt_routine_3
+??uart_interrupt_routine_10:
+        LDI     R16, 0
+??uart_interrupt_routine_3:
+        STD     Z+24, R16
+??uart_interrupt_routine_1:
+        OUT     0x3F, R22
+        LD      R16, Y+
+        LD      R17, Y+
+        LD      R18, Y+
+        LD      R19, Y+
+        LD      R20, Y+
+        LD      R21, Y+
+        LD      R22, Y+
+        LD      R30, Y+
+        LD      R31, Y+
+        LD      R26, Y+
+        LD      R27, Y+
+        RETI
+        REQUIRE _A_UDR1
+        REQUIRE _A_PORTC
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        COMMON INTVEC:CODE:ROOT(1)
+        ORG 120
+`??uart_interrupt_routine??INTVEC 120`:
+        JMP     uart_interrupt_routine
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        END
+// 
+//  13 bytes in segment ABSOLUTE
+// 418 bytes in segment CODE
+//   7 bytes in segment INITTAB
+//   4 bytes in segment INTVEC
+//  45 bytes in segment NEAR_Z
+// 
+// 418 bytes of CODE memory (+ 11 bytes shared)
+//  45 bytes of DATA memory (+ 13 bytes shared)
+//
+//Errors: none
+//Warnings: none

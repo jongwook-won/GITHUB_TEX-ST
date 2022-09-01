@@ -1,0 +1,112 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  16:54:39 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\delay.c                  #
+#    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\delay.c" --cpu=m128     #
+#                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D        #
+#                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"     #
+#                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y          #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\delay.lst          #
+#    Object file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\delay.r90           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID ½Å·Ú¼º\CN_BOARD\source\delay.c
+      1          #include "allinclude.h"
+      2          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+      3          volatile unsigned short delay_timer;
+   \                     delay_timer:
+   \   00000000                      DS8 2
+      4          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+      5          void delay_us( unsigned char ucTime )
+   \                     delay_us:
+      6          {
+      7          	unsigned char ucCnt;
+      8          	
+      9          	for( ucCnt = 0; ucCnt < ucTime; ucCnt ++ )	// 4 cycle +
+   \   00000000   E010               LDI     R17, 0
+   \   00000002   C007               RJMP    ??delay_us_0
+     10          	{
+     11          		asm(" PUSH  R0 ");        // 2 cycle +
+   \                     ??delay_us_1:
+   \   00000004   920F               PUSH  R0 
+     12              	asm(" POP   R0 ");        // 2 cycle = 16 cycle = 1 us for 16MHz
+   \   00000006   900F               POP   R0 
+     13          		
+     14          		asm(" PUSH  R0 ");        // 2 cycle +
+   \   00000008   920F               PUSH  R0 
+     15              	asm(" POP   R0 ");        // 2 cycle = 16 cycle = 1 us for 16MHz
+   \   0000000A   900F               POP   R0 
+     16          		
+     17          		asm(" PUSH  R0 ");        // 2 cycle +
+   \   0000000C   920F               PUSH  R0 
+     18              	asm(" POP   R0 ");        // 2 cycle = 16 cycle = 1 us for 16MHz
+   \   0000000E   900F               POP   R0 
+     19          	}
+   \   00000010   9513               INC     R17
+   \                     ??delay_us_0:
+   \   00000012   1710               CP      R17, R16
+   \   00000014   F3B8               BRCS    ??delay_us_1
+     20          }
+   \   00000016   9508               RET
+     21          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     22          void delay_ms( unsigned short unTime )
+   \                     delay_ms:
+     23          { 
+     24              //timer¸¦ ¾²¹Ç·Î ÀÎÅÍ·´ÅÍ enable ÈÄ¿¡ »ç¿ëÇØ¶ó 
+     25              delay_timer = 0;
+   \   00000000   E020               LDI     R18, 0
+   \   00000002   ....               LDI     R30, LOW(delay_timer)
+   \   00000004   ....               LDI     R31, (delay_timer) >> 8
+   \   00000006   8320               ST      Z, R18
+   \   00000008   8321               STD     Z+1, R18
+     26              
+     27              while(delay_timer <= unTime);   
+   \                     ??delay_ms_0:
+   \   0000000A   8120               LD      R18, Z
+   \   0000000C   8131               LDD     R19, Z+1
+   \   0000000E   1702               CP      R16, R18
+   \   00000010   0713               CPC     R17, R19
+   \   00000012   F7D8               BRCC    ??delay_ms_0
+     28          }
+   \   00000014   9508               RET
+
+   Maximum stack usage in bytes:
+
+     Function CSTACK RSTACK
+     -------- ------ ------
+     delay_ms     0      2
+     delay_us     0      2
+
+
+   Segment part sizes:
+
+     Function/Label Bytes
+     -------------- -----
+     delay_timer       2
+     delay_us         24
+     delay_ms         22
+      Others           7
+
+ 
+ 46 bytes in segment CODE
+  7 bytes in segment INITTAB
+  2 bytes in segment NEAR_Z
+ 
+ 46 bytes of CODE memory (+ 7 bytes shared)
+  2 bytes of DATA memory
+
+Errors: none
+Warnings: none

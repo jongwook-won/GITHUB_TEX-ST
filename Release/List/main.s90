@@ -1,0 +1,638 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  17:09:22 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\main.c                  /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\main.c" --cpu=m128     /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\main.s90          /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME main
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B4_L09
+        EXTERN ?F2SL_L04
+        EXTERN ?F_ADD_L04
+        EXTERN ?F_DIV_L04
+        EXTERN ?F_MUL_L04
+        EXTERN ?PROLOGUE4_L09
+        EXTERN ?UL2F_L04
+        EXTERN ?US_SHR_L02
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_I>`
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBLIC EEPROM_Read
+        PUBLIC EEPROM_Write
+        PUBLIC PC_pwm_H
+        PUBLIC PC_pwm_L
+        PUBLIC PC_pwm_flag
+        PUBWEAK _A_DDRA
+        PUBWEAK _A_DDRB
+        PUBWEAK _A_DDRC
+        PUBWEAK _A_DDRD
+        PUBWEAK _A_DDRE
+        PUBWEAK _A_DDRF
+        PUBWEAK _A_DDRG
+        PUBWEAK _A_EEAR
+        PUBWEAK _A_EECR
+        PUBWEAK _A_EEDR
+        PUBWEAK _A_PORTA
+        PUBWEAK _A_PORTB
+        PUBWEAK _A_PORTC
+        PUBWEAK _A_PORTD
+        PUBWEAK _A_PORTE
+        PUBWEAK _A_PORTF
+        PUBWEAK _A_PORTG
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC analyze_packet
+        PUBLIC check_comm
+        PUBLIC chk_pwm_data
+        PUBLIC eeprom_pwm_H
+        PUBLIC eeprom_pwm_L
+        PUBLIC init_mcu
+        PUBLIC main
+        PUBLIC pc_duty_100
+        PUBLIC start_pwm
+
+        EXTERN init_timer
+        EXTERN init_uart0
+        EXTERN init_uart1
+        EXTERN init_Twi
+        EXTERN delay_ms
+        EXTERN printf
+        EXTERN fs_i2c_dimming_fun
+        EXTERN pwm_dimming_fun
+        EXTERN LED_TIMER
+        EXTERN chk_PWMTimer
+        EXTERN ext_ucRxStatus
+        EXTERN ext_ucRxbuf
+        EXTERN ext_usRxTimer
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,022H
+// union <unnamed> volatile __io _A_DDRE
+_A_DDRE:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,023H
+// union <unnamed> volatile __io _A_PORTE
+_A_PORTE:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,031H
+// union <unnamed> volatile __io _A_DDRD
+_A_DDRD:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,032H
+// union <unnamed> volatile __io _A_PORTD
+_A_PORTD:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,034H
+// union <unnamed> volatile __io _A_DDRC
+_A_DDRC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,035H
+// union <unnamed> volatile __io _A_PORTC
+_A_PORTC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,037H
+// union <unnamed> volatile __io _A_DDRB
+_A_DDRB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,038H
+// union <unnamed> volatile __io _A_PORTB
+_A_PORTB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03aH
+// union <unnamed> volatile __io _A_DDRA
+_A_DDRA:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03bH
+// union <unnamed> volatile __io _A_PORTA
+_A_PORTA:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03cH
+// union <unnamed> volatile __io _A_EECR
+_A_EECR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03dH
+// union <unnamed> volatile __io _A_EEDR
+_A_EEDR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03eH
+// union <unnamed> volatile __io _A_EEAR
+_A_EEAR:
+        DS8 2
+
+        ASEGN ABSOLUTE:DATA:NOROOT,061H
+// union <unnamed> volatile __io _A_DDRF
+_A_DDRF:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,062H
+// union <unnamed> volatile __io _A_PORTF
+_A_PORTF:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,064H
+// union <unnamed> volatile __io _A_DDRG
+_A_DDRG:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,065H
+// union <unnamed> volatile __io _A_PORTG
+_A_PORTG:
+        DS8 1
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+pc_duty_100:
+        DS8 2
+PC_pwm_H:
+        DS8 1
+PC_pwm_L:
+        DS8 1
+PC_pwm_flag:
+        DS8 1
+eeprom_pwm_H:
+        DS8 1
+eeprom_pwm_L:
+        DS8 1
+
+        RSEG CODE:CODE:NOROOT(1)
+init_mcu:
+        LDI     R16, 255
+        OUT     0x1A, R16
+        OUT     0x17, R16
+        OUT     0x14, R16
+        LDI     R16, 243
+        OUT     0x11, R16
+        LDI     R16, 255
+        OUT     0x02, R16
+        STS     _A_DDRF, R16
+        LDI     R16, 31
+        STS     _A_DDRG, R16
+        LDI     R16, 0
+        OUT     0x1B, R16
+        OUT     0x18, R16
+        LDI     R16, 15
+        OUT     0x15, R16
+        LDI     R16, 255
+        OUT     0x12, R16
+        LDI     R16, 16
+        OUT     0x03, R16
+        LDI     R16, 0
+        STS     _A_PORTF, R16
+        STS     _A_PORTG, R16
+        RET
+        REQUIRE _A_DDRA
+        REQUIRE _A_DDRB
+        REQUIRE _A_DDRC
+        REQUIRE _A_DDRD
+        REQUIRE _A_DDRE
+        REQUIRE _A_DDRF
+        REQUIRE _A_DDRG
+        REQUIRE _A_PORTA
+        REQUIRE _A_PORTB
+        REQUIRE _A_PORTC
+        REQUIRE _A_PORTD
+        REQUIRE _A_PORTE
+        REQUIRE _A_PORTF
+        REQUIRE _A_PORTG
+
+        RSEG CODE:CODE:NOROOT(1)
+main:
+        RCALL   init_mcu
+        CALL    init_timer
+        LDI     R16, 207
+        LDI     R17, 0
+        CALL    init_uart0
+        LDI     R16, 207
+        LDI     R17, 0
+        CALL    init_uart1
+        CALL    init_Twi
+        SEI
+        LDI     R16, 200
+        LDI     R17, 0
+        CALL    delay_ms
+        LDI     R16, LOW(`?<Constant "\\r\\n Power ON ok\\r\\n">`)
+        LDI     R17, (`?<Constant "\\r\\n Power ON ok\\r\\n">`) >> 8
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_6:
+        LDI     R16, 0
+        STS     ext_ucRxStatus, R16
+        RJMP    ??main_0
+??main_1:
+        SBIC    0x15, 0x00
+        CBI     0x15, 0x00
+??main_2:
+        LDI     R16, 0
+        STS     LED_TIMER, R16
+??main_3:
+        RCALL   check_comm
+        CALL    fs_i2c_dimming_fun
+        CALL    pwm_dimming_fun
+        LDI     R30, LOW(chk_PWMTimer)
+        LDI     R31, (chk_PWMTimer) >> 8
+        LD      R16, Z
+        LDD     R17, Z+1
+        CPI     R16, 251
+        SBCI    R17, 0
+        BRCS    ??main_0
+        LDS     R16, (pc_duty_100 + 4)
+        SBRS    R16, 3
+        RCALL   chk_pwm_data
+??main_0:
+        LDS     R16, LED_TIMER
+        CPI     R16, 51
+        BRCS    ??main_3
+        SBIC    0x15, 0x00
+        RJMP    ??main_1
+        SBI     0x15, 0x00
+        RJMP    ??main_2
+        REQUIRE _A_PORTC
+
+        RSEG CODE:CODE:NOROOT(1)
+check_comm:
+        CALL    ?PROLOGUE4_L09
+        LDS     R16, ext_ucRxStatus
+        CPI     R16, 253
+        BRNE    ??check_comm_0
+        CBI     0x15, 0x01
+        LDI     R18, 0
+        LDS     R25, (ext_ucRxbuf + 3)
+        LDS     R24, (ext_ucRxbuf + 4)
+        ADIW    R25:R24, 4
+        LDI     R26, 0
+        LDI     R27, 0
+        RJMP    ??check_comm_1
+??check_comm_2:
+        ADD     R30, R26
+        ADC     R31, R27
+        LDD     R16, Z+1
+        ADD     R18, R16
+        ADIW    R27:R26, 1
+??check_comm_1:
+        CP      R26, R24
+        CPC     R27, R25
+        LDI     R30, LOW(ext_ucRxbuf)
+        LDI     R31, (ext_ucRxbuf) >> 8
+        BRCS    ??check_comm_2
+        ADD     R30, R24
+        ADC     R31, R25
+        LDD     R16, Z+1
+        CP      R18, R16
+        BRNE    ??check_comm_3
+        ST      -Y, R25
+        ST      -Y, R24
+        LDS     R16, (ext_ucRxbuf + 2)
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_14:
+        LDS     R16, (ext_ucRxbuf + 1)
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_11:
+        LDI     R16, LOW(`?<Constant "MC[0x%X],SC[0x%X],len...">`)
+        LDI     R17, (`?<Constant "MC[0x%X],SC[0x%X],len...">`) >> 8
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_5:
+        ADIW    R29:R28, 6
+        LDS     R16, (ext_ucRxbuf + 6)
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_15:
+        LDS     R16, (ext_ucRxbuf + 5)
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_12:
+        LDI     R16, LOW((`?<Constant "MC[0x%X],SC[0x%X],len...">` + 30))
+        LDI     R17, HIGH((`?<Constant "MC[0x%X],SC[0x%X],len...">` + 30))
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_4:
+        ADIW    R29:R28, 4
+        RCALL   analyze_packet
+??check_comm_3:
+        LDI     R16, 0
+        STS     ext_ucRxStatus, R16
+        RJMP    ??check_comm_4
+??check_comm_0:
+        TST     R16
+        BREQ    ??check_comm_4
+        LDI     R30, LOW(ext_usRxTimer)
+        LDI     R31, (ext_usRxTimer) >> 8
+        LD      R16, Z
+        LDD     R17, Z+1
+        CPI     R16, 201
+        LDI     R18, 0
+        SBCI    R17, 0
+        BRCS    ??check_comm_4
+        ST      Z, R18
+        STD     Z+1, R18
+        STS     ext_ucRxStatus, R18
+??check_comm_4:
+        LDI     R30, 4
+        JMP     ?EPILOGUE_B4_L09
+        REQUIRE _A_PORTC
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine2:
+        JMP     printf
+
+        RSEG CODE:CODE:NOROOT(1)
+analyze_packet:
+        ST      -Y, R27
+        ST      -Y, R26
+        LDS     R16, (ext_ucRxbuf + 1)
+        CPI     R16, 170
+        BREQ    $+2+2
+        RJMP    ??analyze_packet_0
+        LDI     R26, LOW(pc_duty_100)
+        LDI     R27, (pc_duty_100) >> 8
+        LDS     R16, (ext_ucRxbuf + 5)
+        STS     (pc_duty_100 + 2), R16
+        LDS     R16, (ext_ucRxbuf + 6)
+        STS     (pc_duty_100 + 3), R16
+        RCALL   start_pwm
+        LDS     R16, (pc_duty_100 + 2)
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_16:
+        LDI     R16, LOW(`?<Constant "PC_pwm_H = 0x%x\\r\\n">`)
+        LDI     R17, (`?<Constant "PC_pwm_H = 0x%x\\r\\n">`) >> 8
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_0:
+        LDS     R16, (pc_duty_100 + 3)
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_17:
+        LDI     R16, LOW((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 18))
+        LDI     R17, HIGH((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 18))
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_1:
+        LDS     R17, (pc_duty_100 + 2)
+        LDI     R19, 0
+        LDS     R16, (pc_duty_100 + 3)
+        LDI     R20, 6
+        CALL    ?US_SHR_L02
+        LDI     R18, 0
+        CALL    ?UL2F_L04
+        LDI     R20, 0
+        LDI     R21, 192
+        LDI     R22, 127
+        LDI     R23, 68
+        CALL    ?F_DIV_L04
+        LDI     R20, 0
+        LDI     R21, 0
+        LDI     R22, 200
+        LDI     R23, 66
+        CALL    ?F_MUL_L04
+        LDI     R20, 205
+        LDI     R21, 204
+        LDI     R22, 204
+        LDI     R23, 61
+        CALL    ?F_ADD_L04
+        CALL    ?F2SL_L04
+        ST      X+, R16
+        ST      X, R17
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_13:
+        LDI     R16, LOW((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 36))
+        LDI     R17, HIGH((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 36))
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_2:
+        LDI     R16, 0
+        LDI     R30, LOW(chk_PWMTimer)
+        LDI     R31, (chk_PWMTimer) >> 8
+        ST      Z, R16
+        STD     Z+1, R16
+        LDI     R16, 7
+        STS     (pc_duty_100 + 4), R16
+??analyze_packet_0:
+        LD      R26, Y+
+        LD      R27, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        CALL    printf
+        ADIW    R29:R28, 2
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        LDI     R17, 0
+        REQUIRE ?Subroutine5
+        ;               // Fall through to label ?Subroutine5
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine5:
+        ST      -Y, R17
+        ST      -Y, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+EEPROM_Write:
+??EEPROM_Write_0:
+        SBIC    0x1C, 0x01
+        RJMP    ??EEPROM_Write_0
+        OUT     0x1F, R17
+        OUT     0x1E, R16
+        OUT     0x1D, R18
+        SBI     0x1C, 0x02
+        SBI     0x1C, 0x01
+        RET
+        REQUIRE _A_EECR
+        REQUIRE _A_EEAR
+        REQUIRE _A_EEDR
+
+        RSEG CODE:CODE:NOROOT(1)
+EEPROM_Read:
+??EEPROM_Read_0:
+        SBIC    0x1C, 0x01
+        RJMP    ??EEPROM_Read_0
+        OUT     0x1F, R17
+        OUT     0x1E, R16
+        SBI     0x1C, 0x00
+        IN      R16, 0x1D
+        RET
+        REQUIRE _A_EECR
+        REQUIRE _A_EEAR
+        REQUIRE _A_EEDR
+
+        RSEG CODE:CODE:NOROOT(1)
+chk_pwm_data:
+        ST      -Y, R24
+        LDS     R18, (pc_duty_100 + 2)
+        LDS     R16, (pc_duty_100 + 5)
+        CP      R16, R18
+        BREQ    ??chk_pwm_data_0
+        LDS     R24, (pc_duty_100 + 3)
+        LDS     R16, (pc_duty_100 + 6)
+        CP      R16, R24
+        BREQ    ??chk_pwm_data_0
+        LDI     R16, 254
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_8:
+        MOV     R18, R24
+        LDI     R16, 255
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_7:
+        LDI     R16, LOW(`?<Constant "change eeprom pwm \\r\\n">`)
+        LDI     R17, (`?<Constant "change eeprom pwm \\r\\n">`) >> 8
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_3:
+        LDI     R30, LOW(pc_duty_100)
+        LDI     R31, (pc_duty_100) >> 8
+        LDD     R16, Z+4
+        ORI     R16, 0x08
+        STD     Z+4, R16
+??chk_pwm_data_0:
+        REQUIRE ?Subroutine6
+        ;               // Fall through to label ?Subroutine6
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine6:
+        LD      R24, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine3:
+        LDI     R17, 2
+        RJMP    EEPROM_Write
+
+        RSEG CODE:CODE:NOROOT(1)
+start_pwm:
+        ST      -Y, R24
+        LDS     R16, (pc_duty_100 + 4)
+        SBRC    R16, 2
+        RJMP    ??start_pwm_0
+        LDI     R16, 254
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_10:
+        MOV     R24, R16
+        STS     (pc_duty_100 + 2), R16
+        LDI     R16, 255
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_9:
+        STS     (pc_duty_100 + 3), R16
+        STS     (pc_duty_100 + 5), R24
+        STS     (pc_duty_100 + 6), R16
+??start_pwm_0:
+        RJMP    ?Subroutine6
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine4:
+        LDI     R17, 2
+        RJMP    EEPROM_Read
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "\\r\\n Power ON ok\\`:
+        DC8 "\015\012 Power ON ok\015\012"
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_I>`:
+        DC16    SFE(NEAR_I) - SFB(NEAR_I)
+        DC16    SFB(NEAR_I)
+        DP      SFB(NEAR_ID)
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "MC[0x%X],SC[0x%X]`:
+        DC8 "MC[0x%X],SC[0x%X],len[0x%X]\015\012"
+`?<Initializer for <Constant "d0[0x%X],d1[0x%X]`:
+        DC8 "d0[0x%X],d1[0x%X]\015\012"
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "PC_pwm_H = 0x%x\\r`:
+        DC8 "PC_pwm_H = 0x%x\015\012"
+`?<Initializer for <Constant "PC_pwm_L = 0x%x\\r`:
+        DC8 "PC_pwm_L = 0x%x\015\012"
+`?<Initializer for <Constant "pc_duty_100 = %d\\`:
+        DC8 "pc_duty_100 = %d\015\012"
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "change eeprom pwm`:
+        DC8 "change eeprom pwm \015\012"
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "\\r\\n Power ON ok\\r\\n">`:
+        DS8 17
+        REQUIRE `?<Initializer for <Constant "\\r\\n Power ON ok\\`
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "MC[0x%X],SC[0x%X],len...">`:
+        DS8 30
+        REQUIRE `?<Initializer for <Constant "MC[0x%X],SC[0x%X]`
+        DS8 20
+        REQUIRE `?<Initializer for <Constant "d0[0x%X],d1[0x%X]`
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "PC_pwm_H = 0x%x\\r\\n">`:
+        DS8 18
+        REQUIRE `?<Initializer for <Constant "PC_pwm_H = 0x%x\\r`
+        DS8 18
+        REQUIRE `?<Initializer for <Constant "PC_pwm_L = 0x%x\\r`
+        DS8 19
+        REQUIRE `?<Initializer for <Constant "pc_duty_100 = %d\\`
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "change eeprom pwm \\r\\n">`:
+        DS8 21
+        REQUIRE `?<Initializer for <Constant "change eeprom pwm`
+
+        END
+// 
+//  18 bytes in segment ABSOLUTE
+// 622 bytes in segment CODE
+//  14 bytes in segment INITTAB
+// 143 bytes in segment NEAR_I
+// 143 bytes in segment NEAR_ID
+//   7 bytes in segment NEAR_Z
+// 
+// 765 bytes of CODE memory (+ 14 bytes shared)
+// 150 bytes of DATA memory (+ 18 bytes shared)
+//
+//Errors: none
+//Warnings: none

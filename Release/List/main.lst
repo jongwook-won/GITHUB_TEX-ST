@@ -1,0 +1,837 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  17:09:22 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\main.c                   #
+#    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\main.c" --cpu=m128 -ms  #
+#                    -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D NDEBUG     #
+#                    -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -lb        #
+#                    "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y              #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\main.lst           #
+#    Object file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\main.r90            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID ½Å·Ú¼º\CN_BOARD\source\main.c
+      1          #include "allinclude.h"
+
+   \                                 In  segment ABSOLUTE, at 0x22
+   \   union <unnamed> volatile __io _A_DDRE
+   \                     _A_DDRE:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x23
+   \   union <unnamed> volatile __io _A_PORTE
+   \                     _A_PORTE:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x31
+   \   union <unnamed> volatile __io _A_DDRD
+   \                     _A_DDRD:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x32
+   \   union <unnamed> volatile __io _A_PORTD
+   \                     _A_PORTD:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x34
+   \   union <unnamed> volatile __io _A_DDRC
+   \                     _A_DDRC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x35
+   \   union <unnamed> volatile __io _A_PORTC
+   \                     _A_PORTC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x37
+   \   union <unnamed> volatile __io _A_DDRB
+   \                     _A_DDRB:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x38
+   \   union <unnamed> volatile __io _A_PORTB
+   \                     _A_PORTB:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3a
+   \   union <unnamed> volatile __io _A_DDRA
+   \                     _A_DDRA:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3b
+   \   union <unnamed> volatile __io _A_PORTA
+   \                     _A_PORTA:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3c
+   \   union <unnamed> volatile __io _A_EECR
+   \                     _A_EECR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3d
+   \   union <unnamed> volatile __io _A_EEDR
+   \                     _A_EEDR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3e
+   \   union <unnamed> volatile __io _A_EEAR
+   \                     _A_EEAR:
+   \   00000000                      DS8 2
+
+   \                                 In  segment ABSOLUTE, at 0x61
+   \   union <unnamed> volatile __io _A_DDRF
+   \                     _A_DDRF:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x62
+   \   union <unnamed> volatile __io _A_PORTF
+   \                     _A_PORTF:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x64
+   \   union <unnamed> volatile __io _A_DDRG
+   \                     _A_DDRG:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x65
+   \   union <unnamed> volatile __io _A_PORTG
+   \                     _A_PORTG:
+   \   00000000                      DS8 1
+      2          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+      3          unsigned char PC_pwm_H, PC_pwm_L,PC_pwm_flag,eeprom_pwm_H,eeprom_pwm_L;
+      4          
+      5          unsigned short pc_duty_100;
+   \                     pc_duty_100:
+   \   00000000                      DS8 2
+   \                     PC_pwm_H:
+   \   00000002                      DS8 1
+   \                     PC_pwm_L:
+   \   00000003                      DS8 1
+   \                     PC_pwm_flag:
+   \   00000004                      DS8 1
+   \                     eeprom_pwm_H:
+   \   00000005                      DS8 1
+   \                     eeprom_pwm_L:
+   \   00000006                      DS8 1
+      6          
+      7          
+      8          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+      9          void init_mcu(void)
+   \                     init_mcu:
+     10          {
+     11            DDRA = (PAD0|PAD1|PAD2|PAD3|PAD4|PAD5|PAD6|PAD7);	
+   \   00000000   EF0F               LDI     R16, 255
+   \   00000002   BB0A               OUT     0x1A, R16
+     12            DDRB = (PBD0|PBD1|PBD2|PBD3|PBD4|PBD5|PBD6|PBD7);	
+   \   00000004   BB07               OUT     0x17, R16
+     13            DDRC = (PCD0|PCD1|PCD2|PCD3|PCD4|PCD5|PCD6|PCD7);	
+   \   00000006   BB04               OUT     0x14, R16
+     14            DDRD = (PDD0|PDD1|PDD2|PDD3|PDD4|PDD5|PDD6|PDD7);	
+   \   00000008   EF03               LDI     R16, 243
+   \   0000000A   BB01               OUT     0x11, R16
+     15            DDRE = (PED0|PED1|PED2|PED3|PED4|PED5|PED6|PED7);	
+   \   0000000C   EF0F               LDI     R16, 255
+   \   0000000E   B902               OUT     0x02, R16
+     16            DDRF = (PFD0|PFD1|PFD2|PFD3|PFD4|PFD5|PFD6|PFD7);
+   \   00000010   9300....           STS     _A_DDRF, R16
+     17            DDRG = (PGD0|PGD1|PGD2|PGD3|PGD4);
+   \   00000014   E10F               LDI     R16, 31
+   \   00000016   9300....           STS     _A_DDRG, R16
+     18            
+     19            PORTA = (PAP0|PAP1|PAP2|PAP3|PAP4|PAP5|PAP6|PAP7);	
+   \   0000001A   E000               LDI     R16, 0
+   \   0000001C   BB0B               OUT     0x1B, R16
+     20            PORTB = (PBP0|PBP1|PBP2|PBP3|PBP4|PBP5|PBP6|PBP7);	
+   \   0000001E   BB08               OUT     0x18, R16
+     21            PORTC = (PCP0|PCP1|PCP2|PCP3|PCP4|PCP5|PCP6|PCP7);	
+   \   00000020   E00F               LDI     R16, 15
+   \   00000022   BB05               OUT     0x15, R16
+     22            PORTD = (PDP0|PDP1|PDP2|PDP3|PDP4|PDP5|PDP6|PDP7);	
+   \   00000024   EF0F               LDI     R16, 255
+   \   00000026   BB02               OUT     0x12, R16
+     23            PORTE = (PEP0|PEP1|PEP2|PEP3|PEP4|PEP5|PEP6|PEP7);	
+   \   00000028   E100               LDI     R16, 16
+   \   0000002A   B903               OUT     0x03, R16
+     24            PORTF = (PFP0|PFP1|PFP2|PFP3|PFP4|PFP5|PFP6|PFP7);
+   \   0000002C   E000               LDI     R16, 0
+   \   0000002E   9300....           STS     _A_PORTF, R16
+     25            PORTG = (PGP0|PGP1|PGP2|PGP3|PGP4);
+   \   00000032   9300....           STS     _A_PORTG, R16
+     26          }
+   \   00000036   9508               RET
+   \   00000038                      REQUIRE _A_DDRA
+   \   00000038                      REQUIRE _A_DDRB
+   \   00000038                      REQUIRE _A_DDRC
+   \   00000038                      REQUIRE _A_DDRD
+   \   00000038                      REQUIRE _A_DDRE
+   \   00000038                      REQUIRE _A_DDRF
+   \   00000038                      REQUIRE _A_DDRG
+   \   00000038                      REQUIRE _A_PORTA
+   \   00000038                      REQUIRE _A_PORTB
+   \   00000038                      REQUIRE _A_PORTC
+   \   00000038                      REQUIRE _A_PORTD
+   \   00000038                      REQUIRE _A_PORTE
+   \   00000038                      REQUIRE _A_PORTF
+   \   00000038                      REQUIRE _A_PORTG
+     27          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     28          void main( void )
+   \                     main:
+     29          {
+     30            init_mcu();
+   \   00000000   ....               RCALL   init_mcu
+     31            init_timer();
+   \   00000002   ........           CALL    init_timer
+     32            init_uart0(207);
+   \   00000006   EC0F               LDI     R16, 207
+   \   00000008   E010               LDI     R17, 0
+   \   0000000A   ........           CALL    init_uart0
+     33            init_uart1(207);
+   \   0000000E   EC0F               LDI     R16, 207
+   \   00000010   E010               LDI     R17, 0
+   \   00000012   ........           CALL    init_uart1
+     34            init_Twi();
+   \   00000016   ........           CALL    init_Twi
+     35            
+     36            __enable_interrupt();
+   \   0000001A   9478               SEI
+     37            
+     38           
+     39            delay_ms(200);
+   \   0000001C   EC08               LDI     R16, 200
+   \   0000001E   E010               LDI     R17, 0
+   \   00000020   ........           CALL    delay_ms
+     40            
+     41            printf("\r\n Power ON ok\r\n");
+   \   00000024   ....               LDI     R16, LOW(`?<Constant "\\r\\n Power ON ok\\r\\n">`)
+   \   00000026   ....               LDI     R17, (`?<Constant "\\r\\n Power ON ok\\r\\n">`) >> 8
+   \   00000028   ....               RCALL   ?Subroutine2
+     42            
+     43            ext_ucRxStatus = 0x00;
+   \                     ??CrossCallReturnLabel_6:
+   \   0000002A   E000               LDI     R16, 0
+   \   0000002C   9300....           STS     ext_ucRxStatus, R16
+   \   00000030   C015               RJMP    ??main_0
+     44            
+     45            while(1)
+     46            {
+     47              if(LED_TIMER > 50)
+     48                {
+     49                   if(LED_1==0) LED_1=1;
+     50                   else if (LED_1==1) LED_1=0;
+   \                     ??main_1:
+   \   00000032   99A8               SBIC    0x15, 0x00
+   \   00000034   98A8               CBI     0x15, 0x00
+     51                   LED_TIMER = 0;
+   \                     ??main_2:
+   \   00000036   E000               LDI     R16, 0
+   \   00000038   9300....           STS     LED_TIMER, R16
+     52                   //printf("%d\r\n",UDR1);
+     53                }
+     54              
+     55              
+     56              check_comm();
+   \                     ??main_3:
+   \   0000003C   ....               RCALL   check_comm
+     57              
+     58              fs_i2c_dimming_fun();
+   \   0000003E   ........           CALL    fs_i2c_dimming_fun
+     59              pwm_dimming_fun();
+   \   00000042   ........           CALL    pwm_dimming_fun
+     60              
+     61              if(chk_PWMTimer>250)   //5 seconds
+   \   00000046   ....               LDI     R30, LOW(chk_PWMTimer)
+   \   00000048   ....               LDI     R31, (chk_PWMTimer) >> 8
+   \   0000004A   8100               LD      R16, Z
+   \   0000004C   8111               LDD     R17, Z+1
+   \   0000004E   3F0B               CPI     R16, 251
+   \   00000050   4010               SBCI    R17, 0
+   \   00000052   F020               BRCS    ??main_0
+     62                {
+     63                  if(!(PC_pwm_flag & 0x08)) //check change pwm
+   \   00000054   9100....           LDS     R16, (pc_duty_100 + 4)
+   \   00000058   FF03               SBRS    R16, 3
+     64                  {
+     65                    chk_pwm_data();  // check before pwm , after pwm
+   \   0000005A   ....               RCALL   chk_pwm_data
+     66                  }
+     67                }
+   \                     ??main_0:
+   \   0000005C   9100....           LDS     R16, LED_TIMER
+   \   00000060   3303               CPI     R16, 51
+   \   00000062   F360               BRCS    ??main_3
+   \   00000064   99A8               SBIC    0x15, 0x00
+   \   00000066   CFE5               RJMP    ??main_1
+   \   00000068   9AA8               SBI     0x15, 0x00
+   \   0000006A   CFE5               RJMP    ??main_2
+   \   0000006C                      REQUIRE _A_PORTC
+     68            }
+     69          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine2:
+   \   00000000   ........           JMP     printf
+     70          
+     71          
+     72          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     73          void check_comm(void)
+   \                     check_comm:
+     74          {
+   \   00000000   ........           CALL    ?PROLOGUE4_L09
+     75            unsigned char ucSum;
+     76            unsigned short usCnt, usLen;
+     77            
+     78            
+     79            if( ext_ucRxStatus == 0xFD )
+   \   00000004   9100....           LDS     R16, ext_ucRxStatus
+   \   00000008   3F0D               CPI     R16, 253
+   \   0000000A   F5A1               BRNE    ??check_comm_0
+     80                {
+     81                   //            PIN_LED1 = HIGH;
+     82                  LED_2=0;
+   \   0000000C   98A9               CBI     0x15, 0x01
+     83                   ucSum = 0x00;
+   \   0000000E   E020               LDI     R18, 0
+   \   00000010   9190....           LDS     R25, (ext_ucRxbuf + 3)
+   \   00000014   9180....           LDS     R24, (ext_ucRxbuf + 4)
+   \   00000018   9604               ADIW    R25:R24, 4
+     84                   usLen = (( ext_ucRxbuf[ 3 ] * 0x100 ) | ext_ucRxbuf[ 4 ]) + 4;
+     85                   
+     86                   for( usCnt = 0; usCnt < usLen; usCnt ++ )
+   \   0000001A   E0A0               LDI     R26, 0
+   \   0000001C   E0B0               LDI     R27, 0
+   \   0000001E   C005               RJMP    ??check_comm_1
+     87                      ucSum += ext_ucRxbuf[ 1 + usCnt ];	//check checksum
+   \                     ??check_comm_2:
+   \   00000020   0FEA               ADD     R30, R26
+   \   00000022   1FFB               ADC     R31, R27
+   \   00000024   8101               LDD     R16, Z+1
+   \   00000026   0F20               ADD     R18, R16
+   \   00000028   9611               ADIW    R27:R26, 1
+   \                     ??check_comm_1:
+   \   0000002A   17A8               CP      R26, R24
+   \   0000002C   07B9               CPC     R27, R25
+   \   0000002E   ....               LDI     R30, LOW(ext_ucRxbuf)
+   \   00000030   ....               LDI     R31, (ext_ucRxbuf) >> 8
+   \   00000032   F3B0               BRCS    ??check_comm_2
+     88                   
+     89                   if( ucSum == ext_ucRxbuf[ 1 + usLen ] )
+   \   00000034   0FE8               ADD     R30, R24
+   \   00000036   1FF9               ADC     R31, R25
+   \   00000038   8101               LDD     R16, Z+1
+   \   0000003A   1720               CP      R18, R16
+   \   0000003C   F4B9               BRNE    ??check_comm_3
+     90                   {
+     91                      printf("MC[0x%X],SC[0x%X],len[0x%X]\r\n", ext_ucRxbuf[ MAIN_CMD ],ext_ucRxbuf[ SUB_CMD ],usLen);
+   \   0000003E   939A               ST      -Y, R25
+   \   00000040   938A               ST      -Y, R24
+   \   00000042   9100....           LDS     R16, (ext_ucRxbuf + 2)
+   \   00000046   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_14:
+   \   00000048   9100....           LDS     R16, (ext_ucRxbuf + 1)
+   \   0000004C   ....               RCALL   ?Subroutine5
+   \                     ??CrossCallReturnLabel_11:
+   \   0000004E   ....               LDI     R16, LOW(`?<Constant "MC[0x%X],SC[0x%X],len...">`)
+   \   00000050   ....               LDI     R17, (`?<Constant "MC[0x%X],SC[0x%X],len...">`) >> 8
+   \   00000052   ....               RCALL   ?Subroutine2
+   \                     ??CrossCallReturnLabel_5:
+   \   00000054   9626               ADIW    R29:R28, 6
+     92                      printf("d0[0x%X],d1[0x%X]\r\n", ext_ucRxbuf[ 5 ],ext_ucRxbuf[ 6 ]);
+   \   00000056   9100....           LDS     R16, (ext_ucRxbuf + 6)
+   \   0000005A   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_15:
+   \   0000005C   9100....           LDS     R16, (ext_ucRxbuf + 5)
+   \   00000060   ....               RCALL   ?Subroutine5
+   \                     ??CrossCallReturnLabel_12:
+   \   00000062   ....               LDI     R16, LOW((`?<Constant "MC[0x%X],SC[0x%X],len...">` + 30))
+   \   00000064   ....               LDI     R17, HIGH((`?<Constant "MC[0x%X],SC[0x%X],len...">` + 30))
+   \   00000066   ....               RCALL   ?Subroutine2
+   \                     ??CrossCallReturnLabel_4:
+   \   00000068   9624               ADIW    R29:R28, 4
+     93                      analyze_packet();
+   \   0000006A   ....               RCALL   analyze_packet
+     94                   }
+     95                   ext_ucRxStatus = 0x00;
+   \                     ??check_comm_3:
+   \   0000006C   E000               LDI     R16, 0
+   \   0000006E   9300....           STS     ext_ucRxStatus, R16
+   \   00000072   C00E               RJMP    ??check_comm_4
+     96                }
+     97                if( ext_ucRxStatus )
+   \                     ??check_comm_0:
+   \   00000074   2300               TST     R16
+   \   00000076   F061               BREQ    ??check_comm_4
+     98                {
+     99                   if( ext_usRxTimer > 200 )
+   \   00000078   ....               LDI     R30, LOW(ext_usRxTimer)
+   \   0000007A   ....               LDI     R31, (ext_usRxTimer) >> 8
+   \   0000007C   8100               LD      R16, Z
+   \   0000007E   8111               LDD     R17, Z+1
+   \   00000080   3C09               CPI     R16, 201
+   \   00000082   E020               LDI     R18, 0
+   \   00000084   4010               SBCI    R17, 0
+   \   00000086   F020               BRCS    ??check_comm_4
+    100                   {
+    101                      ext_usRxTimer = 0;
+   \   00000088   8320               ST      Z, R18
+   \   0000008A   8321               STD     Z+1, R18
+    102                      ext_ucRxStatus = 0x00;
+   \   0000008C   9320....           STS     ext_ucRxStatus, R18
+    103                   }
+    104                }
+    105          }
+   \                     ??check_comm_4:
+   \   00000090   E0E4               LDI     R30, 4
+   \   00000092   ........           JMP     ?EPILOGUE_B4_L09
+   \   00000096                      REQUIRE _A_PORTC
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   E010               LDI     R17, 0
+   \   00000002                      REQUIRE ?Subroutine5
+   \   00000002                      ;               // Fall through to label ?Subroutine5
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine5:
+   \   00000000   931A               ST      -Y, R17
+   \   00000002   930A               ST      -Y, R16
+   \   00000004   9508               RET
+    106          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    107          void analyze_packet(void)
+   \                     analyze_packet:
+    108          {
+   \   00000000   93BA               ST      -Y, R27
+   \   00000002   93AA               ST      -Y, R26
+   \   00000004   9100....           LDS     R16, (ext_ucRxbuf + 1)
+   \   00000008   3A0A               CPI     R16, 170
+   \   0000000A   F009               BREQ    $+2+2
+   \   0000000C   C044               RJMP    ??analyze_packet_0
+    109            unsigned short temp;
+    110              
+    111              switch(ext_ucRxbuf[ MAIN_CMD ])
+    112              {
+    113                  case 0xAA:
+    114                      PC_pwm_H = ext_ucRxbuf[ 5 ];
+   \   0000000E   ....               LDI     R26, LOW(pc_duty_100)
+   \   00000010   ....               LDI     R27, (pc_duty_100) >> 8
+   \   00000012   9100....           LDS     R16, (ext_ucRxbuf + 5)
+   \   00000016   9300....           STS     (pc_duty_100 + 2), R16
+    115                      PC_pwm_L = ext_ucRxbuf[ 6 ];
+   \   0000001A   9100....           LDS     R16, (ext_ucRxbuf + 6)
+   \   0000001E   9300....           STS     (pc_duty_100 + 3), R16
+    116                      
+    117                      start_pwm();  // first pwm_data take eeprom
+   \   00000022   ....               RCALL   start_pwm
+    118                      
+    119                      
+    120                      printf("PC_pwm_H = 0x%x\r\n",PC_pwm_H);
+   \   00000024   9100....           LDS     R16, (pc_duty_100 + 2)
+   \   00000028   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_16:
+   \   0000002A   ....               LDI     R16, LOW(`?<Constant "PC_pwm_H = 0x%x\\r\\n">`)
+   \   0000002C   ....               LDI     R17, (`?<Constant "PC_pwm_H = 0x%x\\r\\n">`) >> 8
+   \   0000002E   ....               RCALL   ?Subroutine1
+    121                      printf("PC_pwm_L = 0x%x\r\n",PC_pwm_L);
+   \                     ??CrossCallReturnLabel_0:
+   \   00000030   9100....           LDS     R16, (pc_duty_100 + 3)
+   \   00000034   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_17:
+   \   00000036   ....               LDI     R16, LOW((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 18))
+   \   00000038   ....               LDI     R17, HIGH((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 18))
+   \   0000003A   ....               RCALL   ?Subroutine1
+    122                      
+    123                      //AVR PWM Ãâ·Â ³»·Á°í 0~100%·Î ´Ù½Ã º¹¿ø 
+    124                      temp =  ((unsigned short)PC_pwm_H << 8)| PC_pwm_L;
+    125                      temp = temp >> 6;
+    126                      pc_duty_100 = (unsigned short)((((float)temp / 1023) * 100) + 0.1);//¿¬»ê½Ã 0.1 ¸ðÀÚ¶ó 1¾¿ Â©·Á¼­ 0.1 º¸»ó      
+   \                     ??CrossCallReturnLabel_1:
+   \   0000003C   9110....           LDS     R17, (pc_duty_100 + 2)
+   \   00000040   E030               LDI     R19, 0
+   \   00000042   9100....           LDS     R16, (pc_duty_100 + 3)
+   \   00000046   E046               LDI     R20, 6
+   \   00000048   ........           CALL    ?US_SHR_L02
+   \   0000004C   E020               LDI     R18, 0
+   \   0000004E   ........           CALL    ?UL2F_L04
+   \   00000052   E040               LDI     R20, 0
+   \   00000054   EC50               LDI     R21, 192
+   \   00000056   E76F               LDI     R22, 127
+   \   00000058   E474               LDI     R23, 68
+   \   0000005A   ........           CALL    ?F_DIV_L04
+   \   0000005E   E040               LDI     R20, 0
+   \   00000060   E050               LDI     R21, 0
+   \   00000062   EC68               LDI     R22, 200
+   \   00000064   E472               LDI     R23, 66
+   \   00000066   ........           CALL    ?F_MUL_L04
+   \   0000006A   EC4D               LDI     R20, 205
+   \   0000006C   EC5C               LDI     R21, 204
+   \   0000006E   EC6C               LDI     R22, 204
+   \   00000070   E37D               LDI     R23, 61
+   \   00000072   ........           CALL    ?F_ADD_L04
+   \   00000076   ........           CALL    ?F2SL_L04
+   \   0000007A   930D               ST      X+, R16
+   \   0000007C   931C               ST      X, R17
+    127                     
+    128                      printf("pc_duty_100 = %d\r\n",pc_duty_100); 
+   \   0000007E   ....               RCALL   ?Subroutine5
+   \                     ??CrossCallReturnLabel_13:
+   \   00000080   ....               LDI     R16, LOW((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 36))
+   \   00000082   ....               LDI     R17, HIGH((`?<Constant "PC_pwm_H = 0x%x\\r\\n">` + 36))
+   \   00000084   ....               RCALL   ?Subroutine1
+    129                      
+    130                      chk_PWMTimer=0;
+   \                     ??CrossCallReturnLabel_2:
+   \   00000086   E000               LDI     R16, 0
+   \   00000088   ....               LDI     R30, LOW(chk_PWMTimer)
+   \   0000008A   ....               LDI     R31, (chk_PWMTimer) >> 8
+   \   0000008C   8300               ST      Z, R16
+   \   0000008E   8301               STD     Z+1, R16
+    131                      PC_pwm_flag = 7;
+   \   00000090   E007               LDI     R16, 7
+   \   00000092   9300....           STS     (pc_duty_100 + 4), R16
+    132                  break;
+    133              }
+    134          }
+   \                     ??analyze_packet_0:
+   \   00000096   91A9               LD      R26, Y+
+   \   00000098   91B9               LD      R27, Y+
+   \   0000009A   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine1:
+   \   00000000   ........           CALL    printf
+   \   00000004   9622               ADIW    R29:R28, 2
+   \   00000006   9508               RET
+    135          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    136          void EEPROM_Write(unsigned short address , unsigned char Data)
+   \                     EEPROM_Write:
+   \                     ??EEPROM_Write_0:
+    137          {
+    138              while(EECR & (1 << EEWE));
+   \   00000000   99E1               SBIC    0x1C, 0x01
+   \   00000002   CFFE               RJMP    ??EEPROM_Write_0
+    139              
+    140              EEAR = address;
+   \   00000004   BB1F               OUT     0x1F, R17
+   \   00000006   BB0E               OUT     0x1E, R16
+    141              EEDR = Data;
+   \   00000008   BB2D               OUT     0x1D, R18
+    142              
+    143              EECR |= (1 << EEMWE);
+   \   0000000A   9AE2               SBI     0x1C, 0x02
+    144              EECR |= (1 << EEWE);
+   \   0000000C   9AE1               SBI     0x1C, 0x01
+    145          }
+   \   0000000E   9508               RET
+   \   00000010                      REQUIRE _A_EECR
+   \   00000010                      REQUIRE _A_EEAR
+   \   00000010                      REQUIRE _A_EEDR
+    146          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    147          unsigned char EEPROM_Read(unsigned short address)
+   \                     EEPROM_Read:
+   \                     ??EEPROM_Read_0:
+    148          {
+    149              while(EECR & (1 << EEWE));
+   \   00000000   99E1               SBIC    0x1C, 0x01
+   \   00000002   CFFE               RJMP    ??EEPROM_Read_0
+    150              
+    151              EEAR = address;
+   \   00000004   BB1F               OUT     0x1F, R17
+   \   00000006   BB0E               OUT     0x1E, R16
+    152              
+    153              EECR |= (1<<EERE);
+   \   00000008   9AE0               SBI     0x1C, 0x00
+    154              
+    155              return EEDR;
+   \   0000000A   B30D               IN      R16, 0x1D
+   \   0000000C   9508               RET
+   \   0000000E                      REQUIRE _A_EECR
+   \   0000000E                      REQUIRE _A_EEAR
+   \   0000000E                      REQUIRE _A_EEDR
+    156          }
+    157          
+    158          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    159          void chk_pwm_data(void)
+   \                     chk_pwm_data:
+    160          {
+   \   00000000   938A               ST      -Y, R24
+   \   00000002   9120....           LDS     R18, (pc_duty_100 + 2)
+   \   00000006   9100....           LDS     R16, (pc_duty_100 + 5)
+   \   0000000A   1702               CP      R16, R18
+   \   0000000C   F099               BREQ    ??chk_pwm_data_0
+    161            if(eeprom_pwm_H != PC_pwm_H)
+    162            {
+    163              if(eeprom_pwm_L != PC_pwm_L)  // check pwm data change
+   \   0000000E   9180....           LDS     R24, (pc_duty_100 + 3)
+   \   00000012   9100....           LDS     R16, (pc_duty_100 + 6)
+   \   00000016   1708               CP      R16, R24
+   \   00000018   F069               BREQ    ??chk_pwm_data_0
+    164              {
+    165                EEPROM_Write(0x2fe,PC_pwm_H);     // pwm_data to EEPROM
+   \   0000001A   EF0E               LDI     R16, 254
+   \   0000001C   ....               RCALL   ?Subroutine3
+    166                EEPROM_Write(0x2ff,PC_pwm_L);
+   \                     ??CrossCallReturnLabel_8:
+   \   0000001E   2F28               MOV     R18, R24
+   \   00000020   EF0F               LDI     R16, 255
+   \   00000022   ....               RCALL   ?Subroutine3
+    167                
+    168                printf("change eeprom pwm \r\n");
+   \                     ??CrossCallReturnLabel_7:
+   \   00000024   ....               LDI     R16, LOW(`?<Constant "change eeprom pwm \\r\\n">`)
+   \   00000026   ....               LDI     R17, (`?<Constant "change eeprom pwm \\r\\n">`) >> 8
+   \   00000028   ....               RCALL   ?Subroutine2
+    169                PC_pwm_flag |= 0x08;              // toggle flag
+   \                     ??CrossCallReturnLabel_3:
+   \   0000002A   ....               LDI     R30, LOW(pc_duty_100)
+   \   0000002C   ....               LDI     R31, (pc_duty_100) >> 8
+   \   0000002E   8104               LDD     R16, Z+4
+   \   00000030   6008               ORI     R16, 0x08
+   \   00000032   8304               STD     Z+4, R16
+    170              }
+    171            }
+    172          }
+   \                     ??chk_pwm_data_0:
+   \   00000034                      REQUIRE ?Subroutine6
+   \   00000034                      ;               // Fall through to label ?Subroutine6
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine6:
+   \   00000000   9189               LD      R24, Y+
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine3:
+   \   00000000   E012               LDI     R17, 2
+   \   00000002   ....               RJMP    EEPROM_Write
+    173          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    174          void start_pwm(void)
+   \                     start_pwm:
+    175          {
+   \   00000000   938A               ST      -Y, R24
+   \   00000002   9100....           LDS     R16, (pc_duty_100 + 4)
+   \   00000006   FD02               SBRC    R16, 2
+   \   00000008   C00D               RJMP    ??start_pwm_0
+    176            if(!(PC_pwm_flag & 0x04))  //start take EEPROM DATA
+    177            {
+    178              PC_pwm_H = EEPROM_Read(0x2fe);
+   \   0000000A   EF0E               LDI     R16, 254
+   \   0000000C   ....               RCALL   ?Subroutine4
+   \                     ??CrossCallReturnLabel_10:
+   \   0000000E   2F80               MOV     R24, R16
+   \   00000010   9300....           STS     (pc_duty_100 + 2), R16
+    179              PC_pwm_L = EEPROM_Read(0x2ff);
+   \   00000014   EF0F               LDI     R16, 255
+   \   00000016   ....               RCALL   ?Subroutine4
+   \                     ??CrossCallReturnLabel_9:
+   \   00000018   9300....           STS     (pc_duty_100 + 3), R16
+    180              eeprom_pwm_H=PC_pwm_H;
+   \   0000001C   9380....           STS     (pc_duty_100 + 5), R24
+    181              eeprom_pwm_L=PC_pwm_L;
+   \   00000020   9300....           STS     (pc_duty_100 + 6), R16
+    182            }
+    183          }
+   \                     ??start_pwm_0:
+   \   00000024   ....               RJMP    ?Subroutine6
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine4:
+   \   00000000   E012               LDI     R17, 2
+   \   00000002   ....               RJMP    EEPROM_Read
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "\\r\\n Power ON ok\\`:
+   \   00000000   0A0D5020776F       DC8 "\015\012 Power ON ok\015\012"
+   \              72654F20204E
+   \              6B6F0A0D00  
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "MC[0x%X],SC[0x%X]`:
+   \   00000000   434D305B2578       DC8 "MC[0x%X],SC[0x%X],len[0x%X]\015\012"
+   \              5D58532C5B43
+   \              783058252C5D
+   \              656C5B6E7830
+   \              58250D5D000A
+   \                     `?<Initializer for <Constant "d0[0x%X],d1[0x%X]`:
+   \   0000001E   3064305B2578       DC8 "d0[0x%X],d1[0x%X]\015\012"
+   \              5D58642C5B31
+   \              783058250D5D
+   \              000A        
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "PC_pwm_H = 0x%x\\r`:
+   \   00000000   4350705F6D77       DC8 "PC_pwm_H = 0x%x\015\012"
+   \              485F3D203020
+   \              25780D78000A
+   \                     `?<Initializer for <Constant "PC_pwm_L = 0x%x\\r`:
+   \   00000012   4350705F6D77       DC8 "PC_pwm_L = 0x%x\015\012"
+   \              4C5F3D203020
+   \              25780D78000A
+   \                     `?<Initializer for <Constant "pc_duty_100 = %d\\`:
+   \   00000024   6370645F7475       DC8 "pc_duty_100 = %d\015\012"
+   \              5F7930312030
+   \              203D64250A0D
+   \              00          
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "change eeprom pwm`:
+   \   00000000   68636E616567       DC8 "change eeprom pwm \015\012"
+   \              652070656F72
+   \              206D7770206D
+   \              0A0D00      
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "\\r\\n Power ON ok\\r\\n">`:
+   \   00000000                      DS8 17
+   \   00000011                      REQUIRE `?<Initializer for <Constant "\\r\\n Power ON ok\\`
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "MC[0x%X],SC[0x%X],len...">`:
+   \   00000000                      DS8 30
+   \   0000001E                      REQUIRE `?<Initializer for <Constant "MC[0x%X],SC[0x%X]`
+   \   0000001E                      DS8 20
+   \   00000032                      REQUIRE `?<Initializer for <Constant "d0[0x%X],d1[0x%X]`
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "PC_pwm_H = 0x%x\\r\\n">`:
+   \   00000000                      DS8 18
+   \   00000012                      REQUIRE `?<Initializer for <Constant "PC_pwm_H = 0x%x\\r`
+   \   00000012                      DS8 18
+   \   00000024                      REQUIRE `?<Initializer for <Constant "PC_pwm_L = 0x%x\\r`
+   \   00000024                      DS8 19
+   \   00000037                      REQUIRE `?<Initializer for <Constant "pc_duty_100 = %d\\`
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "change eeprom pwm \\r\\n">`:
+   \   00000000                      DS8 21
+   \   00000015                      REQUIRE `?<Initializer for <Constant "change eeprom pwm`
+
+   Maximum stack usage in bytes:
+
+     Function                CSTACK RSTACK
+     --------                ------ ------
+     EEPROM_Read                 0      2
+     EEPROM_Write                0      2
+     analyze_packet              4      4
+       -> start_pwm              2      2
+       -> printf                 4      2
+       -> printf                 4      2
+       -> printf                 4      2
+     check_comm                 10      2
+       -> printf                10      2
+       -> printf                 8      2
+       -> analyze_packet         4      2
+     chk_pwm_data                1      2
+       -> EEPROM_Write           1      2
+       -> EEPROM_Write           1      2
+       -> printf                 1      2
+     init_mcu                    0      2
+     main                        0      2
+       -> init_mcu               0      2
+       -> init_timer             0      2
+       -> init_uart0             0      2
+       -> init_uart1             0      2
+       -> init_Twi               0      2
+       -> delay_ms               0      2
+       -> printf                 0      2
+       -> check_comm             0      2
+       -> fs_i2c_dimming_fun     0      2
+       -> pwm_dimming_fun        0      2
+       -> chk_pwm_data           0      2
+     start_pwm                   1      2
+       -> EEPROM_Read            1      2
+       -> EEPROM_Read            1      2
+
+
+   Segment part sizes:
+
+     Function/Label                                 Bytes
+     --------------                                 -----
+     _A_DDRE                                           1
+     _A_PORTE                                          1
+     _A_DDRD                                           1
+     _A_PORTD                                          1
+     _A_DDRC                                           1
+     _A_PORTC                                          1
+     _A_DDRB                                           1
+     _A_PORTB                                          1
+     _A_DDRA                                           1
+     _A_PORTA                                          1
+     _A_EECR                                           1
+     _A_EEDR                                           1
+     _A_EEAR                                           2
+     _A_DDRF                                           1
+     _A_PORTF                                          1
+     _A_DDRG                                           1
+     _A_PORTG                                          1
+     pc_duty_100                                       7
+     PC_pwm_H
+     PC_pwm_L
+     PC_pwm_flag
+     eeprom_pwm_H
+     eeprom_pwm_L
+     init_mcu                                         56
+     main                                            108
+     ?Subroutine2                                      4
+     check_comm                                      150
+     ?Subroutine0                                      2
+     ?Subroutine5                                      6
+     analyze_packet                                  156
+     ?Subroutine1                                      8
+     EEPROM_Write                                     16
+     EEPROM_Read                                      14
+     chk_pwm_data                                     52
+     ?Subroutine6                                      4
+     ?Subroutine3                                      4
+     start_pwm                                        38
+     ?Subroutine4                                      4
+     ?<Initializer for <Constant "\r\n Power ON ok\   17
+     ?<Initializer for <Constant "MC[0x%X],SC[0x%X]   50
+     ?<Initializer for <Constant "PC_pwm_H = 0x%x\r   55
+     ?<Initializer for <Constant "change eeprom pwm   21
+     ?<Constant "\r\n Power ON ok\r\n">               17
+     ?<Constant "MC[0x%X],SC[0x%X],len...">           50
+     ?<Constant "PC_pwm_H = 0x%x\r\n">                55
+     ?<Constant "change eeprom pwm \r\n">             21
+      Others                                          14
+
+ 
+  18 bytes in segment ABSOLUTE
+ 622 bytes in segment CODE
+  14 bytes in segment INITTAB
+ 143 bytes in segment NEAR_I
+ 143 bytes in segment NEAR_ID
+   7 bytes in segment NEAR_Z
+ 
+ 765 bytes of CODE memory (+ 14 bytes shared)
+ 150 bytes of DATA memory (+ 18 bytes shared)
+
+Errors: none
+Warnings: none

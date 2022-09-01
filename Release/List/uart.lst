@@ -1,0 +1,676 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  17:11:39 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID 신뢰성\CN_BOARD\source\uart.c                   #
+#    Command line =  "D:\LUCID 신뢰성\CN_BOARD\source\uart.c" --cpu=m128 -ms  #
+#                    -o "D:\LUCID 신뢰성\CN_BOARD\Release\Obj\" -D NDEBUG     #
+#                    -lCN "D:\LUCID 신뢰성\CN_BOARD\Release\List\" -lb        #
+#                    "D:\LUCID 신뢰성\CN_BOARD\Release\List\" -y              #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID 신뢰성\CN_BOARD\Release\List\uart.lst           #
+#    Object file  =  D:\LUCID 신뢰성\CN_BOARD\Release\Obj\uart.r90            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID 신뢰성\CN_BOARD\source\uart.c
+      1          /********************************************************************************
+      2          *	File Name	:	uart.c
+      3          *	Compile		:	IAR Embedded Workbench avr 6.10
+      4          *	History		:	
+      5          *	- 20120725	created by suhyoun
+      6          *********************************************************************************/
+      7          #include "allinclude.h"
+
+   \                                 In  segment ABSOLUTE, at 0x29
+   \   union <unnamed> volatile __io _A_UBRR0L
+   \                     _A_UBRR0L:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x2a
+   \   union <unnamed> volatile __io _A_UCSR0B
+   \                     _A_UCSR0B:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x2b
+   \   union <unnamed> volatile __io _A_UCSR0A
+   \                     _A_UCSR0A:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x2c
+   \   union <unnamed> volatile __io _A_UDR0
+   \                     _A_UDR0:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x35
+   \   union <unnamed> volatile __io _A_PORTC
+   \                     _A_PORTC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x90
+   \   union <unnamed> volatile __io _A_UBRR0H
+   \                     _A_UBRR0H:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x95
+   \   union <unnamed> volatile __io _A_UCSR0C
+   \                     _A_UCSR0C:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x98
+   \   union <unnamed> volatile __io _A_UBRR1H
+   \                     _A_UBRR1H:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x99
+   \   union <unnamed> volatile __io _A_UBRR1L
+   \                     _A_UBRR1L:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x9a
+   \   union <unnamed> volatile __io _A_UCSR1B
+   \                     _A_UCSR1B:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x9b
+   \   union <unnamed> volatile __io _A_UCSR1A
+   \                     _A_UCSR1A:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x9c
+   \   union <unnamed> volatile __io _A_UDR1
+   \                     _A_UDR1:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x9d
+   \   union <unnamed> volatile __io _A_UCSR1C
+   \                     _A_UCSR1C:
+   \   00000000                      DS8 1
+      8          
+      9          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+     10          unsigned char	ext_ucRxStatus;
+     11          unsigned char	ext_ucRxbuf[20];
+   \                     ext_ucRxbuf:
+   \   00000000                      DS8 20
+     12          unsigned char	ext_ucTxbuf[20];
+     13          
+     14          unsigned short	ext_usRxCnt;
+   \                     ext_usRxCnt:
+   \   00000014                      DS8 2
+     15          unsigned short	ext_usLen;
+   \                     ext_usLen:
+   \   00000016                      DS8 2
+   \                     ext_ucRxStatus:
+   \   00000018                      DS8 1
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+   \                     ext_ucTxbuf:
+   \   00000000                      DS8 20
+     16          
+     17          extern unsigned short	ext_usRxTimer;
+     18          
+     19          //-------------------------------------------------------------------------------
+     20          //	DESCRIPTION   : 
+     21          //	HISTORY       :
+     22          //		- 2012/07/25 	created by suhyoun
+     23          //-------------------------------------------------------------------------------
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     24          void init_uart0( SBYTE Baudrate )
+   \                     init_uart0:
+     25          {
+   \   00000000   9721               SBIW    R29:R28, 1
+     26             // 16Mhz에서 보레이트 2배 모드 일때
+     27             //Baudrate 115,200    --> UBRR1L 16    error 2.1%
+     28             //Baudrate  38,400    --> UBRR1L 51    error 0.2%
+     29             //Baudrate  19,200    --> UBRR1L 103   error 0.2%
+     30             //Baudrate   9,600    --> UBRR1L 207   error 0.2%
+     31             volatile BYTE ucDummy;
+     32             
+     33             UBRR0H	= 0;
+   \   00000002   E020               LDI     R18, 0
+   \   00000004   9320....           STS     _A_UBRR0H, R18
+     34             UBRR0L	= (unsigned char)(Baudrate & 0x0FF);
+   \   00000008   B909               OUT     0x09, R16
+     35             UCSR0A	= 0x02;			//BIT1 : 1 보레이트 2배 ,    asynchronous normal mode
+   \   0000000A   E002               LDI     R16, 2
+   \   0000000C   B90B               OUT     0x0B, R16
+     36             
+     37             //UCSR0B	= 0x98;			//Rx / Tx enable, 8 data   // RX 인터럽트 허용 
+     38             //UCSR0B	= 0x18;			//Rx / Tx enable, 8 data   // RX 인터럽트는 사용안함  
+     39                 UCSR0B	= 0x08;			    //     Tx enable, 8 data   // TX만 사용, RX는 사용안함 
+   \   0000000E   E008               LDI     R16, 8
+   \   00000010   B90A               OUT     0x0A, R16
+     40             //UCSR0B	= 0x98;   //RX,TX 둘다 사요 , 이거 쓰면 RX 인터럽터 걸리며 문제 생기는거 같음 
+     41             
+     42             UCSR0C	= 0x06;			//no parity, 1 stop, 8 data
+   \   00000012   E006               LDI     R16, 6
+   \   00000014   9300....           STS     _A_UCSR0C, R16
+     43             ucDummy	= UDR0;			//dummy read
+   \   00000018   B10C               IN      R16, 0x0C
+   \   0000001A                      REQUIRE ?Subroutine4
+   \   0000001A                      REQUIRE _A_UBRR0H
+   \   0000001A                      REQUIRE _A_UBRR0L
+   \   0000001A                      REQUIRE _A_UCSR0A
+   \   0000001A                      REQUIRE _A_UCSR0B
+   \   0000001A                      REQUIRE _A_UCSR0C
+   \   0000001A                      REQUIRE _A_UDR0
+   \   0000001A                      ;               // Fall through to label ?Subroutine4
+     44          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine4:
+   \   00000000   8308               ST      Y, R16
+   \   00000002   9621               ADIW    R29:R28, 1
+   \   00000004   9508               RET
+     45          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     46          void init_uart1( SBYTE Baudrate )
+   \                     init_uart1:
+     47          {
+   \   00000000   9721               SBIW    R29:R28, 1
+     48             // 16Mhz에서 보레이트 2배 모드 일때
+     49             //Baudrate 115,200    --> UBRR1L 16    error 2.1%
+     50             //Baudrate  38,400    --> UBRR1L 51    error 0.2%
+     51             //Baudrate  19,200    --> UBRR1L 103   error 0.2%
+     52             //Baudrate   9,600    --> UBRR1L 207   error 0.2%
+     53             volatile BYTE ucDummy;
+     54             
+     55             UBRR1H	= 0;
+   \   00000002   E020               LDI     R18, 0
+   \   00000004   9320....           STS     _A_UBRR1H, R18
+     56             UBRR1L	= (unsigned char)(Baudrate  & 0x0FF);
+   \   00000008   9300....           STS     _A_UBRR1L, R16
+     57             UCSR1A	= 0x02;			//BIT1 : 1 보레이트 2배 , asynchronous normal mode
+   \   0000000C   E002               LDI     R16, 2
+   \   0000000E   9300....           STS     _A_UCSR1A, R16
+     58             
+     59             UCSR1B	= 0x98;			//Rx / Tx enable, 8 data   //RX 인터럽트 허용
+   \   00000012   E908               LDI     R16, 152
+   \   00000014   9300....           STS     _A_UCSR1B, R16
+     60             //UCSR1B	= 0x18;         //Rx / Tx enable, 8 data   //RX 인터럽트는 사용안함 
+     61             //UCSR1B	= 0x90;         //   / Tx enable, 8 data   //RX 인터럽트 사용, TX 사용안함    
+     62             
+     63             UCSR1C	= 0x06;			//no parity, 1 stop, 8 data
+   \   00000018   E006               LDI     R16, 6
+   \   0000001A   9300....           STS     _A_UCSR1C, R16
+     64             ucDummy	= UDR1;			//dummy read
+   \   0000001E   9100....           LDS     R16, _A_UDR1
+   \   00000022   ....               RJMP    ?Subroutine4
+   \   00000024                      REQUIRE _A_UBRR1H
+   \   00000024                      REQUIRE _A_UBRR1L
+   \   00000024                      REQUIRE _A_UCSR1A
+   \   00000024                      REQUIRE _A_UCSR1B
+   \   00000024                      REQUIRE _A_UCSR1C
+   \   00000024                      REQUIRE _A_UDR1
+     65          }
+     66          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     67          int putchar(int ucData)
+   \                     putchar:
+   \                     ??putchar_0:
+     68          {
+     69              
+     70          	while(( UCSR0A & 0x20 ) == 0x00 )
+   \   00000000   9B5D               SBIS    0x0B, 0x05
+   \   00000002   CFFE               RJMP    ??putchar_0
+     71          	{
+     72          	}; // data register empty ?
+     73          	UDR0 = ucData;
+   \   00000004   B90C               OUT     0x0C, R16
+     74              
+     75          	return 0;
+   \   00000006   E000               LDI     R16, 0
+   \   00000008   E010               LDI     R17, 0
+   \   0000000A   9508               RET
+   \   0000000C                      REQUIRE _A_UCSR0A
+   \   0000000C                      REQUIRE _A_UDR0
+     76          } 
+     77          //-------------------------------------------------------------------------------
+     78          //	DESCRIPTION   : 
+     79          //	HISTORY       :
+     80          //		- 2012/07/25 	created by suhyoun
+     81          //-------------------------------------------------------------------------------
+     82          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     83          unsigned char uart0_rx_char( void )
+   \                     uart0_rx_char:
+   \                     ??uart0_rx_char_0:
+     84          {
+     85            while(( UCSR0A & 0x80 ) == 0x00 );  // data received ?
+   \   00000000   9B5F               SBIS    0x0B, 0x07
+   \   00000002   CFFE               RJMP    ??uart0_rx_char_0
+     86            return UDR0;
+   \   00000004   B10C               IN      R16, 0x0C
+   \   00000006   9508               RET
+   \   00000008                      REQUIRE _A_UCSR0A
+   \   00000008                      REQUIRE _A_UDR0
+     87          }
+     88          
+     89          //-------------------------------------------------------------------------------
+     90          //	DESCRIPTION   : 
+     91          //	HISTORY       :
+     92          //		- 2012/07/25 	created by suhyoun
+     93          //-------------------------------------------------------------------------------
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     94          void send_data( unsigned char ucMainCmd, unsigned char ucSubCmd, unsigned short usLen )
+   \                     send_data:
+     95          {
+   \   00000000   ........           CALL    ?PROLOGUE8_L09
+   \   00000004                      REQUIRE ?Register_R4_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R5_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R6_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R7_is_cg_reg
+   \   00000004   2E40               MOV     R4, R16
+   \   00000006   2FA1               MOV     R26, R17
+   \   00000008   01C9               MOVW    R25:R24, R19:R18
+     96              unsigned char ucSum, ucLenH, ucLenL;
+     97          	unsigned short usCnt;
+     98          	
+     99          	ucSum = 0x00;
+    100          	
+    101              ucLenH = usLen >> 8;
+   \   0000000A   2FB3               MOV     R27, R19
+    102              ucLenL = usLen;
+   \   0000000C   2E52               MOV     R5, R18
+    103          							
+    104          	uart_tx_char( STX );				        // STX
+   \   0000000E   E002               LDI     R16, 2
+   \   00000010   ....               RCALL   ??Subroutine5_0
+    105          	//ucSum += STX;
+    106          	delay_us( RS_DELAY );
+    107          	
+    108          	uart_tx_char( ucMainCmd );			        // Main Command
+   \                     ??CrossCallReturnLabel_5:
+   \   00000012   ....               RCALL   ?Subroutine0
+    109          	ucSum += ucMainCmd;
+    110          	delay_us( RS_DELAY );
+    111          	
+    112          	uart_tx_char( ucSubCmd );			        // Sub Command
+   \                     ??CrossCallReturnLabel_3:
+   \   00000014   2F0A               MOV     R16, R26
+   \   00000016   ....               RCALL   ??Subroutine5_0
+    113          	ucSum += ucSubCmd;
+    114          	delay_us( RS_DELAY );
+    115          
+    116              uart_tx_char( ucLenH );                     // data length high
+   \                     ??CrossCallReturnLabel_6:
+   \   00000018   2F0B               MOV     R16, R27
+   \   0000001A   ....               RCALL   ??Subroutine5_0
+    117              ucSum += ucLenH;
+    118              delay_us( RS_DELAY );
+    119          	
+    120              uart_tx_char( ucLenL );                     // data length low
+   \                     ??CrossCallReturnLabel_7:
+   \   0000001C   2D05               MOV     R16, R5
+   \   0000001E   ....               RCALL   ?Subroutine1
+    121              ucSum += ucLenL;
+   \                     ??CrossCallReturnLabel_2:
+   \   00000020   0E4A               ADD     R4, R26
+   \   00000022   0E49               ADD     R4, R25
+   \   00000024   0E48               ADD     R4, R24
+    122              delay_us( RS_DELAY );
+   \   00000026   ....               RCALL   ?Subroutine3
+    123          
+    124              for( usCnt = 0; usCnt < usLen; usCnt ++ )	// Fill Data Field
+   \                     ??CrossCallReturnLabel_8:
+   \   00000028   2466               CLR     R6
+   \   0000002A   2477               CLR     R7
+   \   0000002C   C00D               RJMP    ??send_data_0
+    125          	{
+    126          		uart_tx_char( ext_ucTxbuf[ usCnt ] );
+   \                     ??send_data_1:
+   \   0000002E   ....               LDI     R26, LOW(ext_ucTxbuf)
+   \   00000030   ....               LDI     R27, (ext_ucTxbuf) >> 8
+   \   00000032   0DA6               ADD     R26, R6
+   \   00000034   1DB7               ADC     R27, R7
+   \   00000036   910C               LD      R16, X
+   \   00000038   ....               RCALL   ?Subroutine1
+    127          		ucSum += ext_ucTxbuf[ usCnt ];
+   \                     ??CrossCallReturnLabel_1:
+   \   0000003A   910C               LD      R16, X
+   \   0000003C   0E40               ADD     R4, R16
+    128          		delay_us( RS_DELAY );
+   \   0000003E   ....               RCALL   ?Subroutine3
+    129          	}
+   \                     ??CrossCallReturnLabel_9:
+   \   00000040   E001               LDI     R16, 1
+   \   00000042   0E60               ADD     R6, R16
+   \   00000044   E000               LDI     R16, 0
+   \   00000046   1E70               ADC     R7, R16
+   \                     ??send_data_0:
+   \   00000048   1668               CP      R6, R24
+   \   0000004A   0679               CPC     R7, R25
+   \   0000004C   F380               BRCS    ??send_data_1
+    130          	
+    131          	uart_tx_char( ucSum );		                // CheckSum
+   \   0000004E   ....               RCALL   ?Subroutine0
+    132          	delay_us( RS_DELAY );
+    133          	uart_tx_char( ETX );		                // ETX
+   \                     ??CrossCallReturnLabel_4:
+   \   00000050   E003               LDI     R16, 3
+   \   00000052   ....               RCALL   ?Subroutine1
+    134          }
+   \                     ??CrossCallReturnLabel_0:
+   \   00000054   E0E8               LDI     R30, 8
+   \   00000056   ........           JMP     ?EPILOGUE_B8_L09
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine1:
+   \   00000000   ........           JMP     uart_tx_char
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   2D04               MOV     R16, R4
+   \   00000002                      REQUIRE ?Subroutine3
+   \   00000002                      REQUIRE ??Subroutine5_0
+   \   00000002                      ;               // Fall through to label ??Subroutine5_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine5_0:
+   \   00000000   ........           CALL    uart_tx_char
+   \   00000004                      REQUIRE ?Subroutine3
+   \   00000004                      ;               // Fall through to label ?Subroutine3
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine3:
+   \   00000000   E604               LDI     R16, 100
+   \   00000002   ........           JMP     delay_us
+    135          
+    136          //-------------------------------------------------------------------------------
+    137          //	DESCRIPTION   : 
+    138          //	HISTORY       :
+    139          //		- 2012/07/25 	created by suhyoun
+    140          //-------------------------------------------------------------------------------
+    141          #pragma vector = USART1_RXC_vect
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    142          __interrupt void uart_interrupt_routine(void)
+   \                     uart_interrupt_routine:
+    143          {
+   \   00000000   93BA               ST      -Y, R27
+   \   00000002   93AA               ST      -Y, R26
+   \   00000004   93FA               ST      -Y, R31
+   \   00000006   93EA               ST      -Y, R30
+   \   00000008   936A               ST      -Y, R22
+   \   0000000A   935A               ST      -Y, R21
+   \   0000000C   934A               ST      -Y, R20
+   \   0000000E   933A               ST      -Y, R19
+   \   00000010   932A               ST      -Y, R18
+   \   00000012   931A               ST      -Y, R17
+   \   00000014   930A               ST      -Y, R16
+   \   00000016   B76F               IN      R22, 0x3F
+    144             unsigned char ucTemp;
+    145             
+    146             ucTemp = UDR1;
+   \   00000018   9110....           LDS     R17, _A_UDR1
+    147             
+    148             LED_2=0;
+   \   0000001C   98A9               CBI     0x15, 0x01
+    149            
+    150             //uart_tx_char(ucTemp);
+    151             
+    152             // Receive STX
+    153             //        printf("UDR0 = 0x%x\r\n",UDR0);
+    154             if( ext_ucRxStatus == 0x00 )
+   \   0000001E   ....               LDI     R30, LOW(ext_ucRxbuf)
+   \   00000020   ....               LDI     R31, (ext_ucRxbuf) >> 8
+   \   00000022   8D00               LDD     R16, Z+24
+   \   00000024   2300               TST     R16
+   \   00000026   F469               BRNE    ??uart_interrupt_routine_0
+    155             {
+    156                //       printf("ucTemp = 0x%x\r\n",ucTemp);
+    157                if( ucTemp == STX )
+   \   00000028   3012               CPI     R17, 2
+   \   0000002A   F009               BREQ    $+2+2
+   \   0000002C   C04C               RJMP    ??uart_interrupt_routine_1
+    158                {
+    159                   ext_ucRxbuf[ 0 ] = ucTemp;
+   \   0000002E   E002               LDI     R16, 2
+   \   00000030   8300               ST      Z, R16
+    160                   ext_ucRxStatus = 0x80;
+   \   00000032   E800               LDI     R16, 128
+   \   00000034   8F00               STD     Z+24, R16
+    161                   ext_usRxTimer = 0;
+   \   00000036   E000               LDI     R16, 0
+   \   00000038   9300....           STS     ext_usRxTimer, R16
+   \   0000003C   9300....           STS     (ext_usRxTimer + 1), R16
+   \   00000040   C042               RJMP    ??uart_interrupt_routine_1
+    162                }
+    163             }
+    164             // Receive Main Command
+    165             else if( ext_ucRxStatus == 0x80 )
+   \                     ??uart_interrupt_routine_0:
+   \   00000042   3800               CPI     R16, 128
+   \   00000044   F419               BRNE    ??uart_interrupt_routine_2
+    166             {
+    167                ext_ucRxbuf[ 1 ] = ucTemp;
+   \   00000046   8311               STD     Z+1, R17
+    168                ext_ucRxStatus = 0xC0;
+   \   00000048   EC00               LDI     R16, 192
+   \   0000004A   C03C               RJMP    ??uart_interrupt_routine_3
+    169             }
+    170             // Receive Sub Command
+    171             else if( ext_ucRxStatus == 0xC0 )
+   \                     ??uart_interrupt_routine_2:
+   \   0000004C   3C00               CPI     R16, 192
+   \   0000004E   F419               BRNE    ??uart_interrupt_routine_4
+    172             {
+    173                ext_ucRxbuf[ 2 ] = ucTemp;
+   \   00000050   8312               STD     Z+2, R17
+    174                ext_ucRxStatus = 0xE0;
+   \   00000052   EE00               LDI     R16, 224
+   \   00000054   C037               RJMP    ??uart_interrupt_routine_3
+    175             }
+    176             // Receive Data Length
+    177             else if( ext_ucRxStatus == 0xE0 )	// high byte
+   \                     ??uart_interrupt_routine_4:
+   \   00000056   3E00               CPI     R16, 224
+   \   00000058   F419               BRNE    ??uart_interrupt_routine_5
+    178             {
+    179                ext_ucRxbuf[ 3 ] = ucTemp;
+   \   0000005A   8313               STD     Z+3, R17
+    180                ext_ucRxStatus = 0xE1;
+   \   0000005C   EE01               LDI     R16, 225
+   \   0000005E   C032               RJMP    ??uart_interrupt_routine_3
+    181             }
+    182             else if( ext_ucRxStatus == 0xE1 )	// low byte
+   \                     ??uart_interrupt_routine_5:
+   \   00000060   3E01               CPI     R16, 225
+   \   00000062   F461               BRNE    ??uart_interrupt_routine_6
+    183             {
+    184                ext_ucRxbuf[ 4 ] = ucTemp;
+   \   00000064   8314               STD     Z+4, R17
+    185                ext_ucRxStatus = 0xF0;
+   \   00000066   EF00               LDI     R16, 240
+   \   00000068   8F00               STD     Z+24, R16
+    186                ext_usLen  = ( ext_ucRxbuf[ 3 ] * 0x100 ) | ext_ucRxbuf[ 4 ];
+   \   0000006A   8133               LDD     R19, Z+3
+   \   0000006C   8104               LDD     R16, Z+4
+   \   0000006E   E010               LDI     R17, 0
+   \   00000070   2333               TST     R19
+   \   00000072   8B06               STD     Z+22, R16
+   \   00000074   8B37               STD     Z+23, R19
+    187                ext_usRxCnt = 0;
+   \   00000076   8B14               STD     Z+20, R17
+   \                     ??uart_interrupt_routine_7:
+   \   00000078   8B15               STD     Z+21, R17
+   \   0000007A   C025               RJMP    ??uart_interrupt_routine_1
+    188             }
+    189             // Receive Data
+    190             else if( ext_ucRxStatus == 0xF0 )
+   \                     ??uart_interrupt_routine_6:
+   \   0000007C   8924               LDD     R18, Z+20
+   \   0000007E   8935               LDD     R19, Z+21
+   \   00000080   01DF               MOVW    R27:R26, R31:R30
+   \   00000082   0FA2               ADD     R26, R18
+   \   00000084   1FB3               ADC     R27, R19
+   \   00000086   3F00               CPI     R16, 240
+   \   00000088   F491               BRNE    ??uart_interrupt_routine_8
+    191             {
+    192                if( ext_usRxCnt < ext_usLen )
+   \   0000008A   8946               LDD     R20, Z+22
+   \   0000008C   8957               LDD     R21, Z+23
+   \   0000008E   1724               CP      R18, R20
+   \   00000090   0735               CPC     R19, R21
+   \   00000092   F440               BRCC    ??uart_interrupt_routine_9
+    193                {
+    194                   ext_ucRxbuf[ ext_usRxCnt + 5 ] = ucTemp;
+   \   00000094   9615               ADIW    R27:R26, 5
+   \   00000096   931C               ST      X, R17
+    195                   ext_usRxCnt ++;
+   \   00000098   8904               LDD     R16, Z+20
+   \   0000009A   8915               LDD     R17, Z+21
+   \   0000009C   5F0F               SUBI    R16, 255
+   \   0000009E   4F1F               SBCI    R17, 255
+   \   000000A0   8B04               STD     Z+20, R16
+   \   000000A2   CFEA               RJMP    ??uart_interrupt_routine_7
+    196                }
+    197                else //if( ext_usRxCnt == ext_usLen )
+    198                {
+    199                   ext_ucRxbuf[ ext_usRxCnt + 5 ] = ucTemp;
+   \                     ??uart_interrupt_routine_9:
+   \   000000A4   9615               ADIW    R27:R26, 5
+   \   000000A6   931C               ST      X, R17
+   \   000000A8   9715               SBIW    R27:R26, 5
+    200                   ext_ucRxStatus = 0xFC;
+   \   000000AA   EF0C               LDI     R16, 252
+   \   000000AC   C00B               RJMP    ??uart_interrupt_routine_3
+    201                }
+    202             }
+    203             // Receive ETX
+    204             else if( ext_ucRxStatus == 0xFC )
+   \                     ??uart_interrupt_routine_8:
+   \   000000AE   3F0C               CPI     R16, 252
+   \   000000B0   F451               BRNE    ??uart_interrupt_routine_1
+    205             {
+    206                if( ucTemp == ETX )
+   \   000000B2   3013               CPI     R17, 3
+   \   000000B4   F431               BRNE    ??uart_interrupt_routine_10
+    207                {
+    208                   ext_ucRxbuf[ ext_usRxCnt + 6 ] = ucTemp;
+   \   000000B6   E003               LDI     R16, 3
+   \   000000B8   9616               ADIW    R27:R26, 6
+   \   000000BA   930C               ST      X, R16
+   \   000000BC   9716               SBIW    R27:R26, 6
+    209                   ext_ucRxStatus = 0xFD;
+   \   000000BE   EF0D               LDI     R16, 253
+   \   000000C0   C001               RJMP    ??uart_interrupt_routine_3
+    210                }
+    211                else
+    212                {
+    213                   ext_ucRxStatus = 0x00;
+   \                     ??uart_interrupt_routine_10:
+   \   000000C2   E000               LDI     R16, 0
+   \                     ??uart_interrupt_routine_3:
+   \   000000C4   8F00               STD     Z+24, R16
+    214                }
+    215             }
+    216          }
+   \                     ??uart_interrupt_routine_1:
+   \   000000C6   BF6F               OUT     0x3F, R22
+   \   000000C8   9109               LD      R16, Y+
+   \   000000CA   9119               LD      R17, Y+
+   \   000000CC   9129               LD      R18, Y+
+   \   000000CE   9139               LD      R19, Y+
+   \   000000D0   9149               LD      R20, Y+
+   \   000000D2   9159               LD      R21, Y+
+   \   000000D4   9169               LD      R22, Y+
+   \   000000D6   91E9               LD      R30, Y+
+   \   000000D8   91F9               LD      R31, Y+
+   \   000000DA   91A9               LD      R26, Y+
+   \   000000DC   91B9               LD      R27, Y+
+   \   000000DE   9518               RETI
+   \   000000E0                      REQUIRE _A_UDR1
+   \   000000E0                      REQUIRE _A_PORTC
+
+   \                                 In  segment INTVEC, offset 0x78, root
+   \                     `??uart_interrupt_routine??INTVEC 120`:
+   \   00000078   ........           JMP     uart_interrupt_routine
+
+   Maximum stack usage in bytes:
+
+     Function               CSTACK RSTACK
+     --------               ------ ------
+     init_uart0                 1      2
+     init_uart1                 1      2
+     putchar                    0      2
+     send_data                  8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+       -> delay_us              8      2
+       -> uart_tx_char          8      2
+     uart0_rx_char              0      2
+     uart_interrupt_routine    12      2
+
+
+   Segment part sizes:
+
+     Function/Label                       Bytes
+     --------------                       -----
+     _A_UBRR0L                               1
+     _A_UCSR0B                               1
+     _A_UCSR0A                               1
+     _A_UDR0                                 1
+     _A_PORTC                                1
+     _A_UBRR0H                               1
+     _A_UCSR0C                               1
+     _A_UBRR1H                               1
+     _A_UBRR1L                               1
+     _A_UCSR1B                               1
+     _A_UCSR1A                               1
+     _A_UDR1                                 1
+     _A_UCSR1C                               1
+     ext_ucRxbuf                            25
+     ext_usRxCnt
+     ext_usLen
+     ext_ucRxStatus
+     ext_ucTxbuf                            20
+     init_uart0                             26
+     ?Subroutine4                            6
+     init_uart1                             36
+     putchar                                12
+     uart0_rx_char                           8
+     send_data                              90
+     ?Subroutine1                            4
+     ?Subroutine0                            2
+     ??Subroutine5_0                         4
+     ?Subroutine3                            6
+     uart_interrupt_routine                224
+     ??uart_interrupt_routine??INTVEC 120    4
+      Others                                 7
+
+ 
+  13 bytes in segment ABSOLUTE
+ 418 bytes in segment CODE
+   7 bytes in segment INITTAB
+   4 bytes in segment INTVEC
+  45 bytes in segment NEAR_Z
+ 
+ 418 bytes of CODE memory (+ 11 bytes shared)
+  45 bytes of DATA memory (+ 13 bytes shared)
+
+Errors: none
+Warnings: none

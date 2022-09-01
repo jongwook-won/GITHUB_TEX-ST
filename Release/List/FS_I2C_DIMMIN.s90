@@ -1,0 +1,174 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:39 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\FS_I2C_DIMMIN.c         /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\FS_I2C_DIMMIN.c"       /
+//                    --cpu=m128 -ms -o "D:\LUCID                             /
+//                    ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D NDEBUG -lCN "D:\LUCID  /
+//                    ½Å·Ú¼º\CN_BOARD\Release\List\" -lb "D:\LUCID            /
+//                    ½Å·Ú¼º\CN_BOARD\Release\List\" -y                       /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\FS_I2C_DIMMIN.s90 /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME FS_I2C_DIMMIN
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B4_L09
+        EXTERN ?PROLOGUE4_L09
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_I>`
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC fs_i2c_dimming_fun
+
+        EXTERN twi_write
+        EXTERN delay_ms
+        EXTERN twi_read
+        EXTERN printf
+        EXTERN PC_pwm_H
+        EXTERN PC_pwm_L
+        EXTERN PC_pwm_flag
+        EXTERN ext_usLEDTimer
+
+
+        RSEG CODE:CODE:NOROOT(1)
+fs_i2c_dimming_fun:
+        CALL    ?PROLOGUE4_L09
+        LDS     R16, PC_pwm_flag
+        SBRS    R16, 0
+        RJMP    ??fs_i2c_dimming_fun_0
+        LDS     R24, PC_pwm_H
+        LDS     R25, PC_pwm_L
+        ORI     R25, 0x3F
+        MOV     R18, R24
+        LDI     R19, 0
+        LDI     R17, 73
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_3:
+        MOV     R18, R25
+        LDI     R19, 0
+        LDI     R17, 74
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_4:
+        ADD     R24, R25
+        COM     R24
+        INC     R24
+        MOV     R18, R24
+        LDI     R19, 0
+        LDI     R17, 254
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_1:
+        LDI     R16, 20
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_5:
+        LDI     R24, 10
+??fs_i2c_dimming_fun_1:
+        LDI     R17, 5
+        LDI     R16, 164
+        CALL    twi_read
+        MOV     R26, R16
+        LDI     R27, 0
+        ST      -Y, R27
+        ST      -Y, R16
+        LDI     R16, LOW(`?<Constant "pc chk_NG =  0x%X\\r\\n">`)
+        LDI     R17, (`?<Constant "pc chk_NG =  0x%X\\r\\n">`) >> 8
+        CALL    printf
+        ADIW    R29:R28, 2
+        BST     R26, 0
+        BRTS    ??fs_i2c_dimming_fun_2
+        LDI     R18, 170
+        LDI     R19, 0
+        LDI     R17, 255
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_2:
+        LDI     R30, LOW(PC_pwm_flag)
+        LDI     R31, (PC_pwm_flag) >> 8
+        LD      R16, Z
+        ANDI    R16, 0xFE
+        ST      Z, R16
+        RJMP    ??fs_i2c_dimming_fun_3
+??fs_i2c_dimming_fun_2:
+        LDI     R16, 10
+        RCALL   ?Subroutine4
+??CrossCallReturnLabel_6:
+        DEC     R24
+        BRNE    ??fs_i2c_dimming_fun_1
+??fs_i2c_dimming_fun_3:
+        LDI     R30, LOW(ext_usLEDTimer)
+        LDI     R31, (ext_usLEDTimer) >> 8
+        ST      Z, R27
+        STD     Z+1, R27
+??fs_i2c_dimming_fun_0:
+        LDI     R30, 4
+        JMP     ?EPILOGUE_B4_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine3:
+        LDI     R16, 164
+        JMP     twi_write
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        RCALL   ?Subroutine3
+??CrossCallReturnLabel_0:
+        LDI     R16, 1
+        REQUIRE ?Subroutine4
+        ;               // Fall through to label ?Subroutine4
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine4:
+        LDI     R17, 0
+        JMP     delay_ms
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG NEAR_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "pc chk_NG =  0x%X`:
+        DC8 "pc chk_NG =  0x%X\015\012"
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_I>`:
+        DC16    SFE(NEAR_I) - SFB(NEAR_I)
+        DC16    SFB(NEAR_I)
+        DP      SFB(NEAR_ID)
+        REQUIRE ?need_segment_init
+
+        RSEG NEAR_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_I>`
+`?<Constant "pc chk_NG =  0x%X\\r\\n">`:
+        DS8 20
+        REQUIRE `?<Initializer for <Constant "pc chk_NG =  0x%X`
+
+        END
+// 
+// 146 bytes in segment CODE
+//   7 bytes in segment INITTAB
+//  20 bytes in segment NEAR_I
+//  20 bytes in segment NEAR_ID
+// 
+// 166 bytes of CODE memory (+ 7 bytes shared)
+//  20 bytes of DATA memory
+//
+//Errors: none
+//Warnings: 1

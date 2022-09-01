@@ -1,0 +1,337 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  16:54:40 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID 신뢰성\CN_BOARD\source\timer.c                  #
+#    Command line =  "D:\LUCID 신뢰성\CN_BOARD\source\timer.c" --cpu=m128     #
+#                    -ms -o "D:\LUCID 신뢰성\CN_BOARD\Release\Obj\" -D        #
+#                    NDEBUG -lCN "D:\LUCID 신뢰성\CN_BOARD\Release\List\"     #
+#                    -lb "D:\LUCID 신뢰성\CN_BOARD\Release\List\" -y          #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID 신뢰성\CN_BOARD\Release\List\timer.lst          #
+#    Object file  =  D:\LUCID 신뢰성\CN_BOARD\Release\Obj\timer.r90           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID 신뢰성\CN_BOARD\source\timer.c
+      1          /********************************************************************************
+      2          *	File Name	:	main.c
+      3          *	Compile		:	IAR Embedded Workbench avr 6.10
+      4          *	History		:	
+      5          *	- 20120725	created by suhyoun
+      6          *********************************************************************************/
+      7          #include "allinclude.h"
+
+   \                                 In  segment ABSOLUTE, at 0x4a
+   \   union <unnamed> volatile __io _A_OCR1A
+   \                     _A_OCR1A:
+   \   00000000                      DS8 2
+
+   \                                 In  segment ABSOLUTE, at 0x4c
+   \   union <unnamed> volatile __io _A_TCNT1
+   \                     _A_TCNT1:
+   \   00000000                      DS8 2
+
+   \                                 In  segment ABSOLUTE, at 0x4e
+   \   union <unnamed> volatile __io _A_TCCR1B
+   \                     _A_TCCR1B:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x4f
+   \   union <unnamed> volatile __io _A_TCCR1A
+   \                     _A_TCCR1A:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x51
+   \   union <unnamed> volatile __io _A_OCR0
+   \                     _A_OCR0:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x52
+   \   union <unnamed> volatile __io _A_TCNT0
+   \                     _A_TCNT0:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x53
+   \   union <unnamed> volatile __io _A_TCCR0
+   \                     _A_TCCR0:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x56
+   \   union <unnamed> volatile __io _A_TIFR
+   \                     _A_TIFR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x57
+   \   union <unnamed> volatile __io _A_TIMSK
+   \                     _A_TIMSK:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x7a
+   \   union <unnamed> volatile __io _A_TCCR1C
+   \                     _A_TCCR1C:
+   \   00000000                      DS8 1
+      8          
+      9          //-------------------------------------------------------------------------------
+     10          //	external variable
+     11          //-------------------------------------------------------------------------------
+     12          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+     13          unsigned short ext_usRxTimer;
+   \                     ext_usRxTimer:
+   \   00000000                      DS8 2
+     14          unsigned short ext_usLEDTimer;
+   \                     ext_usLEDTimer:
+   \   00000002                      DS8 2
+     15          unsigned short chk_PWMTimer;
+   \                     chk_PWMTimer:
+   \   00000004                      DS8 2
+     16          BYTE LED_TIMER;
+   \                     LED_TIMER:
+   \   00000006                      DS8 1
+     17          //-------------------------------------------------------------------------------
+     18          //	DESCRIPTION   : 
+     19          //	HISTORY       :
+     20          //		- 2012/07/25	created by suhyoun
+     21          //-------------------------------------------------------------------------------
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     22          void init_timer( void )
+   \                     init_timer:
+     23          {
+     24          	unsigned int Timmer_Value;
+     25          	unsigned int Use_Hz;
+     26          
+     27              TIMSK = 0;
+   \   00000000   E000               LDI     R16, 0
+   \   00000002   BF07               OUT     0x37, R16
+     28          
+     29              // Set Timer 0  // 1ms --> 0.001S
+     30          	TCCR0			=  (1 << WGM01)|(1 << CS02) ;  //CTC MODE , CLK / 64     //FOC0, WGM00, COM01, COM00, WGM01, CS02, CS01, CS00
+   \   00000004   E00C               LDI     R16, 12
+   \   00000006   BF03               OUT     0x33, R16
+     31          	OCR0			=  249;                        // 16MHz/ 64 / (1+249)  = 1000Hz --> CTC 모드의 실제 인터럽트 발생주파수      // OC0핀의 출력주파수는 1/2배 해야함.   16MHz/ 2 / 64 / (1+249)  = 500Hz
+   \   00000008   EF09               LDI     R16, 249
+   \   0000000A   BF01               OUT     0x31, R16
+     32          	TCNT0			=  0x00;
+   \   0000000C   E000               LDI     R16, 0
+   \   0000000E   BF02               OUT     0x32, R16
+     33              TIMSK			|=  (1 << OCIE0) ;              // TIMER0  OCIE0 출력 비교 인터럽트 ENABLE
+   \   00000010   B707               IN      R16, 0x37
+   \   00000012   6002               ORI     R16, 0x02
+   \   00000014   BF07               OUT     0x37, R16
+     34              TIFR			=  0x00;                       // 인터럽트 플래그 클리어
+   \   00000016   E000               LDI     R16, 0
+   \   00000018   BF06               OUT     0x36, R16
+     35              ////////////////////////////////////////////////////////////////
+     36          
+     37          	Use_Hz			= TIMER1_HZ;
+     38          	Timmer_Value	= (OSC / 256 / Use_Hz) - 1;
+     39          	TCCR1A			= 0x00;
+   \   0000001A   BD0F               OUT     0x2F, R16
+     40          	TCCR1B			= 0x0C;
+   \   0000001C   E00C               LDI     R16, 12
+   \   0000001E   BD0E               OUT     0x2E, R16
+     41          	TCCR1C			= 0x00;
+   \   00000020   E000               LDI     R16, 0
+   \   00000022   9300....           STS     _A_TCCR1C, R16
+     42          	OCR1AH			= ( Timmer_Value >> 8 );
+   \   00000026   E002               LDI     R16, 2
+   \   00000028   BD0B               OUT     0x2B, R16
+     43          	OCR1AL			= ( Timmer_Value & 0xFF );
+   \   0000002A   E700               LDI     R16, 112
+   \   0000002C   BD0A               OUT     0x2A, R16
+     44          	TCNT1H			= 0x00;					//Clear Timer / Counter1
+   \   0000002E   E000               LDI     R16, 0
+   \   00000030   BD0D               OUT     0x2D, R16
+     45          	TCNT1L			= 0x00;
+   \   00000032   BD0C               OUT     0x2C, R16
+     46              TIMSK			|= (1 << OCIE1A);
+   \   00000034   B707               IN      R16, 0x37
+   \   00000036   6100               ORI     R16, 0x10
+   \   00000038   BF07               OUT     0x37, R16
+     47          
+     48              TIFR			= 0x00;
+   \   0000003A   E000               LDI     R16, 0
+   \   0000003C   BF06               OUT     0x36, R16
+     49          /*
+     50          	// Set Timer 3	//10ms --> 0.01S
+     51          	Use_Hz			= TIMER3_HZ;
+     52          	Timmer_Value	= (OSC / 256 / Use_Hz) - 1;
+     53          	TCCR3A			= 0x00;
+     54          	TCCR3B			= 0x0C;
+     55          	TCCR3C			= 0x00;
+     56          	OCR3AH			= ( Timmer_Value >> 8 );
+     57          	OCR3AL			= ( Timmer_Value & 0xFF );
+     58          	TCNT3H			= 0x00;					//Clear Timer / Counter1
+     59          	TCNT3L			= 0x00;
+     60          
+     61          	ETIMSK			= (1 << OCIE3A);		                 // TIMER3 OCIE3A 출력 비교 인터럽트 ENABLE	  // Dummy7, Dummy6, TICIE3, OCIE3A, OCIE3B, TOIE3, OCIE3C, OCIE1C
+     62          	ETIFR			= 0x00;                                  // 인터럽트 플래그 클리어
+     63           */
+     64              // Dummy7, Dummy6, ICF3, OCF3A, OCF3B, TOV3, OCF3C, OCF1C
+     65          }
+   \   0000003E   9508               RET
+   \   00000040                      REQUIRE _A_TIMSK
+   \   00000040                      REQUIRE _A_TCCR0
+   \   00000040                      REQUIRE _A_OCR0
+   \   00000040                      REQUIRE _A_TCNT0
+   \   00000040                      REQUIRE _A_TIFR
+   \   00000040                      REQUIRE _A_TCCR1A
+   \   00000040                      REQUIRE _A_TCCR1B
+   \   00000040                      REQUIRE _A_TCCR1C
+   \   00000040                      REQUIRE _A_OCR1A
+   \   00000040                      REQUIRE _A_TCNT1
+     66          
+     67          #pragma vector = TIMER0_COMP_vect
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     68          __interrupt void timer0_isr()  //1msec
+   \                     timer0_isr:
+     69          {
+   \   00000000   ....               RCALL   ?Subroutine0
+     70            delay_timer++;
+   \                     ??CrossCallReturnLabel_0:
+   \   00000002   ....               LDI     R30, LOW(delay_timer)
+   \   00000004   ....               LDI     R31, (delay_timer) >> 8
+   \   00000006   ....               RCALL   ?Subroutine1
+     71          }
+   \                     ??CrossCallReturnLabel_2:
+   \   00000008                      REQUIRE ?Subroutine3
+   \   00000008                      ;               // Fall through to label ?Subroutine3
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine3:
+   \   00000000   ....               RCALL   ?Subroutine2
+   \                     ??CrossCallReturnLabel_4:
+   \   00000002   9518               RETI
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine2:
+   \   00000000   BF2F               OUT     0x3F, R18
+   \   00000002   9109               LD      R16, Y+
+   \   00000004   9119               LD      R17, Y+
+   \   00000006   9129               LD      R18, Y+
+   \   00000008   91E9               LD      R30, Y+
+   \   0000000A   91F9               LD      R31, Y+
+   \   0000000C   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine1:
+   \   00000000   8100               LD      R16, Z
+   \   00000002   8111               LDD     R17, Z+1
+   \   00000004   5F0F               SUBI    R16, 255
+   \   00000006   4F1F               SBCI    R17, 255
+   \   00000008   8300               ST      Z, R16
+   \   0000000A   8311               STD     Z+1, R17
+   \   0000000C   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   93FA               ST      -Y, R31
+   \   00000002   93EA               ST      -Y, R30
+   \   00000004   932A               ST      -Y, R18
+   \   00000006   931A               ST      -Y, R17
+   \   00000008   930A               ST      -Y, R16
+   \   0000000A   B72F               IN      R18, 0x3F
+   \   0000000C   9508               RET
+     72          //----------------------------------------------------------------
+     73          //  Timer 1 Interrupt routine
+     74          //----------------------------------------------------------------
+     75          #pragma vector = TIMER1_COMPA_vect
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     76          __interrupt void timer_interrupt_routine()  //20msec timer
+   \                     timer_interrupt_routine:
+     77          {
+   \   00000000   ....               RCALL   ?Subroutine0
+     78          	ext_usRxTimer++;
+   \                     ??CrossCallReturnLabel_1:
+   \   00000002   ....               LDI     R30, LOW(ext_usRxTimer)
+   \   00000004   ....               LDI     R31, (ext_usRxTimer) >> 8
+   \   00000006   ....               RCALL   ?Subroutine1
+     79              ext_usLEDTimer++;
+   \                     ??CrossCallReturnLabel_3:
+   \   00000008   8102               LDD     R16, Z+2
+   \   0000000A   8113               LDD     R17, Z+3
+   \   0000000C   5F0F               SUBI    R16, 255
+   \   0000000E   4F1F               SBCI    R17, 255
+   \   00000010   8302               STD     Z+2, R16
+   \   00000012   8313               STD     Z+3, R17
+     80              LED_TIMER++;
+   \   00000014   8106               LDD     R16, Z+6
+   \   00000016   9503               INC     R16
+   \   00000018   8306               STD     Z+6, R16
+     81              chk_PWMTimer++;
+   \   0000001A   8104               LDD     R16, Z+4
+   \   0000001C   8115               LDD     R17, Z+5
+   \   0000001E   5F0F               SUBI    R16, 255
+   \   00000020   4F1F               SBCI    R17, 255
+   \   00000022   8304               STD     Z+4, R16
+   \   00000024   8315               STD     Z+5, R17
+     82          }
+   \   00000026   ....               RJMP    ?Subroutine3
+
+   \                                 In  segment INTVEC, offset 0x30, root
+   \                     `??timer_interrupt_routine??INTVEC 48`:
+   \   00000030   ........           JMP     timer_interrupt_routine
+
+   \                                 In  segment INTVEC, offset 0x3c, root
+   \                     `??timer0_isr??INTVEC 60`:
+   \   0000003C   ........           JMP     timer0_isr
+
+   Maximum stack usage in bytes:
+
+     Function                CSTACK RSTACK
+     --------                ------ ------
+     init_timer                  0      2
+     timer0_isr                  6      2
+     timer_interrupt_routine     6      2
+
+
+   Segment part sizes:
+
+     Function/Label                       Bytes
+     --------------                       -----
+     _A_OCR1A                                2
+     _A_TCNT1                                2
+     _A_TCCR1B                               1
+     _A_TCCR1A                               1
+     _A_OCR0                                 1
+     _A_TCNT0                                1
+     _A_TCCR0                                1
+     _A_TIFR                                 1
+     _A_TIMSK                                1
+     _A_TCCR1C                               1
+     ext_usRxTimer                           7
+     ext_usLEDTimer
+     chk_PWMTimer
+     LED_TIMER
+     init_timer                             64
+     timer0_isr                              8
+     ?Subroutine3                            4
+     ?Subroutine2                           14
+     ?Subroutine1                           14
+     ?Subroutine0                           14
+     timer_interrupt_routine                40
+     ??timer_interrupt_routine??INTVEC 48    4
+     ??timer0_isr??INTVEC 60                 4
+      Others                                 7
+
+ 
+  12 bytes in segment ABSOLUTE
+ 158 bytes in segment CODE
+   7 bytes in segment INITTAB
+   8 bytes in segment INTVEC
+   7 bytes in segment NEAR_Z
+ 
+ 158 bytes of CODE memory (+ 15 bytes shared)
+   7 bytes of DATA memory (+ 12 bytes shared)
+
+Errors: none
+Warnings: none

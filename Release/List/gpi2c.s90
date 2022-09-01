@@ -1,0 +1,797 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:11 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\gpi2c.c                 /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\gpi2c.c" --cpu=m128    /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\gpi2c.s90         /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME gpi2c
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B6_L09
+        EXTERN ?EPILOGUE_B7_L09
+        EXTERN ?PROLOGUE6_L09
+        EXTERN ?PROLOGUE7_L09
+        EXTERN ?Register_R4_is_cg_reg
+        EXTERN ?Register_R5_is_cg_reg
+        EXTERN ?Register_R6_is_cg_reg
+
+        PUBLIC PORTClearBits
+        PUBLIC PORTReadBits
+        PUBLIC PORTSetBits
+        PUBWEAK _A_DDRA
+        PUBWEAK _A_DDRB
+        PUBWEAK _A_DDRC
+        PUBWEAK _A_DDRD
+        PUBWEAK _A_DDRE
+        PUBWEAK _A_DDRF
+        PUBWEAK _A_DDRG
+        PUBWEAK _A_PINA
+        PUBWEAK _A_PINB
+        PUBWEAK _A_PINC
+        PUBWEAK _A_PIND
+        PUBWEAK _A_PINE
+        PUBWEAK _A_PINF
+        PUBWEAK _A_PING
+        PUBWEAK _A_PORTA
+        PUBWEAK _A_PORTB
+        PUBWEAK _A_PORTC
+        PUBWEAK _A_PORTD
+        PUBWEAK _A_PORTE
+        PUBWEAK _A_PORTF
+        PUBWEAK _A_PORTG
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC gpi2c_read
+        PUBLIC gpi2c_restart_condition
+        PUBLIC gpi2c_start_condition
+        PUBLIC gpi2c_stop_condition
+        PUBLIC gpi2c_write
+
+        EXTERN delay_us
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,020H
+// union <unnamed> volatile __io _A_PINF
+_A_PINF:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,021H
+// union <unnamed> volatile __io _A_PINE
+_A_PINE:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,022H
+// union <unnamed> volatile __io _A_DDRE
+_A_DDRE:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,023H
+// union <unnamed> volatile __io _A_PORTE
+_A_PORTE:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,030H
+// union <unnamed> volatile __io _A_PIND
+_A_PIND:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,031H
+// union <unnamed> volatile __io _A_DDRD
+_A_DDRD:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,032H
+// union <unnamed> volatile __io _A_PORTD
+_A_PORTD:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,033H
+// union <unnamed> volatile __io _A_PINC
+_A_PINC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,034H
+// union <unnamed> volatile __io _A_DDRC
+_A_DDRC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,035H
+// union <unnamed> volatile __io _A_PORTC
+_A_PORTC:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,036H
+// union <unnamed> volatile __io _A_PINB
+_A_PINB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,037H
+// union <unnamed> volatile __io _A_DDRB
+_A_DDRB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,038H
+// union <unnamed> volatile __io _A_PORTB
+_A_PORTB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,039H
+// union <unnamed> volatile __io _A_PINA
+_A_PINA:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03aH
+// union <unnamed> volatile __io _A_DDRA
+_A_DDRA:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,03bH
+// union <unnamed> volatile __io _A_PORTA
+_A_PORTA:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,061H
+// union <unnamed> volatile __io _A_DDRF
+_A_DDRF:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,062H
+// union <unnamed> volatile __io _A_PORTF
+_A_PORTF:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,063H
+// union <unnamed> volatile __io _A_PING
+_A_PING:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,064H
+// union <unnamed> volatile __io _A_DDRG
+_A_DDRG:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,065H
+// union <unnamed> volatile __io _A_PORTG
+_A_PORTG:
+        DS8 1
+
+        RSEG CODE:CODE:NOROOT(1)
+PORTSetBits:
+        TST     R16
+        BREQ    ??PORTSetBits_0
+        DEC     R16
+        BREQ    ??PORTSetBits_1
+        DEC     R16
+        BREQ    ??PORTSetBits_2
+        DEC     R16
+        BREQ    ??PORTSetBits_3
+        DEC     R16
+        BREQ    ??PORTSetBits_4
+        DEC     R16
+        BREQ    ??PORTSetBits_5
+        DEC     R16
+        BREQ    ??PORTSetBits_6
+        RET
+??PORTSetBits_0:
+        IN      R16, 0x1B
+        OR      R16, R17
+        OUT     0x1B, R16
+        COM     R17
+        IN      R16, 0x1A
+        AND     R16, R17
+        RJMP    ?Subroutine25
+??PORTSetBits_1:
+        IN      R16, 0x18
+        OR      R16, R17
+        OUT     0x18, R16
+        COM     R17
+        IN      R16, 0x17
+        AND     R16, R17
+        RJMP    ?Subroutine24
+??PORTSetBits_2:
+        IN      R16, 0x15
+        OR      R16, R17
+        OUT     0x15, R16
+        COM     R17
+        IN      R16, 0x14
+        AND     R16, R17
+        RJMP    ?Subroutine23
+??PORTSetBits_3:
+        IN      R16, 0x12
+        OR      R16, R17
+        OUT     0x12, R16
+        COM     R17
+        IN      R16, 0x11
+        AND     R16, R17
+        RJMP    ?Subroutine22
+??PORTSetBits_4:
+        IN      R16, 0x03
+        OR      R16, R17
+        OUT     0x03, R16
+        COM     R17
+        IN      R16, 0x02
+        AND     R16, R17
+        RJMP    ?Subroutine21
+??PORTSetBits_5:
+        LDS     R16, _A_PORTF
+        OR      R16, R17
+        STS     _A_PORTF, R16
+        COM     R17
+        LDS     R16, _A_DDRF
+        AND     R16, R17
+        RJMP    ?Subroutine20
+??PORTSetBits_6:
+        LDS     R16, _A_PORTG
+        OR      R16, R17
+        STS     _A_PORTG, R16
+        COM     R17
+        LDS     R16, _A_DDRG
+        AND     R16, R17
+        RJMP    ?Subroutine19
+        REQUIRE _A_PORTA
+        REQUIRE _A_DDRA
+        REQUIRE _A_PORTB
+        REQUIRE _A_DDRB
+        REQUIRE _A_PORTC
+        REQUIRE _A_DDRC
+        REQUIRE _A_PORTD
+        REQUIRE _A_DDRD
+        REQUIRE _A_PORTE
+        REQUIRE _A_DDRE
+        REQUIRE _A_PORTF
+        REQUIRE _A_DDRF
+        REQUIRE _A_PORTG
+        REQUIRE _A_DDRG
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine25:
+        OUT     0x1A, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine24:
+        OUT     0x17, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine23:
+        OUT     0x14, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine22:
+        OUT     0x11, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine21:
+        OUT     0x02, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine20:
+        STS     _A_DDRF, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine19:
+        STS     _A_DDRG, R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+PORTClearBits:
+        TST     R16
+        BREQ    ??PORTClearBits_0
+        DEC     R16
+        BREQ    ??PORTClearBits_1
+        DEC     R16
+        BREQ    ??PORTClearBits_2
+        DEC     R16
+        BREQ    ??PORTClearBits_3
+        DEC     R16
+        BREQ    ??PORTClearBits_4
+        DEC     R16
+        BREQ    ??PORTClearBits_5
+        DEC     R16
+        BREQ    ??PORTClearBits_6
+        RET
+??PORTClearBits_0:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_0:
+        IN      R18, 0x1B
+        AND     R18, R16
+        OUT     0x1B, R18
+        IN      R16, 0x1A
+        OR      R16, R17
+        RJMP    ?Subroutine25
+??PORTClearBits_1:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_1:
+        IN      R18, 0x18
+        AND     R18, R16
+        OUT     0x18, R18
+        IN      R16, 0x17
+        OR      R16, R17
+        RJMP    ?Subroutine24
+??PORTClearBits_2:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_2:
+        IN      R18, 0x15
+        AND     R18, R16
+        OUT     0x15, R18
+        IN      R16, 0x14
+        OR      R16, R17
+        RJMP    ?Subroutine23
+??PORTClearBits_3:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_3:
+        IN      R18, 0x12
+        AND     R18, R16
+        OUT     0x12, R18
+        IN      R16, 0x11
+        OR      R16, R17
+        RJMP    ?Subroutine22
+??PORTClearBits_4:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_4:
+        IN      R18, 0x03
+        AND     R18, R16
+        OUT     0x03, R18
+        IN      R16, 0x02
+        OR      R16, R17
+        RJMP    ?Subroutine21
+??PORTClearBits_5:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_5:
+        LDS     R18, _A_PORTF
+        AND     R18, R16
+        STS     _A_PORTF, R18
+        LDS     R16, _A_DDRF
+        OR      R16, R17
+        RJMP    ?Subroutine20
+??PORTClearBits_6:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_6:
+        LDS     R18, _A_PORTG
+        AND     R18, R16
+        STS     _A_PORTG, R18
+        LDS     R16, _A_DDRG
+        OR      R16, R17
+        RJMP    ?Subroutine19
+        REQUIRE _A_PORTA
+        REQUIRE _A_DDRA
+        REQUIRE _A_PORTB
+        REQUIRE _A_DDRB
+        REQUIRE _A_PORTC
+        REQUIRE _A_DDRC
+        REQUIRE _A_PORTD
+        REQUIRE _A_DDRD
+        REQUIRE _A_PORTE
+        REQUIRE _A_DDRE
+        REQUIRE _A_PORTF
+        REQUIRE _A_DDRF
+        REQUIRE _A_PORTG
+        REQUIRE _A_DDRG
+
+        RSEG CODE:CODE:NOROOT(1)
+PORTReadBits:
+        TST     R16
+        BREQ    ??PORTReadBits_0
+        DEC     R16
+        BREQ    ??PORTReadBits_1
+        DEC     R16
+        BREQ    ??PORTReadBits_2
+        DEC     R16
+        BREQ    ??PORTReadBits_3
+        DEC     R16
+        BREQ    ??PORTReadBits_4
+        DEC     R16
+        BREQ    ??PORTReadBits_5
+        DEC     R16
+        BREQ    ??PORTReadBits_6
+        RJMP    ??PORTReadBits_7
+??PORTReadBits_0:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_7:
+        IN      R18, 0x1A
+        AND     R18, R16
+        OUT     0x1A, R18
+        IN      R16, 0x19
+        AND     R16, R17
+        BREQ    ??PORTReadBits_7
+??PORTReadBits_8:
+        LDI     R16, 1
+        RET
+??PORTReadBits_1:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_8:
+        IN      R18, 0x17
+        AND     R18, R16
+        OUT     0x17, R18
+        IN      R16, 0x16
+        AND     R16, R17
+        BRNE    ??PORTReadBits_8
+??PORTReadBits_7:
+        LDI     R16, 0
+        RET
+??PORTReadBits_2:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_9:
+        IN      R18, 0x14
+        AND     R18, R16
+        OUT     0x14, R18
+        IN      R16, 0x13
+??PORTReadBits_9:
+        AND     R16, R17
+        BRNE    ??PORTReadBits_8
+        RJMP    ??PORTReadBits_7
+??PORTReadBits_3:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_10:
+        IN      R18, 0x11
+        AND     R18, R16
+        OUT     0x11, R18
+        IN      R16, 0x10
+        RJMP    ??PORTReadBits_9
+??PORTReadBits_4:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_11:
+        IN      R18, 0x02
+        AND     R18, R16
+        OUT     0x02, R18
+        IN      R16, 0x01
+        RJMP    ??PORTReadBits_9
+??PORTReadBits_5:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_12:
+        LDS     R18, _A_DDRF
+        AND     R18, R16
+        STS     _A_DDRF, R18
+        IN      R16, 0x00
+        RJMP    ??PORTReadBits_9
+??PORTReadBits_6:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_13:
+        LDS     R18, _A_DDRG
+        AND     R18, R16
+        STS     _A_DDRG, R18
+        LDS     R16, _A_PING
+        RJMP    ??PORTReadBits_9
+        REQUIRE _A_DDRA
+        REQUIRE _A_PINA
+        REQUIRE _A_DDRB
+        REQUIRE _A_PINB
+        REQUIRE _A_DDRC
+        REQUIRE _A_PINC
+        REQUIRE _A_DDRD
+        REQUIRE _A_PIND
+        REQUIRE _A_DDRE
+        REQUIRE _A_PINE
+        REQUIRE _A_DDRF
+        REQUIRE _A_PINF
+        REQUIRE _A_DDRG
+        REQUIRE _A_PING
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        MOV     R16, R17
+        COM     R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+gpi2c_start_condition:
+        RJMP    ?Subroutine1
+
+        RSEG CODE:CODE:NOROOT(1)
+gpi2c_stop_condition:
+        ST      -Y, R27
+        ST      -Y, R26
+        MOVW    R27:R26, R17:R16
+        ADIW    R27:R26, 1
+        RCALL   ?Subroutine18
+??CrossCallReturnLabel_37:
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_39:
+        ADIW    R27:R26, 3
+        RCALL   ?Subroutine18
+??CrossCallReturnLabel_38:
+        ADIW    R27:R26, 2
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_40:
+        LD      R16, X+
+        SBIW    R27:R26, 4
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_35:
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_22:
+        ADIW    R27:R26, 4
+        LD      R16, X+
+        SBIW    R27:R26, 2
+        RCALL   ?Subroutine5
+??CrossCallReturnLabel_36:
+        ADIW    R27:R26, 2
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_23:
+        RJMP    ?Subroutine14
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine5:
+        RCALL   ??Subroutine29_0
+??CrossCallReturnLabel_49:
+        REQUIRE ?Subroutine18
+        ;               // Fall through to label ?Subroutine18
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine18:
+        LD      R17, X
+        LD      R16, -X
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+gpi2c_restart_condition:
+        REQUIRE ?Subroutine1
+        ;               // Fall through to label ?Subroutine1
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        ST      -Y, R27
+        ST      -Y, R26
+        MOVW    R27:R26, R17:R16
+        ADIW    R27:R26, 3
+        LD      R17, X
+        LD      R16, -X
+        ADIW    R27:R26, 2
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_27:
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_32:
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_26:
+        ADIW    R27:R26, 4
+        LD      R16, X+
+        SBIW    R27:R26, 2
+        RCALL   ??Subroutine27_0
+??CrossCallReturnLabel_34:
+        ADIW    R27:R26, 2
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_45:
+        RCALL   ?Subroutine12
+??CrossCallReturnLabel_33:
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_44:
+        ADIW    R27:R26, 4
+        REQUIRE ?Subroutine14
+        ;               // Fall through to label ?Subroutine14
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine14:
+        LD      R16, X+
+        RCALL   ??Subroutine29_0
+??CrossCallReturnLabel_48:
+        LD      R26, Y+
+        LD      R27, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine12:
+        LD      R16, X+
+        SBIW    R27:R26, 4
+        REQUIRE ??Subroutine27_0
+        ;               // Fall through to label ??Subroutine27_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine27_0:
+        RCALL   ??Subroutine29_0
+??CrossCallReturnLabel_47:
+        RJMP    ?Subroutine18
+
+        RSEG CODE:CODE:NOROOT(1)
+gpi2c_write:
+        CALL    ?PROLOGUE6_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        REQUIRE ?Register_R5_is_cg_reg
+        MOVW    R5:R4, R17:R16
+        MOV     R24, R18
+        LDI     R26, 0
+        LDI     R25, 8
+??gpi2c_write_0:
+        MOVW    R31:R30, R5:R4
+        LDD     R16, Z+2
+        LDD     R17, Z+3
+        BST     R24, 7
+        BRTC    ??gpi2c_write_1
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_24:
+        RJMP    ??CrossCallReturnLabel_41
+??gpi2c_write_1:
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_41:
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_31:
+        LSL     R24
+        DEC     R25
+        BRNE    ??gpi2c_write_0
+        RCALL   ?Subroutine17
+??CrossCallReturnLabel_50:
+        MOVW    R31:R30, R5:R4
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_20:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_17:
+        LDI     R24, 0
+        LDI     R25, 0
+??gpi2c_write_2:
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_14:
+        BREQ    ??gpi2c_write_3
+        RCALL   ?Subroutine17
+??CrossCallReturnLabel_51:
+        ADIW    R25:R24, 1
+        CPI     R24, 30
+        CPC     R25, R26
+        BRLT    ??gpi2c_write_2
+??gpi2c_write_3:
+        CPI     R24, 30
+        SBCI    R25, 0
+        BRLT    ??gpi2c_write_4
+        LDI     R26, 170
+??gpi2c_write_4:
+        RCALL   ?Subroutine26
+??CrossCallReturnLabel_29:
+        MOV     R16, R26
+        LDI     R17, 0
+        LDI     R30, 6
+        JMP     ?EPILOGUE_B6_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine16:
+        RJMP    PORTSetBits
+
+        RSEG CODE:CODE:NOROOT(1)
+gpi2c_read:
+        CALL    ?PROLOGUE7_L09
+        REQUIRE ?Register_R4_is_cg_reg
+        REQUIRE ?Register_R5_is_cg_reg
+        REQUIRE ?Register_R6_is_cg_reg
+        MOVW    R5:R4, R17:R16
+        MOVW    R27:R26, R19:R18
+        MOV     R6, R20
+        LDI     R24, 0
+        MOVW    R31:R30, R17:R16
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_21:
+        RCALL   ?Subroutine17
+??CrossCallReturnLabel_52:
+        LDI     R25, 8
+??gpi2c_read_0:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_16:
+        LSL     R24
+        RCALL   ?Subroutine8
+??CrossCallReturnLabel_15:
+        BREQ    ??gpi2c_read_1
+        ORI     R24, 0x01
+??gpi2c_read_1:
+        RCALL   ?Subroutine26
+??CrossCallReturnLabel_28:
+        DEC     R25
+        BRNE    ??gpi2c_read_0
+        MOVW    R31:R30, R5:R4
+        LDD     R16, Z+2
+        LDD     R17, Z+3
+        TST     R6
+        BREQ    ??gpi2c_read_2
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_42:
+        RJMP    ??CrossCallReturnLabel_25
+??gpi2c_read_2:
+        RCALL   ?Subroutine16
+??CrossCallReturnLabel_25:
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_30:
+        MOVW    R31:R30, R5:R4
+        LDD     R17, Z+3
+        LDD     R16, Z+2
+        RCALL   ??Subroutine28_0
+??CrossCallReturnLabel_43:
+        ST      X, R24
+        MOV     R16, R24
+        LDI     R30, 7
+        JMP     ?EPILOGUE_B7_L09
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine15:
+        LDD     R17, Z+3
+        LDD     R16, Z+2
+        RJMP    PORTReadBits
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine8:
+        MOVW    R31:R30, R5:R4
+        RCALL   ?Subroutine15
+??CrossCallReturnLabel_19:
+        TST     R16
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine26:
+        RCALL   ?Subroutine13
+??CrossCallReturnLabel_46:
+        RJMP    ?Subroutine17
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine13:
+        MOVW    R31:R30, R5:R4
+        LDD     R17, Z+1
+        LD      R16, Z
+        REQUIRE ??Subroutine28_0
+        ;               // Fall through to label ??Subroutine28_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine28_0:
+        RJMP    PORTClearBits
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine10:
+        MOVW    R31:R30, R5:R4
+        LDD     R17, Z+1
+        LD      R16, Z
+        RCALL   PORTSetBits
+        RJMP    ?Subroutine17
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine2:
+        RCALL   ?Subroutine17
+??CrossCallReturnLabel_53:
+        RCALL   ?Subroutine10
+??CrossCallReturnLabel_18:
+        RJMP    ?Subroutine26
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine17:
+        MOVW    R31:R30, R5:R4
+        LDD     R16, Z+4
+        REQUIRE ??Subroutine29_0
+        ;               // Fall through to label ??Subroutine29_0
+
+        RSEG CODE:CODE:NOROOT(1)
+??Subroutine29_0:
+        JMP     delay_us
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        END
+// 
+//  21 bytes in segment ABSOLUTE
+// 772 bytes in segment CODE
+// 
+// 772 bytes of CODE memory
+//   0 bytes of DATA memory (+ 21 bytes shared)
+//
+//Errors: none
+//Warnings: none

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>cn_board/Release</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>137</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1236</ColumnWidth1><ColumnWidth2>329</ColumnWidth2><ColumnWidth3>82</ColumnWidth3></Build>
+      <Find-in-Files>
+        
+        
+        
+      <ColumnWidth0>589</ColumnWidth0><ColumnWidth1>84</ColumnWidth1><ColumnWidth2>1011</ColumnWidth2></Find-in-Files>
+    </Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-17178-22175</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>cn_board</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-1850-23076</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-1977-29010</Identity>
+            <TabName>Find in Files</TabName>
+            <Factory>Find-in-Files</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\main.c</Filename><XPos>0</XPos><YPos>44</YPos><SelStart>1128</SelStart><SelEnd>1128</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\main.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>474</SelStart><SelEnd>474</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\allinclude.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>193</SelStart><SelEnd>193</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\hw_config.h</Filename><XPos>0</XPos><YPos>149</YPos><SelStart>6102</SelStart><SelEnd>6102</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\timer.c</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>2404</SelStart><SelEnd>2414</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\timer.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>32</SelStart><SelEnd>32</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\inc\iom128.h</Filename><XPos>0</XPos><YPos>54</YPos><SelStart>2211</SelStart><SelEnd>2226</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\avr\inc\bitdefinitions\iom128.inc</Filename><XPos>0</XPos><YPos>311</YPos><SelStart>7329</SelStart><SelEnd>7334</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Release\List\timer.lst</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>5056</SelStart><SelEnd>5056</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Release\List\main.lst</Filename><XPos>0</XPos><YPos>87</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Release\List\main.s90</Filename><XPos>0</XPos><YPos>108</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\avr_pwm.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1280</SelStart><SelEnd>1280</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\avr_pwm.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>188</SelStart><SelEnd>188</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\uart.c</Filename><XPos>0</XPos><YPos>129</YPos><SelStart>4417</SelStart><SelEnd>4417</SelEnd></Tab><ActiveTab>13</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\uart.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>40</SelStart><SelEnd>40</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\delay.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>61</SelStart><SelEnd>61</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\delay.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>41</SelStart><SelEnd>41</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\twi.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>1925</SelStart><SelEnd>1925</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\twi.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>62</SelStart><SelEnd>62</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\i2c.c</Filename><XPos>0</XPos><YPos>24</YPos><SelStart>2959</SelStart><SelEnd>2959</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\i2c.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>922</SelStart><SelEnd>922</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\gpi2c.c</Filename><XPos>0</XPos><YPos>117</YPos><SelStart>2119</SelStart><SelEnd>2140</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\gpi2c.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>273</SelStart><SelEnd>281</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\source\FS_I2C_DIMMIN.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>703</SelStart><SelEnd>710</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0578ea78><key>iaridepm.enu1</key></Toolbar-0578ea78></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>789</Bottom><Right>211</Right><x>-2</x><y>-2</y><xscreen>148</xscreen><yscreen>144</yscreen><sizeHorzCX>86702</sizeHorzCX><sizeHorzCY>147541</sizeHorzCY><sizeVertCX>124780</sizeVertCX><sizeVertCY>810451</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>142</Bottom><Right>1709</Right><x>-2</x><y>-2</y><xscreen>1711</xscreen><yscreen>144</yscreen><sizeHorzCX>1002343</sizeHorzCX><sizeHorzCY>147541</sizeHorzCY><sizeVertCX>86702</sizeVertCX><sizeVertCY>147541</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

@@ -1,0 +1,216 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  16:54:39 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID 신뢰성\CN_BOARD\source\FS_I2C_DIMMIN.c          #
+#    Command line =  "D:\LUCID 신뢰성\CN_BOARD\source\FS_I2C_DIMMIN.c"        #
+#                    --cpu=m128 -ms -o "D:\LUCID                              #
+#                    신뢰성\CN_BOARD\Release\Obj\" -D NDEBUG -lCN "D:\LUCID   #
+#                    신뢰성\CN_BOARD\Release\List\" -lb "D:\LUCID             #
+#                    신뢰성\CN_BOARD\Release\List\" -y                        #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID 신뢰성\CN_BOARD\Release\List\FS_I2C_DIMMIN.lst  #
+#    Object file  =  D:\LUCID 신뢰성\CN_BOARD\Release\Obj\FS_I2C_DIMMIN.r90   #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID 신뢰성\CN_BOARD\source\FS_I2C_DIMMIN.c
+      1          #include "allinclude.h"
+      2          
+      3          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+      4          void fs_i2c_dimming_fun(void)
+   \                     fs_i2c_dimming_fun:
+      5          {
+   \   00000000   ........           CALL    ?PROLOGUE4_L09
+      6              unsigned short temp;
+      7              unsigned short cal_chk;
+      8              unsigned char tempH, tempL;
+      9              unsigned char chk_NG;
+     10              BYTE i;
+     11             
+     12          
+     13                  if(PC_pwm_flag & 0x01){ //20msec * 50 =  1000msec 1초 
+   \   00000004   9100....           LDS     R16, PC_pwm_flag
+   \   00000008   FF00               SBRS    R16, 0
+   \   0000000A   C038               RJMP    ??fs_i2c_dimming_fun_0
+     14                      // I2C DIMMING MAX 1023
+     15                      // 100% : 1023
+     16                      //  50% : 512
+     17                      //  25% : 255
+     18                      //   5% :  51
+     19                    
+     20                      tempH = PC_pwm_H;
+   \   0000000C   9180....           LDS     R24, PC_pwm_H
+     21                      tempL = PC_pwm_L;
+     22                      tempL |= 0x3F; // 하위 6 Bit, high로 할것  211217 신동엽 책임 추가 요청
+   \   00000010   9190....           LDS     R25, PC_pwm_L
+   \   00000014   639F               ORI     R25, 0x3F
+     23                      
+     24                      cal_chk = tempH + tempL;
+     25                      cal_chk = ~cal_chk;    //1의 보수 
+     26                      //printf("1 complement = 0x%X\r\n",cal_chk);
+     27                      cal_chk = cal_chk +1;  //2의 보수 
+     28                      //printf("2 complement = 0x%X\r\n",cal_chk);
+     29                      
+     30                      twi_write(0xA4, 73, tempH);
+   \   00000016   2F28               MOV     R18, R24
+   \   00000018   E030               LDI     R19, 0
+   \   0000001A   E419               LDI     R17, 73
+   \   0000001C   ....               RCALL   ?Subroutine0
+     31                      delay_ms(1);
+     32                      twi_write(0xA4, 74, tempL);
+   \                     ??CrossCallReturnLabel_3:
+   \   0000001E   2F29               MOV     R18, R25
+   \   00000020   E030               LDI     R19, 0
+   \   00000022   E41A               LDI     R17, 74
+   \   00000024   ....               RCALL   ?Subroutine0
+     33                      delay_ms(1);
+     34                      twi_write(0xA4, 254, (unsigned char)cal_chk); //chk
+   \                     ??CrossCallReturnLabel_4:
+   \   00000026   0F89               ADD     R24, R25
+   \   00000028   9580               COM     R24
+   \   0000002A   9583               INC     R24
+   \   0000002C   2F28               MOV     R18, R24
+   \   0000002E   E030               LDI     R19, 0
+   \   00000030   EF1E               LDI     R17, 254
+   \   00000032   ....               RCALL   ?Subroutine3
+     35                      delay_ms(20);
+   \                     ??CrossCallReturnLabel_1:
+   \   00000034   E104               LDI     R16, 20
+   \   00000036   ....               RCALL   ?Subroutine4
+     36                      
+     37                      for(i=0; i<10; i++){
+   \                     ??CrossCallReturnLabel_5:
+   \   00000038   E08A               LDI     R24, 10
+     38                          chk_NG = twi_read(0xA4, 5);
+   \                     ??fs_i2c_dimming_fun_1:
+   \   0000003A   E015               LDI     R17, 5
+   \   0000003C   EA04               LDI     R16, 164
+   \   0000003E   ........           CALL    twi_read
+   \   00000042   2FA0               MOV     R26, R16
+     39                          printf("pc chk_NG =  0x%X\r\n",chk_NG);
+   \   00000044   E0B0               LDI     R27, 0
+   \   00000046   93BA               ST      -Y, R27
+   \   00000048   930A               ST      -Y, R16
+   \   0000004A   ....               LDI     R16, LOW(`?<Constant "pc chk_NG =  0x%X\\r\\n">`)
+   \   0000004C   ....               LDI     R17, (`?<Constant "pc chk_NG =  0x%X\\r\\n">`) >> 8
+   \   0000004E   ........           CALL    printf
+   \   00000052   9622               ADIW    R29:R28, 2
+     40                          if((chk_NG & 0x01) == 0){ // 0번 비트가 0이면 ok  
+   \   00000054   FBA0               BST     R26, 0
+   \   00000056   F056               BRTS    ??fs_i2c_dimming_fun_2
+     41                              twi_write(0xA4, 255, 0xAA);   // 0 :ok , 1: NG
+   \   00000058   EA2A               LDI     R18, 170
+   \   0000005A   E030               LDI     R19, 0
+   \   0000005C   EF1F               LDI     R17, 255
+   \   0000005E   ....               RCALL   ?Subroutine3
+     42                              PC_pwm_flag &= ~0x01;
+   \                     ??CrossCallReturnLabel_2:
+   \   00000060   ....               LDI     R30, LOW(PC_pwm_flag)
+   \   00000062   ....               LDI     R31, (PC_pwm_flag) >> 8
+   \   00000064   8100               LD      R16, Z
+   \   00000066   7F0E               ANDI    R16, 0xFE
+   \   00000068   8300               ST      Z, R16
+     43                              break;
+   \   0000006A   C004               RJMP    ??fs_i2c_dimming_fun_3
+     44                          }
+     45                          delay_ms(10);
+   \                     ??fs_i2c_dimming_fun_2:
+   \   0000006C   E00A               LDI     R16, 10
+   \   0000006E   ....               RCALL   ?Subroutine4
+     46                      }
+   \                     ??CrossCallReturnLabel_6:
+   \   00000070   958A               DEC     R24
+   \   00000072   F719               BRNE    ??fs_i2c_dimming_fun_1
+     47          
+     48                      ext_usLEDTimer = 0;
+   \                     ??fs_i2c_dimming_fun_3:
+   \   00000074   ....               LDI     R30, LOW(ext_usLEDTimer)
+   \   00000076   ....               LDI     R31, (ext_usLEDTimer) >> 8
+   \   00000078   83B0               ST      Z, R27
+   \   0000007A   83B1               STD     Z+1, R27
+     49                  }
+     50             
+     51              
+     52              
+     53          }
+   \                     ??fs_i2c_dimming_fun_0:
+   \   0000007C   E0E4               LDI     R30, 4
+   \   0000007E   ........           JMP     ?EPILOGUE_B4_L09
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine3:
+   \   00000000   EA04               LDI     R16, 164
+   \   00000002   ........           JMP     twi_write
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   ....               RCALL   ?Subroutine3
+   \                     ??CrossCallReturnLabel_0:
+   \   00000002   E001               LDI     R16, 1
+   \   00000004                      REQUIRE ?Subroutine4
+   \   00000004                      ;               // Fall through to label ?Subroutine4
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine4:
+   \   00000000   E010               LDI     R17, 0
+   \   00000002   ........           JMP     delay_ms
+
+   \                                 In  segment NEAR_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "pc chk_NG =  0x%X`:
+   \   00000000   637063206B68       DC8 "pc chk_NG =  0x%X\015\012"
+   \              4E5F2047203D
+   \              302025780D58
+   \              000A        
+
+   \                                 In  segment NEAR_I, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_I>`
+   \                     `?<Constant "pc chk_NG =  0x%X\\r\\n">`:
+   \   00000000                      DS8 20
+   \   00000014                      REQUIRE `?<Initializer for <Constant "pc chk_NG =  0x%X`
+
+   Maximum stack usage in bytes:
+
+     Function           CSTACK RSTACK
+     --------           ------ ------
+     fs_i2c_dimming_fun     6      2
+       -> twi_write         4      2
+       -> delay_ms          4      2
+       -> twi_write         4      2
+       -> delay_ms          4      2
+       -> twi_write         4      2
+       -> delay_ms          4      2
+       -> twi_read          4      2
+       -> printf            6      2
+       -> twi_write         4      2
+       -> delay_ms          4      2
+
+
+   Segment part sizes:
+
+     Function/Label                                 Bytes
+     --------------                                 -----
+     fs_i2c_dimming_fun                              130
+     ?Subroutine3                                      6
+     ?Subroutine0                                      4
+     ?Subroutine4                                      6
+     ?<Initializer for <Constant "pc chk_NG =  0x%X   20
+     ?<Constant "pc chk_NG =  0x%X\r\n">              20
+      Others                                           7
+
+ 
+ 146 bytes in segment CODE
+   7 bytes in segment INITTAB
+  20 bytes in segment NEAR_I
+  20 bytes in segment NEAR_ID
+ 
+ 166 bytes of CODE memory (+ 7 bytes shared)
+  20 bytes of DATA memory
+
+Errors: none
+Warnings: 1

@@ -1,0 +1,276 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:40 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\timer.c                 /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\timer.c" --cpu=m128    /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\timer.s90         /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME timer
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBWEAK `??timer0_isr??INTVEC 60`
+        PUBWEAK `??timer_interrupt_routine??INTVEC 48`
+        PUBLIC LED_TIMER
+        PUBWEAK _A_OCR0
+        PUBWEAK _A_OCR1A
+        PUBWEAK _A_TCCR0
+        PUBWEAK _A_TCCR1A
+        PUBWEAK _A_TCCR1B
+        PUBWEAK _A_TCCR1C
+        PUBWEAK _A_TCNT0
+        PUBWEAK _A_TCNT1
+        PUBWEAK _A_TIFR
+        PUBWEAK _A_TIMSK
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC chk_PWMTimer
+        PUBLIC ext_usLEDTimer
+        PUBLIC ext_usRxTimer
+        PUBLIC init_timer
+        PUBLIC timer0_isr
+        PUBLIC timer_interrupt_routine
+
+timer0_isr          SYMBOL "timer0_isr"
+`??timer0_isr??INTVEC 60` SYMBOL "??INTVEC 60", timer0_isr
+timer_interrupt_routine SYMBOL "timer_interrupt_routine"
+`??timer_interrupt_routine??INTVEC 48` SYMBOL "??INTVEC 48", timer_interrupt_routine
+
+        EXTERN delay_timer
+
+
+        ASEGN ABSOLUTE:DATA:NOROOT,04aH
+// union <unnamed> volatile __io _A_OCR1A
+_A_OCR1A:
+        DS8 2
+
+        ASEGN ABSOLUTE:DATA:NOROOT,04cH
+// union <unnamed> volatile __io _A_TCNT1
+_A_TCNT1:
+        DS8 2
+
+        ASEGN ABSOLUTE:DATA:NOROOT,04eH
+// union <unnamed> volatile __io _A_TCCR1B
+_A_TCCR1B:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,04fH
+// union <unnamed> volatile __io _A_TCCR1A
+_A_TCCR1A:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,051H
+// union <unnamed> volatile __io _A_OCR0
+_A_OCR0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,052H
+// union <unnamed> volatile __io _A_TCNT0
+_A_TCNT0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,053H
+// union <unnamed> volatile __io _A_TCCR0
+_A_TCCR0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,056H
+// union <unnamed> volatile __io _A_TIFR
+_A_TIFR:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,057H
+// union <unnamed> volatile __io _A_TIMSK
+_A_TIMSK:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,07aH
+// union <unnamed> volatile __io _A_TCCR1C
+_A_TCCR1C:
+        DS8 1
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+ext_usRxTimer:
+        DS8 2
+ext_usLEDTimer:
+        DS8 2
+chk_PWMTimer:
+        DS8 2
+LED_TIMER:
+        DS8 1
+
+        RSEG CODE:CODE:NOROOT(1)
+init_timer:
+        LDI     R16, 0
+        OUT     0x37, R16
+        LDI     R16, 12
+        OUT     0x33, R16
+        LDI     R16, 249
+        OUT     0x31, R16
+        LDI     R16, 0
+        OUT     0x32, R16
+        IN      R16, 0x37
+        ORI     R16, 0x02
+        OUT     0x37, R16
+        LDI     R16, 0
+        OUT     0x36, R16
+        OUT     0x2F, R16
+        LDI     R16, 12
+        OUT     0x2E, R16
+        LDI     R16, 0
+        STS     _A_TCCR1C, R16
+        LDI     R16, 2
+        OUT     0x2B, R16
+        LDI     R16, 112
+        OUT     0x2A, R16
+        LDI     R16, 0
+        OUT     0x2D, R16
+        OUT     0x2C, R16
+        IN      R16, 0x37
+        ORI     R16, 0x10
+        OUT     0x37, R16
+        LDI     R16, 0
+        OUT     0x36, R16
+        RET
+        REQUIRE _A_TIMSK
+        REQUIRE _A_TCCR0
+        REQUIRE _A_OCR0
+        REQUIRE _A_TCNT0
+        REQUIRE _A_TIFR
+        REQUIRE _A_TCCR1A
+        REQUIRE _A_TCCR1B
+        REQUIRE _A_TCCR1C
+        REQUIRE _A_OCR1A
+        REQUIRE _A_TCNT1
+
+        RSEG CODE:CODE:NOROOT(1)
+timer0_isr:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_0:
+        LDI     R30, LOW(delay_timer)
+        LDI     R31, (delay_timer) >> 8
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_2:
+        REQUIRE ?Subroutine3
+        ;               // Fall through to label ?Subroutine3
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine3:
+        RCALL   ?Subroutine2
+??CrossCallReturnLabel_4:
+        RETI
+
+        RSEG CODE:CODE:NOROOT(1)
+timer_interrupt_routine:
+        RCALL   ?Subroutine0
+??CrossCallReturnLabel_1:
+        LDI     R30, LOW(ext_usRxTimer)
+        LDI     R31, (ext_usRxTimer) >> 8
+        RCALL   ?Subroutine1
+??CrossCallReturnLabel_3:
+        LDD     R16, Z+2
+        LDD     R17, Z+3
+        SUBI    R16, 255
+        SBCI    R17, 255
+        STD     Z+2, R16
+        STD     Z+3, R17
+        LDD     R16, Z+6
+        INC     R16
+        STD     Z+6, R16
+        LDD     R16, Z+4
+        LDD     R17, Z+5
+        SUBI    R16, 255
+        SBCI    R17, 255
+        STD     Z+4, R16
+        STD     Z+5, R17
+        RJMP    ?Subroutine3
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine2:
+        OUT     0x3F, R18
+        LD      R16, Y+
+        LD      R17, Y+
+        LD      R18, Y+
+        LD      R30, Y+
+        LD      R31, Y+
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine1:
+        LD      R16, Z
+        LDD     R17, Z+1
+        SUBI    R16, 255
+        SBCI    R17, 255
+        ST      Z, R16
+        STD     Z+1, R17
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+?Subroutine0:
+        ST      -Y, R31
+        ST      -Y, R30
+        ST      -Y, R18
+        ST      -Y, R17
+        ST      -Y, R16
+        IN      R18, 0x3F
+        RET
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        COMMON INTVEC:CODE:ROOT(1)
+        ORG 48
+`??timer_interrupt_routine??INTVEC 48`:
+        JMP     timer_interrupt_routine
+
+        COMMON INTVEC:CODE:ROOT(1)
+        ORG 60
+`??timer0_isr??INTVEC 60`:
+        JMP     timer0_isr
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        END
+// 
+//  12 bytes in segment ABSOLUTE
+// 158 bytes in segment CODE
+//   7 bytes in segment INITTAB
+//   8 bytes in segment INTVEC
+//   7 bytes in segment NEAR_Z
+// 
+// 158 bytes of CODE memory (+ 15 bytes shared)
+//   7 bytes of DATA memory (+ 12 bytes shared)
+//
+//Errors: none
+//Warnings: none

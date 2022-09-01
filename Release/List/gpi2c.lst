@@ -1,0 +1,1063 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  16:54:11 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\gpi2c.c                  #
+#    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\gpi2c.c" --cpu=m128     #
+#                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D        #
+#                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"     #
+#                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y          #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\gpi2c.lst          #
+#    Object file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\gpi2c.r90           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID ½Å·Ú¼º\CN_BOARD\source\gpi2c.c
+      1          #include "allinclude.h"
+
+   \                                 In  segment ABSOLUTE, at 0x20
+   \   union <unnamed> volatile __io _A_PINF
+   \                     _A_PINF:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x21
+   \   union <unnamed> volatile __io _A_PINE
+   \                     _A_PINE:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x22
+   \   union <unnamed> volatile __io _A_DDRE
+   \                     _A_DDRE:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x23
+   \   union <unnamed> volatile __io _A_PORTE
+   \                     _A_PORTE:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x30
+   \   union <unnamed> volatile __io _A_PIND
+   \                     _A_PIND:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x31
+   \   union <unnamed> volatile __io _A_DDRD
+   \                     _A_DDRD:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x32
+   \   union <unnamed> volatile __io _A_PORTD
+   \                     _A_PORTD:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x33
+   \   union <unnamed> volatile __io _A_PINC
+   \                     _A_PINC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x34
+   \   union <unnamed> volatile __io _A_DDRC
+   \                     _A_DDRC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x35
+   \   union <unnamed> volatile __io _A_PORTC
+   \                     _A_PORTC:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x36
+   \   union <unnamed> volatile __io _A_PINB
+   \                     _A_PINB:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x37
+   \   union <unnamed> volatile __io _A_DDRB
+   \                     _A_DDRB:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x38
+   \   union <unnamed> volatile __io _A_PORTB
+   \                     _A_PORTB:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x39
+   \   union <unnamed> volatile __io _A_PINA
+   \                     _A_PINA:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3a
+   \   union <unnamed> volatile __io _A_DDRA
+   \                     _A_DDRA:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x3b
+   \   union <unnamed> volatile __io _A_PORTA
+   \                     _A_PORTA:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x61
+   \   union <unnamed> volatile __io _A_DDRF
+   \                     _A_DDRF:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x62
+   \   union <unnamed> volatile __io _A_PORTF
+   \                     _A_PORTF:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x63
+   \   union <unnamed> volatile __io _A_PING
+   \                     _A_PING:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x64
+   \   union <unnamed> volatile __io _A_DDRG
+   \                     _A_DDRG:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x65
+   \   union <unnamed> volatile __io _A_PORTG
+   \                     _A_PORTG:
+   \   00000000                      DS8 1
+      2          
+      3          
+      4          //GPI2C_INIT gpi2c_eep = {IOPORT_G, BIT_12, IOPORT_G, BIT_14, 400}; //sck_reg , sck pin, sda_reg, sda_pin
+      5          /*
+      6          GPI2C_INIT gpi2c_module =
+      7          {
+      8              PG,BITS3,  PG,BITS4, 20
+      9          };
+     10          */
+     11          
+     12          #define ACK_WAIT  30
+     13          //*****************************************************************************//
+     14          //**************************** 1 Byte ?? ???? Library *******************//
+     15          //************************************** I2C *********************************//
+     16          //************************************************************ SYW 151026 V0.1*//
+     17          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     18          void PORTSetBits(IoPortId id, BIT_INFO bit)
+   \                     PORTSetBits:
+     19          {
+     20          	switch(id)
+   \   00000000   2300               TST     R16
+   \   00000002   F069               BREQ    ??PORTSetBits_0
+   \   00000004   950A               DEC     R16
+   \   00000006   F091               BREQ    ??PORTSetBits_1
+   \   00000008   950A               DEC     R16
+   \   0000000A   F0B9               BREQ    ??PORTSetBits_2
+   \   0000000C   950A               DEC     R16
+   \   0000000E   F0E1               BREQ    ??PORTSetBits_3
+   \   00000010   950A               DEC     R16
+   \   00000012   F109               BREQ    ??PORTSetBits_4
+   \   00000014   950A               DEC     R16
+   \   00000016   F131               BREQ    ??PORTSetBits_5
+   \   00000018   950A               DEC     R16
+   \   0000001A   F171               BREQ    ??PORTSetBits_6
+   \   0000001C   9508               RET
+     21          	{
+     22          		case PA:    PORTA |= bit;	DDRA &= (~bit);break;
+   \                     ??PORTSetBits_0:
+   \   0000001E   B30B               IN      R16, 0x1B
+   \   00000020   2B01               OR      R16, R17
+   \   00000022   BB0B               OUT     0x1B, R16
+   \   00000024   9510               COM     R17
+   \   00000026   B30A               IN      R16, 0x1A
+   \   00000028   2301               AND     R16, R17
+   \   0000002A   ....               RJMP    ?Subroutine25
+     23          		case PB:    PORTB |= bit;	DDRB &= (~bit);break;
+   \                     ??PORTSetBits_1:
+   \   0000002C   B308               IN      R16, 0x18
+   \   0000002E   2B01               OR      R16, R17
+   \   00000030   BB08               OUT     0x18, R16
+   \   00000032   9510               COM     R17
+   \   00000034   B307               IN      R16, 0x17
+   \   00000036   2301               AND     R16, R17
+   \   00000038   ....               RJMP    ?Subroutine24
+     24          		case PC:    PORTC |= bit;	DDRC &= (~bit);break;
+   \                     ??PORTSetBits_2:
+   \   0000003A   B305               IN      R16, 0x15
+   \   0000003C   2B01               OR      R16, R17
+   \   0000003E   BB05               OUT     0x15, R16
+   \   00000040   9510               COM     R17
+   \   00000042   B304               IN      R16, 0x14
+   \   00000044   2301               AND     R16, R17
+   \   00000046   ....               RJMP    ?Subroutine23
+     25          		case PD:    PORTD |= bit;	DDRD &= (~bit);break;
+   \                     ??PORTSetBits_3:
+   \   00000048   B302               IN      R16, 0x12
+   \   0000004A   2B01               OR      R16, R17
+   \   0000004C   BB02               OUT     0x12, R16
+   \   0000004E   9510               COM     R17
+   \   00000050   B301               IN      R16, 0x11
+   \   00000052   2301               AND     R16, R17
+   \   00000054   ....               RJMP    ?Subroutine22
+     26          		case PE:    PORTE |= bit;	DDRE &= (~bit);break;
+   \                     ??PORTSetBits_4:
+   \   00000056   B103               IN      R16, 0x03
+   \   00000058   2B01               OR      R16, R17
+   \   0000005A   B903               OUT     0x03, R16
+   \   0000005C   9510               COM     R17
+   \   0000005E   B102               IN      R16, 0x02
+   \   00000060   2301               AND     R16, R17
+   \   00000062   ....               RJMP    ?Subroutine21
+     27          		case PF:    PORTF |= bit;	DDRF &= (~bit);break;
+   \                     ??PORTSetBits_5:
+   \   00000064   9100....           LDS     R16, _A_PORTF
+   \   00000068   2B01               OR      R16, R17
+   \   0000006A   9300....           STS     _A_PORTF, R16
+   \   0000006E   9510               COM     R17
+   \   00000070   9100....           LDS     R16, _A_DDRF
+   \   00000074   2301               AND     R16, R17
+   \   00000076   ....               RJMP    ?Subroutine20
+     28          		case PG:    PORTG |= bit;	DDRG &= (~bit);break;
+   \                     ??PORTSetBits_6:
+   \   00000078   9100....           LDS     R16, _A_PORTG
+   \   0000007C   2B01               OR      R16, R17
+   \   0000007E   9300....           STS     _A_PORTG, R16
+   \   00000082   9510               COM     R17
+   \   00000084   9100....           LDS     R16, _A_DDRG
+   \   00000088   2301               AND     R16, R17
+   \   0000008A   ....               RJMP    ?Subroutine19
+   \   0000008C                      REQUIRE _A_PORTA
+   \   0000008C                      REQUIRE _A_DDRA
+   \   0000008C                      REQUIRE _A_PORTB
+   \   0000008C                      REQUIRE _A_DDRB
+   \   0000008C                      REQUIRE _A_PORTC
+   \   0000008C                      REQUIRE _A_DDRC
+   \   0000008C                      REQUIRE _A_PORTD
+   \   0000008C                      REQUIRE _A_DDRD
+   \   0000008C                      REQUIRE _A_PORTE
+   \   0000008C                      REQUIRE _A_DDRE
+   \   0000008C                      REQUIRE _A_PORTF
+   \   0000008C                      REQUIRE _A_DDRF
+   \   0000008C                      REQUIRE _A_PORTG
+   \   0000008C                      REQUIRE _A_DDRG
+     29          	}
+     30          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine25:
+   \   00000000   BB0A               OUT     0x1A, R16
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine24:
+   \   00000000   BB07               OUT     0x17, R16
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine23:
+   \   00000000   BB04               OUT     0x14, R16
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine22:
+   \   00000000   BB01               OUT     0x11, R16
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine21:
+   \   00000000   B902               OUT     0x02, R16
+   \   00000002   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine20:
+   \   00000000   9300....           STS     _A_DDRF, R16
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine19:
+   \   00000000   9300....           STS     _A_DDRG, R16
+   \   00000004   9508               RET
+     31          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     32          void PORTClearBits(IoPortId id, BIT_INFO bit)
+   \                     PORTClearBits:
+     33          {
+     34          	switch(id)
+   \   00000000   2300               TST     R16
+   \   00000002   F069               BREQ    ??PORTClearBits_0
+   \   00000004   950A               DEC     R16
+   \   00000006   F091               BREQ    ??PORTClearBits_1
+   \   00000008   950A               DEC     R16
+   \   0000000A   F0B9               BREQ    ??PORTClearBits_2
+   \   0000000C   950A               DEC     R16
+   \   0000000E   F0E1               BREQ    ??PORTClearBits_3
+   \   00000010   950A               DEC     R16
+   \   00000012   F109               BREQ    ??PORTClearBits_4
+   \   00000014   950A               DEC     R16
+   \   00000016   F131               BREQ    ??PORTClearBits_5
+   \   00000018   950A               DEC     R16
+   \   0000001A   F171               BREQ    ??PORTClearBits_6
+   \   0000001C   9508               RET
+     35          	{
+     36          		case PA:    PORTA &= (~bit);	DDRA |= (bit);break;  
+   \                     ??PORTClearBits_0:
+   \   0000001E   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_0:
+   \   00000020   B32B               IN      R18, 0x1B
+   \   00000022   2320               AND     R18, R16
+   \   00000024   BB2B               OUT     0x1B, R18
+   \   00000026   B30A               IN      R16, 0x1A
+   \   00000028   2B01               OR      R16, R17
+   \   0000002A   ....               RJMP    ?Subroutine25
+     37          		case PB:    PORTB &= (~bit);	DDRB |= (bit);break;		
+   \                     ??PORTClearBits_1:
+   \   0000002C   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_1:
+   \   0000002E   B328               IN      R18, 0x18
+   \   00000030   2320               AND     R18, R16
+   \   00000032   BB28               OUT     0x18, R18
+   \   00000034   B307               IN      R16, 0x17
+   \   00000036   2B01               OR      R16, R17
+   \   00000038   ....               RJMP    ?Subroutine24
+     38          		case PC:    PORTC &= (~bit);	DDRC |= (bit);break;
+   \                     ??PORTClearBits_2:
+   \   0000003A   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_2:
+   \   0000003C   B325               IN      R18, 0x15
+   \   0000003E   2320               AND     R18, R16
+   \   00000040   BB25               OUT     0x15, R18
+   \   00000042   B304               IN      R16, 0x14
+   \   00000044   2B01               OR      R16, R17
+   \   00000046   ....               RJMP    ?Subroutine23
+     39          		case PD:    PORTD &= (~bit);	DDRD |= (bit);break;
+   \                     ??PORTClearBits_3:
+   \   00000048   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_3:
+   \   0000004A   B322               IN      R18, 0x12
+   \   0000004C   2320               AND     R18, R16
+   \   0000004E   BB22               OUT     0x12, R18
+   \   00000050   B301               IN      R16, 0x11
+   \   00000052   2B01               OR      R16, R17
+   \   00000054   ....               RJMP    ?Subroutine22
+     40          		case PE:    PORTE &= (~bit);	DDRE |= (bit);break;
+   \                     ??PORTClearBits_4:
+   \   00000056   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_4:
+   \   00000058   B123               IN      R18, 0x03
+   \   0000005A   2320               AND     R18, R16
+   \   0000005C   B923               OUT     0x03, R18
+   \   0000005E   B102               IN      R16, 0x02
+   \   00000060   2B01               OR      R16, R17
+   \   00000062   ....               RJMP    ?Subroutine21
+     41          		case PF:    PORTF &= (~bit);	DDRF |= (bit);break;
+   \                     ??PORTClearBits_5:
+   \   00000064   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_5:
+   \   00000066   9120....           LDS     R18, _A_PORTF
+   \   0000006A   2320               AND     R18, R16
+   \   0000006C   9320....           STS     _A_PORTF, R18
+   \   00000070   9100....           LDS     R16, _A_DDRF
+   \   00000074   2B01               OR      R16, R17
+   \   00000076   ....               RJMP    ?Subroutine20
+     42          		case PG:    PORTG &= (~bit);	DDRG |= (bit);break;
+   \                     ??PORTClearBits_6:
+   \   00000078   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_6:
+   \   0000007A   9120....           LDS     R18, _A_PORTG
+   \   0000007E   2320               AND     R18, R16
+   \   00000080   9320....           STS     _A_PORTG, R18
+   \   00000084   9100....           LDS     R16, _A_DDRG
+   \   00000088   2B01               OR      R16, R17
+   \   0000008A   ....               RJMP    ?Subroutine19
+   \   0000008C                      REQUIRE _A_PORTA
+   \   0000008C                      REQUIRE _A_DDRA
+   \   0000008C                      REQUIRE _A_PORTB
+   \   0000008C                      REQUIRE _A_DDRB
+   \   0000008C                      REQUIRE _A_PORTC
+   \   0000008C                      REQUIRE _A_DDRC
+   \   0000008C                      REQUIRE _A_PORTD
+   \   0000008C                      REQUIRE _A_DDRD
+   \   0000008C                      REQUIRE _A_PORTE
+   \   0000008C                      REQUIRE _A_DDRE
+   \   0000008C                      REQUIRE _A_PORTF
+   \   0000008C                      REQUIRE _A_DDRF
+   \   0000008C                      REQUIRE _A_PORTG
+   \   0000008C                      REQUIRE _A_DDRG
+     43          	}
+     44          	
+     45          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   2F01               MOV     R16, R17
+   \   00000002   9500               COM     R16
+   \   00000004   9508               RET
+     46          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     47          BYTE PORTReadBits(IoPortId id, BIT_INFO bit)
+   \                     PORTReadBits:
+     48          {  
+     49          	switch(id)
+   \   00000000   2300               TST     R16
+   \   00000002   F069               BREQ    ??PORTReadBits_0
+   \   00000004   950A               DEC     R16
+   \   00000006   F0A1               BREQ    ??PORTReadBits_1
+   \   00000008   950A               DEC     R16
+   \   0000000A   F0D9               BREQ    ??PORTReadBits_2
+   \   0000000C   950A               DEC     R16
+   \   0000000E   F109               BREQ    ??PORTReadBits_3
+   \   00000010   950A               DEC     R16
+   \   00000012   F129               BREQ    ??PORTReadBits_4
+   \   00000014   950A               DEC     R16
+   \   00000016   F149               BREQ    ??PORTReadBits_5
+   \   00000018   950A               DEC     R16
+   \   0000001A   F179               BREQ    ??PORTReadBits_6
+   \   0000001C   C010               RJMP    ??PORTReadBits_7
+     50          	{
+     51          		case PA: 
+     52          		  	DDRA &= (~bit);
+   \                     ??PORTReadBits_0:
+   \   0000001E   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_7:
+   \   00000020   B32A               IN      R18, 0x1A
+   \   00000022   2320               AND     R18, R16
+   \   00000024   BB2A               OUT     0x1A, R18
+     53          			if(PINA & bit)	return 1;
+   \   00000026   B309               IN      R16, 0x19
+   \   00000028   2301               AND     R16, R17
+   \   0000002A   F049               BREQ    ??PORTReadBits_7
+   \                     ??PORTReadBits_8:
+   \   0000002C   E001               LDI     R16, 1
+   \   0000002E   9508               RET
+     54          			else			return 0;
+     55          			break;
+     56          		case PB: 
+     57          		  	DDRB &= (~bit);
+   \                     ??PORTReadBits_1:
+   \   00000030   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_8:
+   \   00000032   B327               IN      R18, 0x17
+   \   00000034   2320               AND     R18, R16
+   \   00000036   BB27               OUT     0x17, R18
+     58          			if(PINB & bit)	return 1;
+   \   00000038   B306               IN      R16, 0x16
+   \   0000003A   2301               AND     R16, R17
+   \   0000003C   F7B9               BRNE    ??PORTReadBits_8
+   \                     ??PORTReadBits_7:
+   \   0000003E   E000               LDI     R16, 0
+   \   00000040   9508               RET
+     59          			else			return 0;
+     60          			break;
+     61          		case PC:
+     62          			DDRC &= (~bit);
+   \                     ??PORTReadBits_2:
+   \   00000042   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_9:
+   \   00000044   B324               IN      R18, 0x14
+   \   00000046   2320               AND     R18, R16
+   \   00000048   BB24               OUT     0x14, R18
+     63          			if(PINC & bit)	return 1;
+   \   0000004A   B303               IN      R16, 0x13
+   \                     ??PORTReadBits_9:
+   \   0000004C   2301               AND     R16, R17
+   \   0000004E   F771               BRNE    ??PORTReadBits_8
+   \   00000050   CFF6               RJMP    ??PORTReadBits_7
+     64          			else			return 0;
+     65          			break;
+     66          		case PD:  
+     67          			DDRD &= (~bit);
+   \                     ??PORTReadBits_3:
+   \   00000052   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_10:
+   \   00000054   B321               IN      R18, 0x11
+   \   00000056   2320               AND     R18, R16
+   \   00000058   BB21               OUT     0x11, R18
+     68          			if(PIND & bit)	return 1;
+   \   0000005A   B300               IN      R16, 0x10
+   \   0000005C   CFF7               RJMP    ??PORTReadBits_9
+     69          			else			return 0;
+     70          			break;
+     71          		case PE: 
+     72          			DDRE &= (~bit);
+   \                     ??PORTReadBits_4:
+   \   0000005E   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_11:
+   \   00000060   B122               IN      R18, 0x02
+   \   00000062   2320               AND     R18, R16
+   \   00000064   B922               OUT     0x02, R18
+     73          			if(PINE & bit)	return 1;
+   \   00000066   B101               IN      R16, 0x01
+   \   00000068   CFF1               RJMP    ??PORTReadBits_9
+     74          			else			return 0;
+     75          			break;
+     76          		case PF: 
+     77          		  	DDRF &= (~bit);
+   \                     ??PORTReadBits_5:
+   \   0000006A   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_12:
+   \   0000006C   9120....           LDS     R18, _A_DDRF
+   \   00000070   2320               AND     R18, R16
+   \   00000072   9320....           STS     _A_DDRF, R18
+     78          			if(PINF & bit)	return 1;
+   \   00000076   B100               IN      R16, 0x00
+   \   00000078   CFE9               RJMP    ??PORTReadBits_9
+     79          			else			return 0;
+     80          			break;
+     81          		case PG:  
+     82          			DDRG &= (~bit);
+   \                     ??PORTReadBits_6:
+   \   0000007A   ....               RCALL   ?Subroutine0
+   \                     ??CrossCallReturnLabel_13:
+   \   0000007C   9120....           LDS     R18, _A_DDRG
+   \   00000080   2320               AND     R18, R16
+   \   00000082   9320....           STS     _A_DDRG, R18
+     83          			if(PING & bit)	return 1;
+   \   00000086   9100....           LDS     R16, _A_PING
+   \   0000008A   CFE0               RJMP    ??PORTReadBits_9
+   \   0000008C                      REQUIRE _A_DDRA
+   \   0000008C                      REQUIRE _A_PINA
+   \   0000008C                      REQUIRE _A_DDRB
+   \   0000008C                      REQUIRE _A_PINB
+   \   0000008C                      REQUIRE _A_DDRC
+   \   0000008C                      REQUIRE _A_PINC
+   \   0000008C                      REQUIRE _A_DDRD
+   \   0000008C                      REQUIRE _A_PIND
+   \   0000008C                      REQUIRE _A_DDRE
+   \   0000008C                      REQUIRE _A_PINE
+   \   0000008C                      REQUIRE _A_DDRF
+   \   0000008C                      REQUIRE _A_PINF
+   \   0000008C                      REQUIRE _A_DDRG
+   \   0000008C                      REQUIRE _A_PING
+     84          			else			return 0;
+     85          			break;
+     86          	}
+     87              
+     88          	return 0;
+     89          }
+     90          
+     91          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     92          void gpi2c_start_condition(GPI2C_INIT* iic) {
+   \                     gpi2c_start_condition:
+   \   00000000   ....               RJMP    ?Subroutine1
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine18:
+     93              PORTSetBits(iic->sda_reg, iic->sda_pin);
+   \   00000000   911C               LD      R17, X
+   \   00000002   910E               LD      R16, -X
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine1:
+   \   00000000   93BA               ST      -Y, R27
+   \   00000002   93AA               ST      -Y, R26
+   \   00000004   01D8               MOVW    R27:R26, R17:R16
+   \   00000006   9613               ADIW    R27:R26, 3
+   \   00000008   911C               LD      R17, X
+   \   0000000A   910E               LD      R16, -X
+   \   0000000C   9612               ADIW    R27:R26, 2
+   \   0000000E   ....               RCALL   ?Subroutine16
+   \                     ??CrossCallReturnLabel_27:
+   \   00000010   ....               RCALL   ?Subroutine12
+   \                     ??CrossCallReturnLabel_32:
+   \   00000012   ....               RCALL   ?Subroutine16
+   \                     ??CrossCallReturnLabel_26:
+   \   00000014   9614               ADIW    R27:R26, 4
+   \   00000016   910D               LD      R16, X+
+   \   00000018   9712               SBIW    R27:R26, 2
+   \   0000001A   ....               RCALL   ??Subroutine27_0
+   \                     ??CrossCallReturnLabel_34:
+   \   0000001C   9612               ADIW    R27:R26, 2
+   \   0000001E   ....               RCALL   ??Subroutine28_0
+   \                     ??CrossCallReturnLabel_45:
+   \   00000020   ....               RCALL   ?Subroutine12
+   \                     ??CrossCallReturnLabel_33:
+   \   00000022   ....               RCALL   ??Subroutine28_0
+   \                     ??CrossCallReturnLabel_44:
+   \   00000024   9614               ADIW    R27:R26, 4
+   \   00000026                      REQUIRE ?Subroutine14
+   \   00000026                      ;               // Fall through to label ?Subroutine14
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine14:
+   \   00000000   910D               LD      R16, X+
+   \   00000002   ....               RCALL   ??Subroutine29_0
+   \                     ??CrossCallReturnLabel_48:
+   \   00000004   91A9               LD      R26, Y+
+   \   00000006   91B9               LD      R27, Y+
+   \   00000008   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine12:
+   \   00000000   910D               LD      R16, X+
+   \   00000002   9714               SBIW    R27:R26, 4
+   \   00000004                      REQUIRE ??Subroutine27_0
+   \   00000004                      ;               // Fall through to label ??Subroutine27_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine27_0:
+   \   00000000   ....               RCALL   ??Subroutine29_0
+   \                     ??CrossCallReturnLabel_47:
+   \   00000002   ....               RJMP    ?Subroutine18
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine16:
+   \   00000000   ....               RJMP    PORTSetBits
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine28_0:
+   \   00000000   ....               RJMP    PORTClearBits
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine29_0:
+   \   00000000   ........           JMP     delay_us
+     94              delay_us(iic->u16_freq);
+     95              PORTSetBits(iic->sck_reg, iic->sck_pin);
+     96              delay_us(iic->u16_freq);
+     97          
+     98              PORTClearBits(iic->sda_reg, iic->sda_pin);
+     99              delay_us(iic->u16_freq);
+    100              PORTClearBits(iic->sck_reg, iic->sck_pin);
+    101              delay_us(iic->u16_freq);
+    102          }
+    103          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    104          void gpi2c_stop_condition(GPI2C_INIT* iic) {
+   \                     gpi2c_stop_condition:
+   \   00000000   93BA               ST      -Y, R27
+   \   00000002   93AA               ST      -Y, R26
+   \   00000004   01D8               MOVW    R27:R26, R17:R16
+    105              PORTClearBits(iic->sck_reg, iic->sck_pin);
+   \   00000006   9611               ADIW    R27:R26, 1
+   \   00000008   ....               RCALL   ?Subroutine18
+   \                     ??CrossCallReturnLabel_37:
+   \   0000000A   ....               RCALL   ??Subroutine28_0
+    106              PORTClearBits(iic->sda_reg, iic->sda_pin);
+   \                     ??CrossCallReturnLabel_39:
+   \   0000000C   9613               ADIW    R27:R26, 3
+   \   0000000E   ....               RCALL   ?Subroutine18
+   \                     ??CrossCallReturnLabel_38:
+   \   00000010   9612               ADIW    R27:R26, 2
+   \   00000012   ....               RCALL   ??Subroutine28_0
+    107              delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_40:
+   \   00000014   910D               LD      R16, X+
+   \   00000016   9714               SBIW    R27:R26, 4
+   \   00000018   ....               RCALL   ?Subroutine5
+   \                     ??CrossCallReturnLabel_35:
+   \   0000001A   ....               RCALL   ?Subroutine16
+    108              PORTSetBits(iic->sck_reg, iic->sck_pin);
+    109              delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_22:
+   \   0000001C   9614               ADIW    R27:R26, 4
+   \   0000001E   910D               LD      R16, X+
+   \   00000020   9712               SBIW    R27:R26, 2
+   \   00000022   ....               RCALL   ?Subroutine5
+    110              PORTSetBits(iic->sda_reg, iic->sda_pin);
+   \                     ??CrossCallReturnLabel_36:
+   \   00000024   9612               ADIW    R27:R26, 2
+   \   00000026   ....               RCALL   ?Subroutine16
+    111              delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_23:
+   \   00000028   ....               RJMP    ?Subroutine14
+    112          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine5:
+   \   00000000   ....               RCALL   ??Subroutine29_0
+   \                     ??CrossCallReturnLabel_49:
+   \   00000002                      REQUIRE ?Subroutine18
+   \   00000002                      ;               // Fall through to label ?Subroutine18
+    113          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    114          void gpi2c_restart_condition(GPI2C_INIT* iic) {
+   \                     gpi2c_restart_condition:
+   \   00000000                      REQUIRE ?Subroutine1
+   \   00000000                      ;               // Fall through to label ?Subroutine1
+    115          
+    116              PORTSetBits(iic->sda_reg, iic->sda_pin);
+    117              delay_us(iic->u16_freq);
+    118          
+    119              PORTSetBits(iic->sck_reg, iic->sck_pin);
+    120              delay_us(iic->u16_freq);
+    121          
+    122              PORTClearBits(iic->sda_reg, iic->sda_pin);
+    123              delay_us(iic->u16_freq);
+    124          
+    125              PORTClearBits(iic->sck_reg, iic->sck_pin);
+    126              delay_us(iic->u16_freq);
+    127          }
+    128          
+    129          
+    130          
+    131          //void gpi2c_write(GPI2C_INIT* iic, BYTE byte)
+    132          //I2C 1BYTE Write.
+    133          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    134          int gpi2c_write(GPI2C_INIT* iic, BYTE byte) {
+   \                     gpi2c_write:
+   \   00000000   ........           CALL    ?PROLOGUE6_L09
+   \   00000004                      REQUIRE ?Register_R4_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R5_is_cg_reg
+   \   00000004   0128               MOVW    R5:R4, R17:R16
+   \   00000006   2F82               MOV     R24, R18
+    135              int i = 0, err = 0;
+   \   00000008   E0A0               LDI     R26, 0
+    136              for (i = 0; i < 8; i++) {
+   \   0000000A   E098               LDI     R25, 8
+    137          
+    138                  if (byte & 0x80) PORTSetBits(iic->sda_reg, iic->sda_pin);
+   \                     ??gpi2c_write_0:
+   \   0000000C   01F2               MOVW    R31:R30, R5:R4
+   \   0000000E   8102               LDD     R16, Z+2
+   \   00000010   8113               LDD     R17, Z+3
+   \   00000012   FB87               BST     R24, 7
+   \   00000014   F416               BRTC    ??gpi2c_write_1
+   \   00000016   ....               RCALL   ?Subroutine16
+   \                     ??CrossCallReturnLabel_24:
+   \   00000018   C001               RJMP    ??CrossCallReturnLabel_41
+    139                  else PORTClearBits(iic->sda_reg, iic->sda_pin);
+   \                     ??gpi2c_write_1:
+   \   0000001A   ....               RCALL   ??Subroutine28_0
+    140          
+    141                  delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_41:
+   \   0000001C   ....               RCALL   ?Subroutine2
+    142                  PORTSetBits(iic->sck_reg, iic->sck_pin);
+    143                  delay_us(iic->u16_freq);
+    144                  PORTClearBits(iic->sck_reg, iic->sck_pin);
+    145                  delay_us(iic->u16_freq);
+    146                  byte <<= 1;
+   \                     ??CrossCallReturnLabel_31:
+   \   0000001E   0F88               LSL     R24
+    147              }
+   \   00000020   959A               DEC     R25
+   \   00000022   F7A1               BRNE    ??gpi2c_write_0
+    148              delay_us(iic->u16_freq);
+   \   00000024   ....               RCALL   ?Subroutine17
+    149          	PORTReadBits(iic->sda_reg, iic->sda_pin);//SDA INPUT À¸·Î ¸¸µé¾îÁÜ.
+   \                     ??CrossCallReturnLabel_50:
+   \   00000026   01F2               MOVW    R31:R30, R5:R4
+   \   00000028   ....               RCALL   ?Subroutine15
+    150          	
+    151              PORTSetBits(iic->sck_reg, iic->sck_pin);
+   \                     ??CrossCallReturnLabel_20:
+   \   0000002A   ....               RCALL   ?Subroutine10
+    152              delay_us(iic->u16_freq);
+    153              for (i = 0; i < ACK_WAIT; i++) {
+   \                     ??CrossCallReturnLabel_17:
+   \   0000002C   E080               LDI     R24, 0
+   \   0000002E   E090               LDI     R25, 0
+    154                  if (!PORTReadBits(iic->sda_reg, iic->sda_pin)) {
+   \                     ??gpi2c_write_2:
+   \   00000030   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_14:
+   \   00000032   F029               BREQ    ??gpi2c_write_3
+    155                      err = 0;
+    156                      break;
+    157                  }
+    158                  delay_us(iic->u16_freq);
+   \   00000034   ....               RCALL   ?Subroutine17
+    159              }
+   \                     ??CrossCallReturnLabel_51:
+   \   00000036   9601               ADIW    R25:R24, 1
+   \   00000038   318E               CPI     R24, 30
+   \   0000003A   079A               CPC     R25, R26
+   \   0000003C   F3CC               BRLT    ??gpi2c_write_2
+    160              if (i >= ACK_WAIT) err = 0xAA;
+   \                     ??gpi2c_write_3:
+   \   0000003E   318E               CPI     R24, 30
+   \   00000040   4090               SBCI    R25, 0
+   \   00000042   F00C               BRLT    ??gpi2c_write_4
+   \   00000044   EAAA               LDI     R26, 170
+    161              PORTClearBits(iic->sck_reg, iic->sck_pin);
+   \                     ??gpi2c_write_4:
+   \   00000046   ....               RCALL   ?Subroutine26
+    162              delay_us(iic->u16_freq);
+    163          
+    164              return err;
+   \                     ??CrossCallReturnLabel_29:
+   \   00000048   2F0A               MOV     R16, R26
+   \   0000004A   E010               LDI     R17, 0
+   \   0000004C   E0E6               LDI     R30, 6
+   \   0000004E   ........           JMP     ?EPILOGUE_B6_L09
+    165          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine15:
+   \   00000000   8113               LDD     R17, Z+3
+   \   00000002   8102               LDD     R16, Z+2
+   \   00000004   ....               RJMP    PORTReadBits
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine8:
+   \   00000000   01F2               MOVW    R31:R30, R5:R4
+   \   00000002   ....               RCALL   ?Subroutine15
+   \                     ??CrossCallReturnLabel_19:
+   \   00000004   2300               TST     R16
+   \   00000006   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine26:
+   \   00000000   ....               RCALL   ?Subroutine13
+   \                     ??CrossCallReturnLabel_46:
+   \   00000002   ....               RJMP    ?Subroutine17
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine13:
+   \   00000000   01F2               MOVW    R31:R30, R5:R4
+   \   00000002   8111               LDD     R17, Z+1
+   \   00000004   8100               LD      R16, Z
+   \   00000006                      REQUIRE ??Subroutine28_0
+   \   00000006                      ;               // Fall through to label ??Subroutine28_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine10:
+   \   00000000   01F2               MOVW    R31:R30, R5:R4
+   \   00000002   8111               LDD     R17, Z+1
+   \   00000004   8100               LD      R16, Z
+   \   00000006   ....               RCALL   PORTSetBits
+   \   00000008   ....               RJMP    ?Subroutine17
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine2:
+   \   00000000   ....               RCALL   ?Subroutine17
+   \                     ??CrossCallReturnLabel_53:
+   \   00000002   ....               RCALL   ?Subroutine10
+   \                     ??CrossCallReturnLabel_18:
+   \   00000004   ....               RJMP    ?Subroutine26
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine17:
+   \   00000000   01F2               MOVW    R31:R30, R5:R4
+   \   00000002   8104               LDD     R16, Z+4
+   \   00000004                      REQUIRE ??Subroutine29_0
+   \   00000004                      ;               // Fall through to label ??Subroutine29_0
+    166          
+    167          //void gpi2c_write(GPI2C_INIT* iic, BYTE byte)
+    168          //I2C 1BYTE Write.
+    169          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    170          BYTE gpi2c_read(GPI2C_INIT* iic, BYTE* byte, BYTE status) //status 0 : nack ??, 1: ack ??.
+   \                     gpi2c_read:
+    171          {
+   \   00000000   ........           CALL    ?PROLOGUE7_L09
+   \   00000004                      REQUIRE ?Register_R4_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R5_is_cg_reg
+   \   00000004                      REQUIRE ?Register_R6_is_cg_reg
+   \   00000004   0128               MOVW    R5:R4, R17:R16
+   \   00000006   01D9               MOVW    R27:R26, R19:R18
+   \   00000008   2E64               MOV     R6, R20
+    172              int i = 0;
+    173              BYTE rdData = 0;
+   \   0000000A   E080               LDI     R24, 0
+    174              
+    175              PORTReadBits(iic->sda_reg, iic->sda_pin);//SDA INPUT À¸·Î ¸¸µé¾îÁÜ.
+   \   0000000C   01F8               MOVW    R31:R30, R17:R16
+   \   0000000E   ....               RCALL   ?Subroutine15
+    176              delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_21:
+   \   00000010   ....               RCALL   ?Subroutine17
+    177              for (i = 0; i < 8; i++) {
+   \                     ??CrossCallReturnLabel_52:
+   \   00000012   E098               LDI     R25, 8
+    178                  PORTSetBits(iic->sck_reg, iic->sck_pin);
+   \                     ??gpi2c_read_0:
+   \   00000014   ....               RCALL   ?Subroutine10
+    179                  delay_us(iic->u16_freq);
+    180                  rdData <<= 1;
+   \                     ??CrossCallReturnLabel_16:
+   \   00000016   0F88               LSL     R24
+    181                  if (PORTReadBits(iic->sda_reg, iic->sda_pin)) rdData |= 0x01;
+   \   00000018   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_15:
+   \   0000001A   F009               BREQ    ??gpi2c_read_1
+   \   0000001C   6081               ORI     R24, 0x01
+    182          
+    183                  PORTClearBits(iic->sck_reg, iic->sck_pin);
+   \                     ??gpi2c_read_1:
+   \   0000001E   ....               RCALL   ?Subroutine26
+    184                  delay_us(iic->u16_freq);
+    185              }
+   \                     ??CrossCallReturnLabel_28:
+   \   00000020   959A               DEC     R25
+   \   00000022   F7C1               BRNE    ??gpi2c_read_0
+    186          
+    187              if (status) {
+   \   00000024   01F2               MOVW    R31:R30, R5:R4
+   \   00000026   8102               LDD     R16, Z+2
+   \   00000028   8113               LDD     R17, Z+3
+   \   0000002A   2066               TST     R6
+   \   0000002C   F011               BREQ    ??gpi2c_read_2
+    188                  PORTClearBits(iic->sda_reg, iic->sda_pin);  //ACK
+   \   0000002E   ....               RCALL   ??Subroutine28_0
+    189              } else {
+   \                     ??CrossCallReturnLabel_42:
+   \   00000030   C001               RJMP    ??CrossCallReturnLabel_25
+    190                  PORTSetBits(iic->sda_reg, iic->sda_pin);   //NACK
+   \                     ??gpi2c_read_2:
+   \   00000032   ....               RCALL   ?Subroutine16
+    191              }
+    192              delay_us(iic->u16_freq);
+   \                     ??CrossCallReturnLabel_25:
+   \   00000034   ....               RCALL   ?Subroutine2
+    193              PORTSetBits(iic->sck_reg, iic->sck_pin);
+    194              delay_us(iic->u16_freq);
+    195              PORTClearBits(iic->sck_reg, iic->sck_pin);
+    196              delay_us(iic->u16_freq);
+    197              PORTClearBits(iic->sda_reg, iic->sda_pin);
+   \                     ??CrossCallReturnLabel_30:
+   \   00000036   01F2               MOVW    R31:R30, R5:R4
+   \   00000038   8113               LDD     R17, Z+3
+   \   0000003A   8102               LDD     R16, Z+2
+   \   0000003C   ....               RCALL   ??Subroutine28_0
+    198          
+    199              *byte = rdData;
+   \                     ??CrossCallReturnLabel_43:
+   \   0000003E   938C               ST      X, R24
+    200              return rdData;
+   \   00000040   2F08               MOV     R16, R24
+   \   00000042   E0E7               LDI     R30, 7
+   \   00000044   ........           JMP     ?EPILOGUE_B7_L09
+    201          }
+
+   Maximum stack usage in bytes:
+
+     Function                CSTACK RSTACK
+     --------                ------ ------
+     PORTClearBits               0      2
+     PORTReadBits                0      2
+     PORTSetBits                 0      2
+     gpi2c_read                  7      2
+       -> PORTReadBits           7      2
+       -> delay_us               7      2
+       -> PORTSetBits            7      2
+       -> delay_us               7      2
+       -> PORTReadBits           7      2
+       -> PORTClearBits          7      2
+       -> delay_us               7      2
+       -> PORTClearBits          7      2
+       -> PORTSetBits            7      2
+       -> delay_us               7      2
+       -> PORTSetBits            7      2
+       -> delay_us               7      2
+       -> PORTClearBits          7      2
+       -> delay_us               7      2
+       -> PORTClearBits          7      2
+     gpi2c_restart_condition     2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+       -> PORTClearBits          2      2
+       -> delay_us               2      2
+       -> PORTClearBits          2      2
+       -> delay_us               2      2
+     gpi2c_start_condition       2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+       -> PORTClearBits          2      2
+       -> delay_us               2      2
+       -> PORTClearBits          2      2
+       -> delay_us               2      2
+     gpi2c_stop_condition        2      2
+       -> PORTClearBits          2      2
+       -> PORTClearBits          2      2
+       -> delay_us               2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+       -> PORTSetBits            2      2
+       -> delay_us               2      2
+     gpi2c_write                 6      2
+       -> PORTSetBits            6      2
+       -> PORTClearBits          6      2
+       -> delay_us               6      2
+       -> PORTSetBits            6      2
+       -> delay_us               6      2
+       -> PORTClearBits          6      2
+       -> delay_us               6      2
+       -> delay_us               6      2
+       -> PORTReadBits           6      2
+       -> PORTSetBits            6      2
+       -> delay_us               6      2
+       -> PORTReadBits           6      2
+       -> delay_us               6      2
+       -> PORTClearBits          6      2
+       -> delay_us               6      2
+
+
+   Segment part sizes:
+
+     Function/Label          Bytes
+     --------------          -----
+     _A_PINF                    1
+     _A_PINE                    1
+     _A_DDRE                    1
+     _A_PORTE                   1
+     _A_PIND                    1
+     _A_DDRD                    1
+     _A_PORTD                   1
+     _A_PINC                    1
+     _A_DDRC                    1
+     _A_PORTC                   1
+     _A_PINB                    1
+     _A_DDRB                    1
+     _A_PORTB                   1
+     _A_PINA                    1
+     _A_DDRA                    1
+     _A_PORTA                   1
+     _A_DDRF                    1
+     _A_PORTF                   1
+     _A_PING                    1
+     _A_DDRG                    1
+     _A_PORTG                   1
+     PORTSetBits              140
+     ?Subroutine25              4
+     ?Subroutine24              4
+     ?Subroutine23              4
+     ?Subroutine22              4
+     ?Subroutine21              4
+     ?Subroutine20              6
+     ?Subroutine19              6
+     PORTClearBits            140
+     ?Subroutine0               6
+     PORTReadBits             140
+     gpi2c_start_condition      2
+     ?Subroutine18              6
+     ?Subroutine1              38
+     ?Subroutine14             10
+     ?Subroutine12              4
+     ??Subroutine27_0           4
+     ?Subroutine16              2
+     ??Subroutine28_0           2
+     ??Subroutine29_0           4
+     gpi2c_stop_condition      42
+     ?Subroutine5               2
+     gpi2c_restart_condition    0
+     gpi2c_write               82
+     ?Subroutine15              6
+     ?Subroutine8               8
+     ?Subroutine26              4
+     ?Subroutine13              6
+     ?Subroutine10             10
+     ?Subroutine2               6
+     ?Subroutine17              4
+     gpi2c_read                72
+
+ 
+  21 bytes in segment ABSOLUTE
+ 772 bytes in segment CODE
+ 
+ 772 bytes of CODE memory
+   0 bytes of DATA memory (+ 21 bytes shared)
+
+Errors: none
+Warnings: none

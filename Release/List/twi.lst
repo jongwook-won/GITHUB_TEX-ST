@@ -1,0 +1,752 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR        31/Aug/2022  16:54:40 #
+# Copyright 1996-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\twi.c                    #
+#    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\twi.c" --cpu=m128 -ms   #
+#                    -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D NDEBUG     #
+#                    -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -lb        #
+#                    "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y              #
+#                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e      #
+#                    --eeprom_size 4096 --clib -Ohz                           #
+#    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\twi.lst            #
+#    Object file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\twi.r90             #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\LUCID ½Å·Ú¼º\CN_BOARD\source\twi.c
+      1          #include "allinclude.h"
+
+   \                                 In  segment ABSOLUTE, at 0x70
+   \   union <unnamed> volatile __io _A_TWBR
+   \                     _A_TWBR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x71
+   \   union <unnamed> volatile __io _A_TWSR
+   \                     _A_TWSR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x73
+   \   union <unnamed> volatile __io _A_TWDR
+   \                     _A_TWDR:
+   \   00000000                      DS8 1
+
+   \                                 In  segment ABSOLUTE, at 0x74
+   \   union <unnamed> volatile __io _A_TWCR
+   \                     _A_TWCR:
+   \   00000000                      DS8 1
+      2          
+      3          extern unsigned char ext_ucRxbuf[];
+      4          extern unsigned char ext_ucTxbuf[];
+      5          //extern unsigned char edid_data[];
+      6          
+
+   \                                 In  segment NEAR_F, align 1, keep-with-next
+      7          __flash unsigned char edid_data_3200_930[EDID_DATA_SIZE] = {0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1E, 0x6D, 0xBB, 0x5A, 0x01, 0x01, 0x01, 0x01,
+   \                     edid_data_3200_930:
+   \   00000000   FF00FFFFFFFF       DC8 0, 255, 255, 255, 255, 255, 255, 0, 30, 109, 187, 90, 1, 1, 1, 1, 1
+   \              00FF6D1E5ABB
+   \              0101010101  
+   \   00000011   011880031B30       DC8 24, 1, 3, 128, 48, 27, 120, 234, 49, 53, 165, 85, 78, 161, 38, 12
+   \              EA78353155A5
+   \              A14E0C26    
+   \   00000021   54504BA57100       DC8 80, 84, 165, 75, 0, 113, 79, 129, 128, 149, 0, 179, 0, 169, 192
+   \              814F9580B300
+   \              A900C0      
+   \   00000030   0081C0814090       DC8 129, 0, 129, 192, 144, 64, 165, 73, 128, 40, 192, 162, 10, 48, 24
+   \              49A52880A2C0
+   \              300A18      
+   \   0000003F   4E10E000110E       DC8 16, 78, 0, 224, 14, 17, 0, 0, 30, 0, 0, 0, 253, 0, 56, 75, 30, 83
+   \              0000001E0000
+   \              00FD4B38531E
+   \   00000051   000F200A2020       DC8 15, 0, 10, 32, 32, 32, 32, 32, 32, 0, 0, 0, 252, 0, 76, 71, 32, 70
+   \              202000200000
+   \              00FC474C4620
+   \   00000063   4C55204C4448       DC8 85, 76, 76, 32, 72, 68, 10, 32, 32, 0, 0, 0, 255, 0, 10, 32, 32, 32
+   \              200A00200000
+   \              00FF200A2020
+   \   00000075   202020202020       DC8 32, 32, 32, 32, 32, 32, 32, 32, 32, 0, 15
+   \              202000200F  
+      8          0x01, 0x18, 0x01, 0x03, 0x80, 0x30, 0x1B, 0x78, 0xEA, 0x31, 0x35, 0xA5, 0x55, 0x4E, 0xA1, 0x26,
+      9          0x0C, 0x50, 0x54, 0xA5, 0x4B, 0x00, 0x71, 0x4F, 0x81, 0x80, 0x95, 0x00, 0xB3, 0x00, 0xA9, 0xC0,
+     10          0x81, 0x00, 0x81, 0xC0, 0x90, 0x40, 0xA5, 0x49, 0x80, 0x28, 0xC0, 0xA2, 0x0A, 0x30, 0x18, 0x10,
+     11          0x4E, 0x00, 0xE0, 0x0E, 0x11, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0xFD, 0x00, 0x38, 0x4B, 0x1E,
+     12          0x53, 0x0F, 0x00, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xFC, 0x00, 0x4C,
+     13          0x47, 0x20, 0x46, 0x55, 0x4C, 0x4C, 0x20, 0x48, 0x44, 0x0A, 0x20, 0x20, 0x00, 0x00, 0x00, 0xFF,
+     14          0x00, 0x0A, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00, 0x0F};
+     15          
+
+   \                                 In  segment NEAR_F, align 1, keep-with-next
+     16          __flash unsigned char edid_data_1920_1080[EDID_DATA_SIZE] = {0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x30, 0xE4, 0x52, 0xB7, 0x00, 0x00, 0x00, 0x00, 0x00,
+   \                     edid_data_1920_1080:
+   \   00000000   FF00FFFFFFFF       DC8 0, 255, 255, 255, 255, 255, 255, 0, 48, 228, 82, 183, 0, 0, 0, 0, 0
+   \              00FFE430B752
+   \              0000000000  
+   \   00000011   011880030D16       DC8 24, 1, 3, 128, 22, 13, 120, 10, 166, 51, 144, 80, 80, 139, 38, 29
+   \              0A7833A65090
+   \              8B501D26    
+   \   00000021   514E00004500       DC8 78, 81, 0, 0, 0, 69, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              00C000000000
+   \              000000000000
+   \              000000      
+   \   00000036   35F7A0803870       DC8 247, 53, 128, 160, 112, 56, 27, 64, 48, 32, 58, 0, 36, 109, 16, 0
+   \              401B2030003A
+   \              6D240010    
+   \   00000046   180000000000       DC8 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              000000000000
+   \              00000000    
+   \   0000005C   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              000000000000
+   \              0000000000  
+   \   00000073   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155
+   \              000000000000
+   \              9B          
+     17          0x18, 0x01, 0x03, 0x80, 0x16, 0x0D, 0x78, 0x0A, 0xA6, 0x33, 0x90, 0x50, 0x50, 0x8B, 0x26,
+     18          0x1D, 0x4E, 0x51, 0x00, 0x00, 0x00, 0x45, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     19          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF7, 0x35, 0x80, 0xA0, 0x70, 0x38, 0x1B, 0x40, 0x30, 0x20,
+     20          0x3A, 0x00, 0x24, 0x6D, 0x10, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     21          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     22          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     23          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x9B};
+     24          
+
+   \                                 In  segment NEAR_Z, align 1, keep-with-next
+   \   00000000                      REQUIRE `?<Segment init: NEAR_Z>`
+     25          BYTE edid_read_data[128];
+   \                     edid_read_data:
+   \   00000000                      DS8 128
+     26          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     27          void init_Twi(void)// Twi init
+   \                     init_Twi:
+     28          {
+     29              // CPU Clock frequcncy / 16 + 2(TWBR) * 4^TWPS  
+     30            	unsigned char ucDummy;
+     31          	TWCR = 0x00;
+   \   00000000   E000               LDI     R16, 0
+   \   00000002   ....               RCALL   ??Subroutine19_0
+     32              TWBR = 100;			
+   \                     ??CrossCallReturnLabel_23:
+   \   00000004   E604               LDI     R16, 100
+   \   00000006   9300....           STS     _A_TWBR, R16
+     33          	TWSR = 0;
+   \   0000000A   E000               LDI     R16, 0
+   \   0000000C   9300....           STS     _A_TWSR, R16
+     34          	ucDummy = TWDR;
+   \   00000010   9100....           LDS     R16, _A_TWDR
+     35          }
+   \   00000014   9508               RET
+   \   00000016                      REQUIRE _A_TWCR
+   \   00000016                      REQUIRE _A_TWBR
+   \   00000016                      REQUIRE _A_TWSR
+   \   00000016                      REQUIRE _A_TWDR
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine19_0:
+   \   00000000   9300....           STS     _A_TWCR, R16
+   \   00000004   9508               RET
+     36          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     37          void TWI_Start(void)
+   \                     TWI_Start:
+     38          {
+   \   00000000   ....               RCALL   ?Subroutine7
+     39          	unsigned long cnt;
+     40          	TWCR = 0xA4;	//TWINT + TWSTA + TWEN 
+   \                     ??CrossCallReturnLabel_7:
+   \   00000002   EA04               LDI     R16, 164
+   \   00000004   ....               RCALL   ?Subroutine3
+     41          	cnt = 0; 
+     42          	while((TWCR & 0x80) != 0x80){if(++cnt > 0x1000)break;}
+   \                     ??CrossCallReturnLabel_4:
+   \   00000006   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_11:
+   \   00000008   FD07               SBRC    R16, 7
+   \   0000000A   C002               RJMP    ??TWI_Start_0
+   \   0000000C   9701               SBIW    R25:R24, 1
+   \   0000000E   F7D9               BRNE    ??CrossCallReturnLabel_4
+     43          }
+   \                     ??TWI_Start_0:
+   \   00000010                      REQUIRE ?Subroutine16
+   \   00000010                      REQUIRE _A_TWCR
+   \   00000010                      ;               // Fall through to label ?Subroutine16
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine16:
+   \   00000000   2F82               MOV     R24, R18
+   \   00000002   2F91               MOV     R25, R17
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine8:
+   \   00000000   9100....           LDS     R16, _A_TWCR
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine7:
+   \   00000000   2F19               MOV     R17, R25
+   \   00000002   2F28               MOV     R18, R24
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine3:
+   \   00000000   9300....           STS     _A_TWCR, R16
+   \   00000004   E081               LDI     R24, 1
+   \   00000006   E190               LDI     R25, 16
+   \   00000008   9508               RET
+     44          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     45          void Twi_Byte_Write(unsigned char Data)      //BYTE Write
+   \                     Twi_Byte_Write:
+     46          {
+   \   00000000   ....               RCALL   ?Subroutine7
+     47              unsigned long cnt;
+     48          	TWDR =	Data; 
+   \                     ??CrossCallReturnLabel_8:
+   \   00000002   9300....           STS     _A_TWDR, R16
+     49          	TWCR = 0x84;    //TWINT + TWEN
+   \   00000006   E804               LDI     R16, 132
+   \   00000008   ....               RCALL   ??Subroutine19_0
+     50          	cnt = 0;
+   \                     ??CrossCallReturnLabel_24:
+   \   0000000A   E081               LDI     R24, 1
+   \   0000000C   EF90               LDI     R25, 240
+     51          	while((TWCR & 0x80) != 0x80){if(++cnt > 0xF000)break;}
+   \                     ??Twi_Byte_Write_0:
+   \   0000000E   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_12:
+   \   00000010   FD07               SBRC    R16, 7
+   \   00000012   C002               RJMP    ??Twi_Byte_Write_1
+   \   00000014   9701               SBIW    R25:R24, 1
+   \   00000016   F7D9               BRNE    ??Twi_Byte_Write_0
+     52          }
+   \                     ??Twi_Byte_Write_1:
+   \   00000018   ....               RJMP    ?Subroutine16
+   \   0000001A                      REQUIRE _A_TWDR
+   \   0000001A                      REQUIRE _A_TWCR
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     53          unsigned char Twi_Byte_Read(void) 			//BYTE Read ÈÄ Non Ack Pulse
+   \                     Twi_Byte_Read:
+     54          {
+   \   00000000   ....               RCALL   ?Subroutine7
+     55          	unsigned long cnt;
+     56          	TWCR = 0x84;    //TWINT + TWEN
+   \                     ??CrossCallReturnLabel_9:
+   \   00000002   E804               LDI     R16, 132
+   \   00000004   ....               RCALL   ?Subroutine3
+     57          	cnt = 0;
+     58          	while((TWCR & 0x80) != 0x80){if(++cnt > 0x1000)break;}
+   \                     ??CrossCallReturnLabel_5:
+   \   00000006   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_13:
+   \   00000008   FD07               SBRC    R16, 7
+   \   0000000A   C002               RJMP    ??Twi_Byte_Read_0
+   \   0000000C   9701               SBIW    R25:R24, 1
+   \   0000000E   F7D9               BRNE    ??CrossCallReturnLabel_5
+     59          	
+     60          	return	TWDR; 
+   \                     ??Twi_Byte_Read_0:
+   \   00000010   ....               RJMP    ?Subroutine6
+   \   00000012                      REQUIRE _A_TWCR
+   \   00000012                      REQUIRE _A_TWDR
+     61          }
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine6:
+   \   00000000   9100....           LDS     R16, _A_TWDR
+   \   00000004   ....               RJMP    ?Subroutine16
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     62          unsigned char Twi_Multiple_Read(void)		//BYTE Read ÈÄ Ack Pulse
+   \                     Twi_Multiple_Read:
+     63          {
+   \   00000000   ....               RCALL   ?Subroutine7
+     64            	unsigned long cnt;
+     65            	TWCR = 0xC4;    //TWINT + TEWA + TWEN
+   \                     ??CrossCallReturnLabel_10:
+   \   00000002   EC04               LDI     R16, 196
+   \   00000004   ....               RCALL   ?Subroutine3
+     66          	cnt = 0;
+     67          	while((TWCR & 0x80) != 0x80)if(++cnt > 0x1000)break;
+   \                     ??CrossCallReturnLabel_6:
+   \   00000006   ....               RCALL   ?Subroutine8
+   \                     ??CrossCallReturnLabel_14:
+   \   00000008   FD07               SBRC    R16, 7
+   \   0000000A   C002               RJMP    ??Twi_Multiple_Read_0
+   \   0000000C   9701               SBIW    R25:R24, 1
+   \   0000000E   F7D9               BRNE    ??CrossCallReturnLabel_6
+     68          	
+     69          	return	TWDR; 
+   \                     ??Twi_Multiple_Read_0:
+   \   00000010                      REQUIRE ?Subroutine6
+   \   00000010                      REQUIRE _A_TWCR
+   \   00000010                      REQUIRE _A_TWDR
+   \   00000010                      ;               // Fall through to label ?Subroutine6
+     70          }
+     71          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     72          void twi_write(unsigned char ucDev_add , unsigned char ucReg_add , unsigned short usData)
+   \                     twi_write:
+     73          {
+   \   00000000   ........           CALL    ?PROLOGUE4_L09
+   \   00000004   2FB0               MOV     R27, R16
+   \   00000006   2FA1               MOV     R26, R17
+   \   00000008   2F82               MOV     R24, R18
+     74              TWI_Start();
+   \   0000000A   ....               RCALL   ?Subroutine9
+     75              delay_us(2);
+   \                     ??CrossCallReturnLabel_17:
+   \   0000000C   ....               RCALL   ?Subroutine13
+     76          //    delay_ms(6);
+     77              Twi_Byte_Write(ucDev_add);
+   \                     ??CrossCallReturnLabel_42:
+   \   0000000E   2F0B               MOV     R16, R27
+   \   00000010   ....               RCALL   ?Subroutine4
+     78              delay_us(5);
+     79          //    delay_ms(6);
+     80              Twi_Byte_Write(ucReg_add);
+   \                     ??CrossCallReturnLabel_29:
+   \   00000012   2F0A               MOV     R16, R26
+   \   00000014   ....               RCALL   ?Subroutine4
+     81              delay_us(5);    
+     82          //    delay_ms(6);
+     83              Twi_Byte_Write((unsigned char)usData);
+   \                     ??CrossCallReturnLabel_30:
+   \   00000016   ....               RCALL   ?Subroutine2
+     84              delay_us(2);      
+     85          //    delay_ms(6);
+     86              TWI_Stop;
+   \                     ??CrossCallReturnLabel_33:
+   \   00000018   ....               RCALL   ?Subroutine5
+     87              delay_ms(10);
+   \                     ??CrossCallReturnLabel_25:
+   \   0000001A   E00A               LDI     R16, 10
+   \   0000001C   ....               RCALL   ?Subroutine14
+     88          }
+   \                     ??CrossCallReturnLabel_21:
+   \   0000001E   E0E4               LDI     R30, 4
+   \   00000020   ........           JMP     ?EPILOGUE_B4_L09
+   \   00000024                      REQUIRE _A_TWCR
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine5:
+   \   00000000   E904               LDI     R16, 148
+   \   00000002                      REQUIRE ??Subroutine19_0
+   \   00000002                      ;               // Fall through to label ??Subroutine19_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine4:
+   \   00000000   ....               RCALL   ?Subroutine15
+   \                     ??CrossCallReturnLabel_37:
+   \   00000002                      REQUIRE ??Subroutine20_0
+   \   00000002                      ;               // Fall through to label ??Subroutine20_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine20_0:
+   \   00000000   E005               LDI     R16, 5
+   \   00000002   ....               RJMP    ?Subroutine18
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine14:
+   \   00000000   E010               LDI     R17, 0
+   \   00000002   ........           JMP     delay_ms
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine9:
+   \   00000000   ....               RJMP    TWI_Start
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine2:
+   \   00000000   2F08               MOV     R16, R24
+   \   00000002                      REQUIRE ??Subroutine21_0
+   \   00000002                      ;               // Fall through to label ??Subroutine21_0
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ??Subroutine21_0:
+   \   00000000   ....               RCALL   ?Subroutine15
+   \                     ??CrossCallReturnLabel_36:
+   \   00000002   ....               RJMP    ?Subroutine13
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine15:
+   \   00000000   ....               RJMP    Twi_Byte_Write
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine13:
+   \   00000000   E002               LDI     R16, 2
+   \   00000002                      REQUIRE ?Subroutine18
+   \   00000002                      ;               // Fall through to label ?Subroutine18
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine18:
+   \   00000000   ........           JMP     delay_us
+     89          
+
+   \                                 In  segment CODE, align 2, keep-with-next
+     90          unsigned short twi_read(unsigned char ucDev_add , unsigned char ucReg_add)
+   \                     twi_read:
+     91          {
+   \   00000000   939A               ST      -Y, R25
+   \   00000002   938A               ST      -Y, R24
+   \   00000004   2F90               MOV     R25, R16
+   \   00000006   2F81               MOV     R24, R17
+     92              unsigned char temp_H, temp_L;
+     93              BYTE i;
+     94              edid_read_data[0] = 1;
+   \   00000008   E001               LDI     R16, 1
+   \   0000000A   9300....           STS     edid_read_data, R16
+     95              //unsigned short read_v=0;
+     96              
+     97          //    for(i=0; i<128; i++){
+     98          //    
+     99                TWI_Start();
+   \   0000000E   ....               RCALL   ?Subroutine9
+    100                delay_us(5);
+   \                     ??CrossCallReturnLabel_16:
+   \   00000010   ....               RCALL   ??Subroutine20_0
+    101                //delay_ms(6);
+    102                Twi_Byte_Write(ucDev_add);
+   \                     ??CrossCallReturnLabel_27:
+   \   00000012   2F09               MOV     R16, R25
+   \   00000014   ....               RCALL   ??Subroutine21_0
+    103                delay_us(2);
+    104                //delay_ms(6);
+    105                Twi_Byte_Write(ucReg_add);
+   \                     ??CrossCallReturnLabel_31:
+   \   00000016   ....               RCALL   ?Subroutine2
+    106          //       Twi_Byte_Write(i);
+    107                
+    108                delay_us(2);
+    109                //delay_ms(6);
+    110                
+    111                TWI_Start();
+   \                     ??CrossCallReturnLabel_34:
+   \   00000018   ....               RCALL   ?Subroutine9
+    112                delay_us(2);
+   \                     ??CrossCallReturnLabel_15:
+   \   0000001A   ....               RCALL   ?Subroutine13
+    113                delay_us(2); 
+   \                     ??CrossCallReturnLabel_43:
+   \   0000001C   ....               RCALL   ?Subroutine13
+    114                //delay_ms(6);
+    115                Twi_Byte_Write(ucDev_add + 1); 
+   \                     ??CrossCallReturnLabel_44:
+   \   0000001E   9593               INC     R25
+   \   00000020   2F09               MOV     R16, R25
+   \   00000022   ....               RCALL   ??Subroutine21_0
+    116                //delay_ms(6);
+    117            
+    118                delay_us(2);
+    119                
+    120          //      for(i = 0 ; i < 127 ; i++)
+    121          //      {    
+    122          //      edid_read_data[i] = Twi_Multiple_Read();
+    123          //      }
+    124                edid_read_data[0] = Twi_Byte_Read();  
+   \                     ??CrossCallReturnLabel_32:
+   \   00000024   ....               RCALL   Twi_Byte_Read
+   \   00000026   9300....           STS     edid_read_data, R16
+    125                //delay_ms(6);
+    126          //      edid_read_data[i] = Twi_Byte_Read();
+    127                
+    128                TWI_Stop;
+   \   0000002A   ....               RCALL   ?Subroutine5
+    129                delay_ms(1);
+   \                     ??CrossCallReturnLabel_26:
+   \   0000002C   E001               LDI     R16, 1
+   \   0000002E   ....               RCALL   ?Subroutine14
+    130          //    }
+    131              delay_us(5);
+   \                     ??CrossCallReturnLabel_22:
+   \   00000030   ....               RCALL   ??Subroutine20_0
+    132              
+    133              temp_L = 0;
+    134              //read_v = (unsigned short)temp_H << 8;
+    135              //read_v = read_v | temp_L;
+    136              
+    137              //read_v = read_v >> 6;
+    138              
+    139          //    for(i = 0; i<128;i++)
+    140          //    {
+    141          //      printf("edid_read_data[%d] = %x\r\n",i,edid_read_data[i]);
+    142          //    }
+    143              
+    144          //    return temp_L;
+    145          //    printf("edid_read_data[0] = %d\r\n",edid_read_data[0]);
+    146              return edid_read_data[0];
+   \                     ??CrossCallReturnLabel_28:
+   \   00000032   9100....           LDS     R16, edid_read_data
+   \   00000036   E010               LDI     R17, 0
+   \   00000038   9189               LD      R24, Y+
+   \   0000003A   9199               LD      R25, Y+
+   \   0000003C   9508               RET
+   \   0000003E                      REQUIRE _A_TWCR
+    147          }
+    148          /*
+    149          void edid_save(unsigned short add_edid)
+    150          {
+    151              BYTE i;
+    152              TWI_Start();
+    153              delay_us(2);
+    154              
+    155              Twi_Byte_Write(add_edid);
+    156              delay_us(2);
+    157              
+    158              Twi_Byte_Write(0);
+    159              delay_us(2);
+    160              
+    161              for(i = 0 ; i < EDID_DATA_SIZE; i++)
+    162              {
+    163              Twi_Byte_Write(edid_data[i]);
+    164              delay_us(2);
+    165          //    printf("edid_data[i] = %x\r\n",edid_data[i]);
+    166              }
+    167              
+    168              TWI_Stop;
+    169          }
+    170          */
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    171          void edid_save_3200(unsigned short add_edid)
+   \                     edid_save_3200:
+    172          {
+   \   00000000   ....               RCALL   ?Subroutine11
+    173              BYTE i;
+    174              
+    175              for(i = 0 ; i < EDID_DATA_SIZE; i++)
+    176              {
+    177                TWI_Start();
+   \                     ??CrossCallReturnLabel_18:
+   \   00000002   ....               RCALL   ?Subroutine0
+    178                delay_us(2);
+    179                
+    180                Twi_Byte_Write(add_edid);
+    181                delay_us(2);
+    182                
+    183                Twi_Byte_Write(i);
+    184                delay_us(2);
+    185                
+    186                Twi_Byte_Write(edid_data_3200_930[i]);
+    187                delay_us(2);
+    188                //    printf("edid_data[i] = %x\r\n",edid_data[i]);
+    189                TWI_Stop;
+    190                delay_ms(10);
+    191              }
+   \                     ??CrossCallReturnLabel_0:
+   \   00000004   ....               SUBI    R30, LOW((-(edid_data_3200_930) & 0xFFFF))
+   \   00000006   ....               SBCI    R31, (-(edid_data_3200_930) & 0xFFFF) >> 8
+   \   00000008   ....               RCALL   ?Subroutine1
+   \                     ??CrossCallReturnLabel_2:
+   \   0000000A   F3D8               BRCS    ??CrossCallReturnLabel_18
+    192          }
+   \   0000000C                      REQUIRE ?Subroutine17
+   \   0000000C                      REQUIRE _A_TWCR
+   \   0000000C                      ;               // Fall through to label ?Subroutine17
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine17:
+   \   00000000   9189               LD      R24, Y+
+   \   00000002   91A9               LD      R26, Y+
+   \   00000004   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine11:
+   \   00000000   93AA               ST      -Y, R26
+   \   00000002   938A               ST      -Y, R24
+   \   00000004   2FA0               MOV     R26, R16
+   \   00000006   E080               LDI     R24, 0
+   \   00000008   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine1:
+   \   00000000   9104               LPM     R16, Z
+   \   00000002   ....               RCALL   ?Subroutine12
+   \                     ??CrossCallReturnLabel_40:
+   \   00000004   E904               LDI     R16, 148
+   \   00000006   9300....           STS     _A_TWCR, R16
+   \   0000000A   E00A               LDI     R16, 10
+   \   0000000C   ....               RCALL   ?Subroutine14
+   \                     ??CrossCallReturnLabel_20:
+   \   0000000E   9583               INC     R24
+   \   00000010   3880               CPI     R24, 128
+   \   00000012   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   ....               RCALL   TWI_Start
+   \   00000002   ....               RCALL   ?Subroutine13
+   \                     ??CrossCallReturnLabel_41:
+   \   00000004   2F0A               MOV     R16, R26
+   \   00000006   ....               RCALL   ?Subroutine12
+   \                     ??CrossCallReturnLabel_39:
+   \   00000008   2F08               MOV     R16, R24
+   \   0000000A   ....               RCALL   ?Subroutine12
+   \                     ??CrossCallReturnLabel_38:
+   \   0000000C   E0F0               LDI     R31, 0
+   \   0000000E   2FE8               MOV     R30, R24
+   \   00000010   9508               RET
+
+   \                                 In  segment CODE, align 2, keep-with-next
+   \                     ?Subroutine12:
+   \   00000000   ....               RCALL   ?Subroutine15
+   \                     ??CrossCallReturnLabel_35:
+   \   00000002   E002               LDI     R16, 2
+   \   00000004   ....               RJMP    ?Subroutine18
+
+   \                                 In  segment CODE, align 2, keep-with-next
+    193          void edid_save_1920(unsigned short add_edid)
+   \                     edid_save_1920:
+    194          {
+   \   00000000   ....               RCALL   ?Subroutine11
+    195              BYTE i;
+    196              
+    197              for(i = 0 ; i < EDID_DATA_SIZE; i++)
+    198              {
+    199                TWI_Start();
+   \                     ??CrossCallReturnLabel_19:
+   \   00000002   ....               RCALL   ?Subroutine0
+    200                delay_us(2);
+    201                
+    202                Twi_Byte_Write(add_edid);
+    203                delay_us(2);
+    204                
+    205                Twi_Byte_Write(i);
+    206                delay_us(2);
+    207                
+    208                Twi_Byte_Write(edid_data_1920_1080[i]);
+    209                delay_us(2);
+    210                //    printf("edid_data[i] = %x\r\n",edid_data[i]);
+    211                TWI_Stop;
+    212                delay_ms(10);
+    213              }
+   \                     ??CrossCallReturnLabel_1:
+   \   00000004   ....               SUBI    R30, LOW((-(edid_data_1920_1080) & 0xFFFF))
+   \   00000006   ....               SBCI    R31, (-(edid_data_1920_1080) & 0xFFFF) >> 8
+   \   00000008   ....               RCALL   ?Subroutine1
+   \                     ??CrossCallReturnLabel_3:
+   \   0000000A   F3D8               BRCS    ??CrossCallReturnLabel_19
+    214          }
+   \   0000000C   ....               RJMP    ?Subroutine17
+   \   0000000E                      REQUIRE _A_TWCR
+
+   Maximum stack usage in bytes:
+
+     Function            CSTACK RSTACK
+     --------            ------ ------
+     TWI_Start               0      2
+     Twi_Byte_Read           0      2
+     Twi_Byte_Write          0      2
+     Twi_Multiple_Read       0      2
+     edid_save_1920          4      2
+       -> TWI_Start          4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> delay_ms           4      2
+     edid_save_3200          4      2
+       -> TWI_Start          4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> delay_ms           4      2
+     init_Twi                0      2
+     twi_read                2      2
+       -> TWI_Start          2      2
+       -> delay_us           2      2
+       -> Twi_Byte_Write     2      2
+       -> delay_us           2      2
+       -> Twi_Byte_Write     2      2
+       -> delay_us           2      2
+       -> TWI_Start          2      2
+       -> delay_us           2      2
+       -> delay_us           2      2
+       -> Twi_Byte_Write     2      2
+       -> delay_us           2      2
+       -> Twi_Byte_Read      2      2
+       -> delay_ms           2      2
+       -> delay_us           2      2
+     twi_write               4      2
+       -> TWI_Start          4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> Twi_Byte_Write     4      2
+       -> delay_us           4      2
+       -> delay_ms           4      2
+
+
+   Segment part sizes:
+
+     Function/Label      Bytes
+     --------------      -----
+     _A_TWBR                1
+     _A_TWSR                1
+     _A_TWDR                1
+     _A_TWCR                1
+     edid_data_3200_930   128
+     edid_data_1920_1080  128
+     edid_read_data       128
+     init_Twi              22
+     ??Subroutine19_0       6
+     TWI_Start             16
+     ?Subroutine16          6
+     ?Subroutine8           6
+     ?Subroutine7           6
+     ?Subroutine3          10
+     Twi_Byte_Write        26
+     Twi_Byte_Read         18
+     ?Subroutine6           6
+     Twi_Multiple_Read     16
+     twi_write             36
+     ?Subroutine5           2
+     ?Subroutine4           2
+     ??Subroutine20_0       4
+     ?Subroutine14          6
+     ?Subroutine9           2
+     ?Subroutine2           2
+     ??Subroutine21_0       4
+     ?Subroutine15          2
+     ?Subroutine13          2
+     ?Subroutine18          4
+     twi_read              62
+     edid_save_3200        12
+     ?Subroutine17          6
+     ?Subroutine11         10
+     ?Subroutine1          20
+     ?Subroutine0          18
+     ?Subroutine12          6
+     edid_save_1920        14
+      Others                7
+
+ 
+   4 bytes in segment ABSOLUTE
+ 352 bytes in segment CODE
+   7 bytes in segment INITTAB
+ 256 bytes in segment NEAR_F
+ 128 bytes in segment NEAR_Z
+ 
+ 608 bytes of CODE memory (+ 7 bytes shared)
+ 128 bytes of DATA memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: 4

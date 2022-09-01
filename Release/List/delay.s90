@@ -1,0 +1,101 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.10.1.50424 for Atmel AVR       31/Aug/2022  16:54:39 /
+// Copyright 1996-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\LUCID ½Å·Ú¼º\CN_BOARD\source\delay.c                 /
+//    Command line =  "D:\LUCID ½Å·Ú¼º\CN_BOARD\source\delay.c" --cpu=m128    /
+//                    -ms -o "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\Obj\" -D       /
+//                    NDEBUG -lCN "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\"    /
+//                    -lb "D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\" -y         /
+//                    --initializers_in_flash -DENABLE_BIT_DEFINITIONS -e     /
+//                    --eeprom_size 4096 --clib -Ohz                          /
+//    List file    =  D:\LUCID ½Å·Ú¼º\CN_BOARD\Release\List\delay.s90         /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME delay
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: NEAR_Z>`
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC delay_ms
+        PUBLIC delay_timer
+        PUBLIC delay_us
+
+
+        RSEG NEAR_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: NEAR_Z>`
+delay_timer:
+        DS8 2
+
+        RSEG CODE:CODE:NOROOT(1)
+delay_us:
+        LDI     R17, 0
+        RJMP    ??delay_us_0
+??delay_us_1:
+        PUSH  R0 
+        POP   R0 
+        PUSH  R0 
+        POP   R0 
+        PUSH  R0 
+        POP   R0 
+        INC     R17
+??delay_us_0:
+        CP      R17, R16
+        BRCS    ??delay_us_1
+        RET
+
+        RSEG CODE:CODE:NOROOT(1)
+delay_ms:
+        LDI     R18, 0
+        LDI     R30, LOW(delay_timer)
+        LDI     R31, (delay_timer) >> 8
+        ST      Z, R18
+        STD     Z+1, R18
+??delay_ms_0:
+        LD      R18, Z
+        LDD     R19, Z+1
+        CP      R16, R18
+        CPC     R17, R19
+        BRCC    ??delay_ms_0
+        RET
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: NEAR_Z>`:
+        DC16    SFE(NEAR_Z) - SFB(NEAR_Z)
+        DC16    SFB(NEAR_Z)
+        DP      0
+        REQUIRE ?need_segment_init
+
+        END
+// 
+// 46 bytes in segment CODE
+//  7 bytes in segment INITTAB
+//  2 bytes in segment NEAR_Z
+// 
+// 46 bytes of CODE memory (+ 7 bytes shared)
+//  2 bytes of DATA memory
+//
+//Errors: none
+//Warnings: none
